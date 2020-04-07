@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/336c09e/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/336c09e/">
+    
+    
+    <title>JS你所不知道的奇淫技巧 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="javascript">
+    <meta name="description" content="总结下 js 在日常使用中更简洁，更易读的写法  操作符的妙用1.利用按位与“&amp;amp;”判断奇偶数按位与运算的逻辑是这样： 0001 &amp;amp; 0011 = 0001，也就是两个位都是 1，才是 1，其它位都是 0。我们经常要做一个条件，判断一个数的奇偶性，会这样写： function fn(n) {     if(n % 2 === 1) {         //奇数     } else">
+<meta name="keywords" content="javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS你所不知道的奇淫技巧">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/336c09e/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="总结下 js 在日常使用中更简洁，更易读的写法  操作符的妙用1.利用按位与“&amp;amp;”判断奇偶数按位与运算的逻辑是这样： 0001 &amp;amp; 0011 = 0001，也就是两个位都是 1，才是 1，其它位都是 0。我们经常要做一个条件，判断一个数的奇偶性，会这样写： function fn(n) {     if(n % 2 === 1) {         //奇数     } else">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-11-27T13:49:27.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JS你所不知道的奇淫技巧">
+<meta name="twitter:description" content="总结下 js 在日常使用中更简洁，更易读的写法  操作符的妙用1.利用按位与“&amp;amp;”判断奇偶数按位与运算的逻辑是这样： 0001 &amp;amp; 0011 = 0001，也就是两个位都是 1，才是 1，其它位都是 0。我们经常要做一个条件，判断一个数的奇偶性，会这样写： function fn(n) {     if(n % 2 === 1) {         //奇数     } else">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">JS你所不知道的奇淫技巧</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">JS你所不知道的奇淫技巧</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-11-27T13:49:27.000Z" itemprop="datePublished" class="page-time">
+  2017-11-27
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#操作符的妙用"><span class="post-toc-number">1.</span> <span class="post-toc-text">操作符的妙用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-利用按位与“-amp-”判断奇偶数"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">1.利用按位与“&amp;”判断奇偶数</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-利用按位与运算，则可以简写为这样："><span class="post-toc-number">1.2.</span> <span class="post-toc-text">2.利用按位与运算，则可以简写为这样：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-利用按位或“-”取整"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">3.利用按位或“|”取整</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-利用按位非“-”简化表达式"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">4.利用按位非“~”简化表达式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-左移-lt-lt-求-2-的-n-次方"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">5.左移&lt;&lt;求 2 的 n 次方</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6-无符号右移-gt-gt-gt-判断数的正负"><span class="post-toc-number">1.6.</span> <span class="post-toc-text">6.无符号右移&gt;&gt;&gt;判断数的正负</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7-利用-amp-amp-连结条件与表达式"><span class="post-toc-number">1.7.</span> <span class="post-toc-text">7.利用&amp;&amp;连结条件与表达式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#8-利用-取值（设置默认值）"><span class="post-toc-number">1.8.</span> <span class="post-toc-text">8.利用||取值（设置默认值）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#9-利用-取整"><span class="post-toc-number">1.9.</span> <span class="post-toc-text">9.利用~ ~取整</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#10-利用-将字符串转为数字"><span class="post-toc-number">1.10.</span> <span class="post-toc-text">10.利用+将字符串转为数字</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#11-利用-逻辑非强转布尔值"><span class="post-toc-number">1.11.</span> <span class="post-toc-text">11.利用!逻辑非强转布尔值</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#12-利用-实现变量检测"><span class="post-toc-number">1.12.</span> <span class="post-toc-text">12.利用!!实现变量检测</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-自执行函数"><span class="post-toc-number">1.13.</span> <span class="post-toc-text">1.自执行函数</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-isNaN-判断是否为合法数字"><span class="post-toc-number">1.14.</span> <span class="post-toc-text">2.isNaN 判断是否为合法数字</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-缓存-Array-length"><span class="post-toc-number">1.15.</span> <span class="post-toc-text">3.缓存 Array.length</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-判断属于是否存在于对象中"><span class="post-toc-number">1.16.</span> <span class="post-toc-text">4.判断属于是否存在于对象中</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-获取数组最后一个元素"><span class="post-toc-number">1.17.</span> <span class="post-toc-text">5.获取数组最后一个元素</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6-数组截断"><span class="post-toc-number">1.18.</span> <span class="post-toc-text">6.数组截断</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7-数组合并"><span class="post-toc-number">1.19.</span> <span class="post-toc-text">7.数组合并</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#8-类数组利用数组的方法"><span class="post-toc-number">1.20.</span> <span class="post-toc-text">8.类数组利用数组的方法</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#9-利用-arguments-callee-实现递归"><span class="post-toc-number">1.21.</span> <span class="post-toc-text">9.利用 arguments.callee 实现递归</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#10-给回调函数传递参数"><span class="post-toc-number">1.22.</span> <span class="post-toc-text">10.给回调函数传递参数</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#11-利用正则表达式处理实际问题"><span class="post-toc-number">1.23.</span> <span class="post-toc-text">11.利用正则表达式处理实际问题</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/javascript/JS你所不知道的奇淫技巧" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">JS你所不知道的奇淫技巧</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-11-27 21:49:27" datetime="2017-11-27T13:49:27.000Z" itemprop="datePublished">2017-11-27</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p><strong>总结下 js 在日常使用中更简洁，更易读的写法</strong> </p>
+<h2 id="操作符的妙用"><a href="#操作符的妙用" class="headerlink" title="操作符的妙用"></a>操作符的妙用</h2><h3 id="1-利用按位与“-amp-”判断奇偶数"><a href="#1-利用按位与“-amp-”判断奇偶数" class="headerlink" title="1.利用按位与“&amp;”判断奇偶数"></a>1.利用按位与“&amp;”判断奇偶数</h3><p>按位与运算的逻辑是这样： 0001 &amp; 0011 = 0001，也就是两个位都是 1，才是 1，其它位都是 0。<br>我们经常要做一个条件，判断一个数的奇偶性，会这样写：</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">fn</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>n <span class="token operator">%</span> <span class="token number">2</span> <span class="token operator">===</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">//奇数</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">//偶数</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="2-利用按位与运算，则可以简写为这样："><a href="#2-利用按位与运算，则可以简写为这样：" class="headerlink" title="2.利用按位与运算，则可以简写为这样："></a>2.利用按位与运算，则可以简写为这样：</h3><pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">fn</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>n <span class="token operator">&amp;</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">//奇数</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">//偶数</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="3-利用按位或“-”取整"><a href="#3-利用按位或“-”取整" class="headerlink" title="3.利用按位或“|”取整"></a>3.利用按位或“|”取整</h3><p>按位或运算的逻辑是这样： 0001 | 0011 = 0011，也就是两个位都是 0，才是 0，其它位都 1。</p>
+<pre class=" language-js"><code class="language-js"><span class="token number">0</span> <span class="token operator">|</span> <span class="token number">0</span> <span class="token comment" spellcheck="true">//0</span>
+<span class="token number">0</span> <span class="token operator">|</span> <span class="token number">1</span> <span class="token comment" spellcheck="true">//1</span>
+<span class="token number">1</span> <span class="token operator">|</span> <span class="token number">0</span> <span class="token comment" spellcheck="true">//1</span>
+<span class="token number">1</span> <span class="token operator">|</span> <span class="token number">1</span> <span class="token comment" spellcheck="true">//1</span>
+<span class="token number">3</span> <span class="token operator">|</span> <span class="token number">5</span> <span class="token comment" spellcheck="true">//7 即 0000 0011 | 0000 0101 = 0000 0111   因此，3|5的值得7</span>
+</code></pre>
+<p>按位或|有一个作用，通过搭配 0 进行运算可以用来实现数字取整。</p>
+<pre class=" language-js"><code class="language-js"><span class="token number">1.1</span> <span class="token operator">|</span> <span class="token number">0</span> <span class="token comment" spellcheck="true">//1</span>
+<span class="token operator">-</span><span class="token number">2.0</span> <span class="token operator">|</span> <span class="token number">0</span> <span class="token comment" spellcheck="true">//-2</span>
+
+<span class="token comment" spellcheck="true">//非数字，则根据值强转为 0 或者 1 再取整，不过这种没啥意义</span>
+<span class="token keyword">null</span> <span class="token operator">|</span> <span class="token number">0</span> <span class="token comment" spellcheck="true">//0</span>
+<span class="token boolean">true</span> <span class="token operator">|</span> <span class="token number">0</span> <span class="token comment" spellcheck="true">//1</span>
+</code></pre>
+<blockquote>
+<p>Tips: 其实浮点数是不支持位运算的，所以会先把 1.1 转成整数 1 再进行位运算，就好像是对浮点数向下求整。所以 1 | 0 的结果就是 1。</p>
+</blockquote>
+<p>还有一个就是在设计 vue 组件的时候，也常用到的地方如下：（具体为啥这么用，我也说不清楚，没研究过原理，知道的同学可以告诉我）。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">//... 其它参数</span>
+    props <span class="token punctuation">{</span>
+        params<span class="token punctuation">:</span> Object <span class="token operator">|</span> Array <span class="token comment" spellcheck="true">//只要其中任意一个满足条件即可</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="4-利用按位非“-”简化表达式"><a href="#4-利用按位非“-”简化表达式" class="headerlink" title="4.利用按位非“~”简化表达式"></a>4.利用按位非“~”简化表达式</h3><p>普及一下~运算符，这个符号学名叫“按位非”，它是一个一元运算符。按位非操作符由一个波浪线（~）表示，按位非就是求二进制的反码。不管什么值使用了这个运算符，结果总是一个数字。按位非运算符，简单的理解就是改变运算数的符号并减去 1。</p>
+<pre class=" language-js"><code class="language-js"><span class="token operator">~</span><span class="token number">5</span> <span class="token comment" spellcheck="true">//-6</span>
+<span class="token operator">~</span><span class="token number">0</span> <span class="token comment" spellcheck="true">//-1</span>
+<span class="token operator">~</span><span class="token operator">-</span><span class="token number">2</span> <span class="token comment" spellcheck="true">//1</span>
+<span class="token operator">~</span><span class="token boolean">true</span> <span class="token comment" spellcheck="true">//-2 这里true被强转为1</span>
+<span class="token operator">~</span><span class="token keyword">null</span> <span class="token comment" spellcheck="true">//-1 这里null被强转为0</span>
+<span class="token operator">~</span>undefined <span class="token comment" spellcheck="true">//-1 这里undefined被强转为0</span>
+</code></pre>
+<p>利用这个原理，我们可以在实际工作中这样应用：</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'hello world!'</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span>str<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span><span class="token string">'w'</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">/*...*/</span> <span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">//或者</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span>str<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span><span class="token string">'w'</span><span class="token punctuation">)</span> <span class="token operator">></span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">/*...*/</span> <span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">//根据str.indexOf('w')的值，无外乎两种情况： -1, 0及正整数，</span>
+<span class="token comment" spellcheck="true">//则，从-1到正整数中，经过按位运算~之后，则为：0或者任意负数，</span>
+<span class="token comment" spellcheck="true">//实际表示为：false与true</span>
+<span class="token comment" spellcheck="true">//上面的条件语句，可以改为：</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">~</span>str<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span><span class="token string">'w'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">/*...*/</span> <span class="token punctuation">}</span>
+</code></pre>
+<blockquote>
+<p>Tips: 按位运算，简单的地方，可以使用。但一些比较复杂的、难理解的，我觉得应该尽量少用，因为会给阅读者带来困难，也会给自己带来麻烦。</p>
+</blockquote>
+<h3 id="5-左移-lt-lt-求-2-的-n-次方"><a href="#5-左移-lt-lt-求-2-的-n-次方" class="headerlink" title="5.左移&lt;&lt;求 2 的 n 次方"></a>5.左移&lt;&lt;求 2 的 n 次方</h3><pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">//二进制运算：</span>
+<span class="token number">01</span> <span class="token operator">&lt;</span><span class="token operator">&lt;</span> <span class="token number">2</span> <span class="token comment" spellcheck="true">//0100，十进制为4</span>
+
+<span class="token comment" spellcheck="true">//实际运用可以这样：</span>
+<span class="token number">1</span> <span class="token operator">&lt;</span><span class="token operator">&lt;</span> <span class="token number">2</span> <span class="token comment" spellcheck="true">//4 即2的平方</span>
+<span class="token number">1</span> <span class="token operator">&lt;</span><span class="token operator">&lt;</span> <span class="token number">3</span> <span class="token comment" spellcheck="true">//8 即2的立方</span>
+<span class="token number">1</span> <span class="token operator">&lt;</span><span class="token operator">&lt;</span> <span class="token number">4</span> <span class="token comment" spellcheck="true">//16 即2的4次方</span>
+</code></pre>
+<h3 id="6-无符号右移-gt-gt-gt-判断数的正负"><a href="#6-无符号右移-gt-gt-gt-判断数的正负" class="headerlink" title="6.无符号右移&gt;&gt;&gt;判断数的正负"></a>6.无符号右移&gt;&gt;&gt;判断数的正负</h3><p>正数的无符号右移与有符号右移结果是一样的。负数的无符号右移会把符号位也一起移动，而且无符号右移会把负数的二进制码当成正数的二进制码。即：</p>
+<pre class=" language-js"><code class="language-js"><span class="token number">1</span> <span class="token operator">></span><span class="token operator">></span><span class="token operator">></span> <span class="token number">0</span> <span class="token comment" spellcheck="true">//1</span>
+<span class="token number">2</span> <span class="token operator">></span><span class="token operator">></span><span class="token operator">></span> <span class="token number">0</span> <span class="token comment" spellcheck="true">//2</span>
+<span class="token number">4</span> <span class="token operator">></span><span class="token operator">></span><span class="token operator">></span> <span class="token number">0</span> <span class="token comment" spellcheck="true">//4</span>
+<span class="token number">4</span> <span class="token operator">></span><span class="token operator">></span><span class="token operator">></span> <span class="token number">1</span> <span class="token comment" spellcheck="true">//2</span>
+<span class="token number">4</span> <span class="token operator">></span><span class="token operator">></span><span class="token operator">></span> <span class="token number">2</span> <span class="token comment" spellcheck="true">//1</span>
+<span class="token operator">-</span><span class="token number">4</span> <span class="token operator">></span><span class="token operator">></span><span class="token operator">></span> <span class="token number">0</span> <span class="token comment" spellcheck="true">//4294967292</span>
+<span class="token operator">-</span><span class="token number">4</span> <span class="token operator">></span><span class="token operator">></span><span class="token operator">></span> <span class="token number">1</span> <span class="token comment" spellcheck="true">//2147483646</span>
+<span class="token operator">-</span><span class="token number">2</span> <span class="token operator">></span><span class="token operator">></span><span class="token operator">></span> <span class="token number">0</span> <span class="token comment" spellcheck="true">//4294967294</span>
+<span class="token operator">-</span><span class="token number">1</span> <span class="token operator">></span><span class="token operator">></span><span class="token operator">></span> <span class="token number">0</span> <span class="token comment" spellcheck="true">//4294967295</span>
+</code></pre>
+<p>观察上面的例子，我们得出一个结论，正数右移 0 位，值不变，而负数右移 0 位，值已经变化了。即可以通过这种关系判断一个数的正负：</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">isPos</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> n <span class="token operator">===</span> n <span class="token operator">></span><span class="token operator">></span><span class="token operator">></span> <span class="token number">0</span>
+<span class="token punctuation">}</span>
+<span class="token function">isPos</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//false</span>
+<span class="token function">isPos</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//true</span>
+</code></pre>
+<h3 id="7-利用-amp-amp-连结条件与表达式"><a href="#7-利用-amp-amp-连结条件与表达式" class="headerlink" title="7.利用&amp;&amp;连结条件与表达式"></a>7.利用&amp;&amp;连结条件与表达式</h3><p>通常，我们为了给一个变量赋值，正常的逻辑是：if 语句判断，通过 if 逻辑控制语句，则赋值成功。利用&amp;&amp;符号，则可以直接在前面写上条件语句，后面写上执行语句。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> a<span class="token punctuation">;</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    a <span class="token operator">=</span> <span class="token number">10</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">//也可以写成</span>
+<span class="token keyword">var</span> a<span class="token punctuation">;</span>
+<span class="token boolean">true</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>a <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//或者</span>
+<span class="token keyword">var</span> a <span class="token operator">=</span> <span class="token boolean">true</span> <span class="token operator">&amp;&amp;</span> <span class="token number">10</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//这种情况尽量不要使用，因为如果条件不成立，则会给a赋上一个false值。</span>
+
+<span class="token comment" spellcheck="true">//常见使用：</span>
+<span class="token keyword">function</span> <span class="token function">fn</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    obj <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span><span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">var</span> a <span class="token operator">=</span> b <span class="token operator">=</span> c <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">,</span> d<span class="token punctuation">;</span>
+a <span class="token operator">&amp;&amp;</span> b <span class="token operator">&amp;&amp;</span> c <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>d <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>d<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//10</span>
+</code></pre>
+<blockquote>
+<p>Tips: 对于&amp;&amp;，需要注意以下几点：</p>
+</blockquote>
+<ul>
+<li>对于布尔值，逻辑与是非常简单的，只要有一个 false，就返回 false；</li>
+<li>对于不是布尔值的情况则：<br>如果第一个操作数是对象，则返回第二个数<br>如果第二个操作数是对象，则只有在第一个操作数的求值结果为 true 的情况下才会返回该对象；<br>如果第两个操作数都是对象，则返回第二个数操作数<br>如果有一个操作数是 null，则返回 null<br>如果有一个操作数是 NaN，则返回第 NaN<br>如果第一个操作数是 undefined，则返回 undefined</li>
+</ul>
+<h3 id="8-利用-取值（设置默认值）"><a href="#8-利用-取值（设置默认值）" class="headerlink" title="8.利用||取值（设置默认值）"></a>8.利用||取值（设置默认值）</h3><p>通常，我们声明一个变量，可能要根据条件进行赋值。正常的逻辑是：if … else if … else 或者使用 switch 这两种语句块。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> a<span class="token punctuation">,</span> b<span class="token punctuation">;</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span>b <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    a <span class="token operator">=</span> <span class="token number">1</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span><span class="token punctuation">(</span>b <span class="token operator">===</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    a <span class="token operator">=</span> <span class="token number">2</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    a <span class="token operator">=</span> <span class="token number">3</span>
+<span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">//或者</span>
+<span class="token keyword">var</span> a<span class="token punctuation">,</span> b <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token keyword">switch</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">case</span> <span class="token number">0</span><span class="token punctuation">:</span>
+        a <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token number">1</span><span class="token punctuation">:</span>
+        a <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token keyword">default</span><span class="token punctuation">:</span>
+        a <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>如果直接使用||或运算符，则按从左到右，取第一个非空的一个值，否则直接使用 false 作为值使用。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> b <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> a <span class="token operator">=</span> <span class="token punctuation">(</span>b <span class="token operator">===</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">(</span>b <span class="token operator">===</span> <span class="token number">1</span> <span class="token operator">&amp;&amp;</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token number">3</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 3</span>
+
+<span class="token comment" spellcheck="true">//常用到的或运算取值方式一般是在函数里面。</span>
+<span class="token keyword">function</span> <span class="token function">doSomething</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> o <span class="token operator">=</span> obj <span class="token operator">||</span> <span class="token punctuation">{</span><span class="token punctuation">}</span> <span class="token comment" spellcheck="true">//如果obj不存在，则使用默认值</span>
+    <span class="token keyword">var</span> oo<span class="token punctuation">;</span>
+    o <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>oo <span class="token operator">=</span> obj <span class="token operator">||</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//结合与运算，作变判断的前置条件</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<blockquote>
+<p>Tips: 关于||，需要注意以下几点：</p>
+</blockquote>
+<ul>
+<li>对于布尔值，逻辑或是非常简单的，只要有一个 true，就返回 true；</li>
+<li>对于不是布尔值的情况则：<br>如果第一个操作数是对象，则返第一个操作数<br>如果第一个操作数的求值结果为 false，则返回第二个操作数<br>如果两个操作数都是对象，则返回第一个操作数<br>如果两个操作数是 null，则返回 null<br>如果两个操作数是 NaN，则返回 NaN<br>如果两个操作数是 undefined，则返回 undefined</li>
+</ul>
+<h3 id="9-利用-取整"><a href="#9-利用-取整" class="headerlink" title="9.利用~ ~取整"></a>9.利用~ ~取整</h3><p>如果要将一个小数取整数部分，正常的逻辑是：parseInt()强转为整数方法，或者 Math.floor()向下取整。其实，使用~ ~操作符可以更快速的取整。</p>
+<pre class=" language-js"><code class="language-js"><span class="token function">parseInt</span><span class="token punctuation">(</span><span class="token number">12.55</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//12</span>
+Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span><span class="token number">12.55</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//12</span>
+<span class="token operator">~</span> <span class="token operator">~</span><span class="token number">12.55</span> <span class="token comment" spellcheck="true">//12</span>
+</code></pre>
+<p>其实，除了取整的作用，它还可以达到强转数字的作用，比如：</p>
+<pre class=" language-js"><code class="language-js"><span class="token operator">~</span> <span class="token operator">~</span><span class="token boolean">true</span> <span class="token comment" spellcheck="true">//1</span>
+<span class="token operator">~</span> <span class="token operator">~</span><span class="token boolean">false</span> <span class="token comment" spellcheck="true">//0</span>
+<span class="token operator">~</span> <span class="token operator">~</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token comment" spellcheck="true">//0</span>
+<span class="token operator">~</span> <span class="token operator">~</span><span class="token punctuation">{</span><span class="token punctuation">}</span> <span class="token comment" spellcheck="true">//0</span>
+<span class="token operator">~</span> <span class="token operator">~</span>undefined <span class="token comment" spellcheck="true">//0</span>
+<span class="token operator">~</span> <span class="token operator">~</span><span class="token operator">!</span>undefined <span class="token comment" spellcheck="true">//1</span>
+<span class="token operator">~</span> <span class="token operator">~</span><span class="token keyword">null</span> <span class="token comment" spellcheck="true">//0</span>
+<span class="token operator">~</span> <span class="token operator">~</span><span class="token operator">!</span><span class="token keyword">null</span> <span class="token comment" spellcheck="true">//1</span>
+</code></pre>
+<blockquote>
+<p>Tips: 虽然~ ~用起来比较骚气，但是为了可读性，本人还是建议使用 Math.floor()更为稳妥，谁知道领导 review 代码的时候，会不会说你过于装逼，要被喷死。</p>
+</blockquote>
+<h3 id="10-利用-将字符串转为数字"><a href="#10-利用-将字符串转为数字" class="headerlink" title="10.利用+将字符串转为数字"></a>10.利用+将字符串转为数字</h3><p>如果要将一个表现字符串的数字转化为真正的数字，正常逻辑是：Number()或者 parseInt()、parseFloat()实现转化。实际上，我们还可以更简捷，只需要在前面添加一个+就可以了。当然，你也可以用-来实现，只不过，这样子，则值就成了负数。</p>
+<pre class=" language-js"><code class="language-js"><span class="token function">Number</span><span class="token punctuation">(</span><span class="token string">'123'</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//123</span>
+<span class="token function">parseInt</span><span class="token punctuation">(</span><span class="token string">'123'</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//123</span>
+<span class="token function">parseFloat</span><span class="token punctuation">(</span><span class="token string">'123'</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//123</span>
+<span class="token function">parseFloat</span><span class="token punctuation">(</span><span class="token string">'123.0'</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//123</span>
+<span class="token function">parseFloat</span><span class="token punctuation">(</span><span class="token string">'123.0'</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//123</span>
+<span class="token function">parseFloat</span><span class="token punctuation">(</span><span class="token string">'123.1'</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//123.1</span>
+
+<span class="token comment" spellcheck="true">//只要使用+，则可以实现数字的转化</span>
+<span class="token operator">+</span><span class="token string">'123'</span> <span class="token comment" spellcheck="true">//123</span>
+<span class="token operator">+</span><span class="token string">'12.22'</span> <span class="token comment" spellcheck="true">//12</span>
+<span class="token operator">-</span><span class="token string">'12.1'</span> <span class="token comment" spellcheck="true">//-12.1</span>
+
+<span class="token comment" spellcheck="true">//如果要取整并且转数字的话，使用~~</span>
+<span class="token operator">~</span><span class="token operator">~</span><span class="token string">'123.33'</span> <span class="token comment" spellcheck="true">//123</span>
+</code></pre>
+<p>实际上，+也适用于 Date 对象。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> date <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span> <span class="token comment" spellcheck="true">//Fri Oct 27 2017 14:38:49 GMT+0800 (中国标准时间)</span>
+date<span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//1509086332914</span>
+
+<span class="token comment" spellcheck="true">//使用+直接输出时间缀</span>
+<span class="token operator">+</span><span class="token keyword">new</span> <span class="token class-name">Date</span> <span class="token comment" spellcheck="true">//1509086332914</span>
+</code></pre>
+<h3 id="11-利用-逻辑非强转布尔值"><a href="#11-利用-逻辑非强转布尔值" class="headerlink" title="11.利用!逻辑非强转布尔值"></a>11.利用!逻辑非强转布尔值</h3><p>逻辑非会将所有值，转为布尔值：</p>
+<pre class=" language-js"><code class="language-js"><span class="token operator">!</span><span class="token punctuation">{</span><span class="token punctuation">}</span> <span class="token comment" spellcheck="true">//false 一个空对象，实际上是一个引用，属于存在的引用地址值</span>
+<span class="token operator">!</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token comment" spellcheck="true">//false 存在引用地址值</span>
+<span class="token operator">!</span><span class="token string">''</span> <span class="token comment" spellcheck="true">//true</span>
+<span class="token operator">!</span><span class="token number">0</span> <span class="token comment" spellcheck="true">//true</span>
+<span class="token operator">!</span><span class="token string">'hello'</span> <span class="token comment" spellcheck="true">//false</span>
+<span class="token operator">!</span><span class="token keyword">null</span> <span class="token comment" spellcheck="true">//true</span>
+<span class="token operator">!</span><span class="token number">NaN</span> <span class="token comment" spellcheck="true">//true</span>
+<span class="token operator">!</span>undefined <span class="token comment" spellcheck="true">//true</span>
+</code></pre>
+<p>利用逻辑非运算符，可以省去一些多余的判断。比如经常要判断一个值非空：</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> a<span class="token punctuation">,</span> b<span class="token punctuation">;</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span>a <span class="token operator">!==</span> undefined <span class="token operator">&amp;&amp;</span> a <span class="token operator">!==</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> a <span class="token operator">!==</span> <span class="token string">''</span> <span class="token operator">&amp;&amp;</span> a <span class="token operator">!==</span> <span class="token punctuation">{</span><span class="token punctuation">}</span> <span class="token operator">&amp;&amp;</span> a<span class="token operator">!==</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> a<span class="token operator">!==</span> undefined<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    b <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>实际上，如果像这面这种判断，只需要一个逻辑非。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> a<span class="token punctuation">,</span> b<span class="token punctuation">;</span>
+<span class="token operator">!</span>a <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>b <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<h3 id="12-利用-实现变量检测"><a href="#12-利用-实现变量检测" class="headerlink" title="12.利用!!实现变量检测"></a>12.利用!!实现变量检测</h3><p>如果要将一个值强转为布尔类型，正常的逻辑是：Boolean()强转为布尔值。</p>
+<pre class=" language-js"><code class="language-js"><span class="token function">Boolean</span><span class="token punctuation">(</span><span class="token number">123</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//true</span>
+<span class="token function">Boolean</span><span class="token punctuation">(</span><span class="token string">'hello'</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//true</span>
+<span class="token function">Boolean</span><span class="token punctuation">(</span><span class="token string">'false'</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//true</span>
+<span class="token function">Boolean</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//false</span>
+<span class="token function">Boolean</span><span class="token punctuation">(</span>undefined<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//false</span>
+<span class="token function">Boolean</span><span class="token punctuation">(</span><span class="token string">'undefined'</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//true</span>
+</code></pre>
+<p>然而，通过!!两个非逻辑符，则可以将一个值强转为布尔值。</p>
+<pre class=" language-js"><code class="language-js"><span class="token operator">!</span><span class="token operator">!</span><span class="token number">123</span> <span class="token comment" spellcheck="true">//true</span>
+<span class="token operator">!</span><span class="token operator">!</span><span class="token string">'hello'</span> <span class="token comment" spellcheck="true">//true</span>
+<span class="token operator">!</span><span class="token operator">!</span><span class="token string">'false'</span> <span class="token comment" spellcheck="true">//true</span>
+<span class="token operator">!</span><span class="token operator">!</span><span class="token keyword">null</span> <span class="token comment" spellcheck="true">//false</span>
+<span class="token operator">!</span><span class="token operator">!</span>undefined <span class="token comment" spellcheck="true">//false</span>
+<span class="token operator">!</span><span class="token operator">!</span><span class="token number">0</span> <span class="token comment" spellcheck="true">//false 注意，0也会转为false，在数字中，只有0会转为false，其它非0值，都会转为true</span>
+<span class="token operator">!</span><span class="token operator">!</span><span class="token string">''</span> <span class="token comment" spellcheck="true">//false</span>
+<span class="token operator">!</span><span class="token operator">!</span><span class="token number">NaN</span> <span class="token comment" spellcheck="true">//false</span>
+</code></pre>
+<blockquote>
+<p>Tips: 任意的 javascript 的值都可以转换成布尔值。这些值会被转换成 false：undefined,null,0,-0,NaN,””，而其它都变强转为 true。通常，利用!!符号来检测一个变量是否存在。 ###表达式的妙用</p>
+</blockquote>
+<h3 id="1-自执行函数"><a href="#1-自执行函数" class="headerlink" title="1.自执行函数"></a>1.自执行函数</h3><p>函数，只是声明，并不能直接执行，需要调用才会执行。而如果，变成了表达式，则会自动执行。自执行函数，则是利用了表达式的这种特性。那些匿名函数附近使用括号或一些一元运算符来引导解析器，指明运算符附近是一个表达式。<br>按照这个理解，可以举出五类，超过十几种的让匿名函数表达式立即调用的写法：</p>
+<pre class=" language-js"><code class="language-js"><span class="token punctuation">(</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">(</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span> <span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">[</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token operator">~</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token operator">!</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token operator">+</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token operator">-</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">delete</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">typeof</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">void</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">new</span> <span class="token class-name">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">new</span> <span class="token class-name">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">var</span> f <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token number">1</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token number">1</span> <span class="token operator">^</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token number">1</span> <span class="token operator">></span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<blockquote>
+<p>Tips：另外值得再次注意的是，括号的含混使用——它可以用来执行一个函数，还可以做为分组运算符来对表达式求值。比如使用圆括号或方括号的话，可以在行首加一个分号，避免被用做函数执行或下标运算：</p>
+</blockquote>
+<pre class=" language-js"><code class="language-js"><span class="token punctuation">;</span><span class="token punctuation">(</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">)</span>
+<span class="token punctuation">;</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="2-isNaN-判断是否为合法数字"><a href="#2-isNaN-判断是否为合法数字" class="headerlink" title="2.isNaN 判断是否为合法数字"></a>2.isNaN 判断是否为合法数字</h3><p>isNaN(x) 函数用于检查其参数是否是非数字值。如果 x 是特殊的非数字值 NaN（或者能被转换为这样的值），返回的值就是 true。如果 x 是其他值,则返回 false。<br>经常，我们在页面功能模块开发过程中，拿到的交互数据，有很大可能是字符串形式的“数字”。这时，我们如果要做计算，就得先判断是否合法的数字。</p>
+<pre class=" language-js"><code class="language-js"><span class="token function">isNaN</span><span class="token punctuation">(</span><span class="token string">'111'</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//false</span>
+<span class="token function">isNaN</span><span class="token punctuation">(</span><span class="token number">111</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//false</span>
+<span class="token function">isNaN</span><span class="token punctuation">(</span><span class="token number">12.2</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//false</span>
+<span class="token function">isNaN</span><span class="token punctuation">(</span><span class="token string">'12.2'</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//false</span>
+<span class="token function">isNaN</span><span class="token punctuation">(</span><span class="token string">'aa11'</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//true</span>
+<span class="token function">isNaN</span><span class="token punctuation">(</span>undefined<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//true 一切非数字，返回都是true</span>
+</code></pre>
+<blockquote>
+<p>Tips: 我们可以这样总结，只要是表现得像数字（字符串形式，或者真正数字）的都可以检测出是属于“数字”,否则属于不合法数字。</p>
+</blockquote>
+<h3 id="3-缓存-Array-length"><a href="#3-缓存-Array-length" class="headerlink" title="3.缓存 Array.length"></a>3.缓存 Array.length</h3><p>写 for 循环的时候，经常是这样：</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> arr <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">]</span>
+<span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> arr<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token comment" spellcheck="true">/**/</span><span class="token punctuation">}</span>
+</code></pre>
+<p>在处理一个很大的数组循环时，对性能的影响将是非常大的。为了提升运行性能，需要将数组使用一个变量缓存起来使用。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> len <span class="token operator">=</span> arr<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i <span class="token operator">&lt;</span> len<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span><span class="token comment" spellcheck="true">/**/</span><span class="token punctuation">}</span>
+</code></pre>
+<h3 id="4-判断属于是否存在于对象中"><a href="#4-判断属于是否存在于对象中" class="headerlink" title="4.判断属于是否存在于对象中"></a>4.判断属于是否存在于对象中</h3><p><strong>a、使用 in 运算符</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> obj <span class="token operator">=</span> <span class="token punctuation">{</span> a<span class="token punctuation">:</span> <span class="token number">11</span> <span class="token punctuation">}</span>
+<span class="token string">'a'</span> <span class="token keyword">in</span> obj <span class="token comment" spellcheck="true">//true</span>
+<span class="token string">'b'</span> <span class="token keyword">in</span> obj <span class="token comment" spellcheck="true">//false</span>
+</code></pre>
+<p><strong>b、使用!!</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> obj <span class="token operator">=</span> <span class="token punctuation">{</span> a<span class="token punctuation">:</span> <span class="token number">11</span> <span class="token punctuation">}</span>
+<span class="token operator">!</span><span class="token operator">!</span>obj<span class="token punctuation">.</span>a <span class="token comment" spellcheck="true">//true</span>
+<span class="token operator">!</span><span class="token operator">!</span>obj<span class="token punctuation">.</span>b <span class="token comment" spellcheck="true">//false</span>
+
+<span class="token comment" spellcheck="true">//或者使用undefined来判断，但是可能也会属于值本身就是undefined，这样子就判断不出来了。</span>
+obj<span class="token punctuation">.</span>a <span class="token operator">!==</span> undefined <span class="token comment" spellcheck="true">//true</span>
+obj<span class="token punctuation">.</span>b <span class="token operator">!==</span> undefined <span class="token comment" spellcheck="true">//false</span>
+</code></pre>
+<p><strong>c、hasOwnProperty()方法</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> obj <span class="token operator">=</span> <span class="token punctuation">{</span> a<span class="token punctuation">:</span> <span class="token number">11</span> <span class="token punctuation">}</span>
+obj<span class="token punctuation">.</span><span class="token function">hasOwnProperty</span><span class="token punctuation">(</span><span class="token string">'a'</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//true</span>
+obj<span class="token punctuation">.</span><span class="token function">hasOwnProperty</span><span class="token punctuation">(</span><span class="token string">'b'</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//false</span>
+<span class="token comment" spellcheck="true">//该方法只能判断自有属性是否存在，对于继承属性会返回false。</span>
+</code></pre>
+<h3 id="5-获取数组最后一个元素"><a href="#5-获取数组最后一个元素" class="headerlink" title="5.获取数组最后一个元素"></a>5.获取数组最后一个元素</h3><p>获取数组最后一个元素的方式有多种，常用的有 array.pop 或者 array[array.length - 1]方式。实际上，还可使用 Array.slice(-1)</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> arr <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">]</span>
+arr<span class="token punctuation">.</span><span class="token function">pop</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//5 此方法会改变数组的结构，不推荐</span>
+arr<span class="token punctuation">[</span>arr<span class="token punctuation">.</span>length <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token comment" spellcheck="true">//5</span>
+arr<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token comment" spellcheck="true">//5 不需要计算数组的长度，直接拿到最后一个元素</span>
+</code></pre>
+<h3 id="6-数组截断"><a href="#6-数组截断" class="headerlink" title="6.数组截断"></a>6.数组截断</h3><p>数组有时候需要设置一个上限，或者删除数组中的一些元素，使用 array.length = [长度值] 这种方式非常有用。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> arr <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">]</span>
+arr<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">)</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>arr<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//[1,2,3]</span>
+arr <span class="token operator">=</span> arr<span class="token punctuation">.</span><span class="token function">splice</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//splice方法会改变数组结构</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>arr<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//[1,2,3]</span>
+
+<span class="token comment" spellcheck="true">//直接设置长度值</span>
+arr<span class="token punctuation">.</span>length <span class="token operator">=</span> <span class="token number">3</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>arr<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//[1,2,3]</span>
+
+<span class="token comment" spellcheck="true">//还可以实现数组的清空操作</span>
+arr<span class="token punctuation">.</span>length <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//arr => []</span>
+</code></pre>
+<h3 id="7-数组合并"><a href="#7-数组合并" class="headerlink" title="7.数组合并"></a>7.数组合并</h3><p>合并数组常用的方法是：concat。不过现有一种更快速的合并方式：Array.push.apply(arr1,arr2)</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> arr1 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">,</span> arr2 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+arr1 <span class="token operator">=</span> arr1<span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span>arr2<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//常规方式</span>
+<span class="token comment" spellcheck="true">//或者</span>
+arr1 <span class="token operator">=</span> arr1<span class="token punctuation">.</span>push<span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span>arr1<span class="token punctuation">,</span>arr2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//装逼方式，但运行速度更快！</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>arr1<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//[1,2,3,4,5] 两种方式都可以达到合并的结果</span>
+</code></pre>
+<h3 id="8-类数组利用数组的方法"><a href="#8-类数组利用数组的方法" class="headerlink" title="8.类数组利用数组的方法"></a>8.类数组利用数组的方法</h3><p>类数组拥有 length 属性，但不具有数组所具有的方法。为了方便操作，常需要将其转化为数组结构。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> arrLike <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token string">'0'</span><span class="token punctuation">:</span> <span class="token string">'a'</span><span class="token punctuation">,</span> <span class="token string">'1'</span><span class="token punctuation">:</span> <span class="token string">'b'</span><span class="token punctuation">,</span> length<span class="token punctuation">:</span> <span class="token number">2</span> <span class="token punctuation">}</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//下标为 '0' '1'才符合数组的数据结构</span>
+Array<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>join<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>arrLike<span class="token punctuation">,</span> <span class="token string">'-'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//a-b 模拟数组的join()方法,使用-分隔。</span>
+Array<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>slice<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>arrLike<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//['a','b'] //模拟数组slice方法，返回一个新的数组</span>
+
+<span class="token keyword">function</span> <span class="token function">fn</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> args <span class="token operator">=</span> Array<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>slice<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>arguments<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//获取所有参数的列表</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="9-利用-arguments-callee-实现递归"><a href="#9-利用-arguments-callee-实现递归" class="headerlink" title="9.利用 arguments.callee 实现递归"></a>9.利用 arguments.callee 实现递归</h3><p>普通的递归方法是这样写的：</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">fn</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>n <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token number">1</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> n <span class="token operator">*</span> <span class="token function">fn</span><span class="token punctuation">(</span>n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>但是当这个函数变成了一个匿名函数时，我们就可以利用 callee 来递归这个函数。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">fn</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>n <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token number">1</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> n <span class="token operator">*</span> arguments<span class="token punctuation">.</span><span class="token function">callee</span><span class="token punctuation">(</span>n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<blockquote>
+<p>Tips: 这个方法虽然好用，但是有一点值得注意，ECMAScript4 中为了限制 js 的灵活度，让 js 变得严格，新增了严格模式，在严格模式中我们被禁止不使用 var 来直接声明一个全局变量，当然这不是重点，重点是 arguments.callee 这个属性也被禁止了。</p>
+</blockquote>
+<h3 id="10-给回调函数传递参数"><a href="#10-给回调函数传递参数" class="headerlink" title="10.给回调函数传递参数"></a>10.给回调函数传递参数</h3><p>经常，函数一般是可以当作参数来使用。但是有时候，一些函数自身需要带参，这时候，把函数当参数使用的话，就显得比较麻烦。一般的处理方法是，通过附加的传参的办法。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">callback</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">fn</span><span class="token punctuation">(</span>callback<span class="token punctuation">,</span> obj<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">callback</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>但是有些时候，函数的参数限定了，只能传一个回调函数，这时，这种附加传参的显得无力了。采用闭包的方式可以解决此问题。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">callback</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span><span class="token function">callback</span><span class="token punctuation">(</span><span class="token string">'hello'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//执行callback('hello')，则返回的是一个函数</span>
+</code></pre>
+<h3 id="11-利用正则表达式处理实际问题"><a href="#11-利用正则表达式处理实际问题" class="headerlink" title="11.利用正则表达式处理实际问题"></a>11.利用正则表达式处理实际问题</h3><p><strong>a、获取有价值部分</strong></p>
+<p>经常，在项目中，可能会获取到一些带有带有各种干扰因素的值。而我们需要提取相应的数字部分，可以使用正则表达式获取。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> val <span class="token operator">=</span> <span class="token string">"98.8元/斤"</span><span class="token punctuation">;</span>
+val<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex">/[^(0-9).]/ig</span><span class="token punctuation">,</span><span class="token string">''</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//98.8</span>
+</code></pre>
+<p><strong>2、获取 URL 中的 value 值</strong></p>
+<p>经常，我们会从 url 中获取到 location.search，但却是一个字符串，然后还需要将这个字符串进行分拆才能得到想要的值，而使用正则，则快速方便得多。</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">//假设当前url为：https://www.baidu.com?name=jawil&amp;age=23</span>
+
+<span class="token comment" spellcheck="true">//普通实现：</span>
+<span class="token keyword">function</span> <span class="token function">fn</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> obj <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token keyword">var</span> searchStr <span class="token operator">=</span> window<span class="token punctuation">.</span>location<span class="token punctuation">.</span>search<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    searchStr<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">'&amp;'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> arr <span class="token operator">=</span> item<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">'='</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        obj<span class="token punctuation">[</span>arr<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> arr<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> obj<span class="token punctuation">[</span>key<span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">fn</span><span class="token punctuation">(</span><span class="token string">'name'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//jawil</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">fn</span><span class="token punctuation">(</span><span class="token string">'age'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//23</span>
+
+<span class="token comment" spellcheck="true">//使用正则实现：</span>
+<span class="token keyword">function</span> <span class="token function">fn</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> reg <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">RegExp</span><span class="token punctuation">(</span><span class="token string">"(^|&amp;)"</span><span class="token operator">+</span> key <span class="token operator">+</span><span class="token string">"=([^&amp;]*)(&amp;|$)"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//url正则表达式</span>
+    <span class="token keyword">var</span> flag <span class="token operator">=</span> window<span class="token punctuation">.</span>location<span class="token punctuation">.</span>search<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">match</span><span class="token punctuation">(</span>reg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> flag <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">?</span> <span class="token function">unescape</span><span class="token punctuation">(</span>flag<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">fn</span><span class="token punctuation">(</span><span class="token string">'name'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//jawil</span>
+</code></pre>
+<p><strong>3、格式化数字</strong></p>
+<p>通常，我们需要将一个大的数字 19456212 转化为 19,456,212 这种样子。使用正则表达式可以很好的处理：</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> num <span class="token operator">=</span> <span class="token number">19456212.85</span><span class="token punctuation">;</span>
+num<span class="token punctuation">.</span><span class="token function">toLocaleString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//19,456,212.85 toLocaleString()会根据你机器的本地环境来返回字符串，它和toString()返回的值在不同的本地环境下使用的符号会有微妙的变化</span>
+
+<span class="token comment" spellcheck="true">//为了保险起见，可以使用方法实现</span>
+<span class="token keyword">function</span> <span class="token function">fn</span><span class="token punctuation">(</span>s<span class="token punctuation">,</span> n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    n <span class="token operator">=</span> n <span class="token operator">></span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> n <span class="token operator">&lt;=</span> <span class="token number">20</span> <span class="token operator">?</span> n <span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">;</span>
+    s <span class="token operator">=</span> <span class="token function">parseFloat</span><span class="token punctuation">(</span><span class="token punctuation">(</span>s <span class="token operator">+</span> <span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex">/[^\d\.-]/g</span><span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toFixed</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">''</span><span class="token punctuation">;</span>
+    <span class="token keyword">var</span> l <span class="token operator">=</span> s<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">'.'</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">reverse</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        r <span class="token operator">=</span> s<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">'.'</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    t <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> l<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        t <span class="token operator">+</span><span class="token operator">=</span> l<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">%</span> <span class="token number">3</span> <span class="token operator">==</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">!=</span> l<span class="token punctuation">.</span>length <span class="token operator">?</span> <span class="token string">','</span> <span class="token punctuation">:</span> <span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> t<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">reverse</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">'.'</span> <span class="token operator">+</span> r<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">fn</span><span class="token punctuation">(</span><span class="token number">19456212.85</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//19,456,212.85</span>
+</code></pre>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-11-27T13:49:27.000Z" itemprop="dateUpdated">2017-11-27 21:49:27</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/336c09e/&title=《JS你所不知道的奇淫技巧》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/336c09e/&title=《JS你所不知道的奇淫技巧》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/336c09e/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JS你所不知道的奇淫技巧》 — Sixin的小站&url=http://coder.liusixin.cn/posts/336c09e/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/336c09e/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/ac9a6cb1/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">JavaScript设计模式--行为型设计模式</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/a76d942d/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">前后端漏洞分析与安全防御总结</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/336c09e/&title=《JS你所不知道的奇淫技巧》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/336c09e/&title=《JS你所不知道的奇淫技巧》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/336c09e/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JS你所不知道的奇淫技巧》 — Sixin的小站&url=http://coder.liusixin.cn/posts/336c09e/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/336c09e/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABxElEQVR42u3aQW4DIRAEQP//05trLot7GCAoKk6WjZeyDy2Y4fOJx/NrvH36Nj//1rKBi4vb5j7DkSw//lY+c2zAxcU9zx0Hzdyc5Efmz8fFxb2fmyw2no+Li/ufuElgJcceXFzc+7nJ4We82DjOqoerBWc1XFzcBjevUu57vaW+i4uLO8V9iiMPsupGJ1odFxf3CLda1EhA+ZFmbl1cXNzd3OQA04mwzhbqy/+Ki4u7mXsekRCjHRkuLu4GbnlqsQCazCy3YHFxcY9wk9ZmtQUyt4kZr4uLi3sDN4+2te3ScrsFFxd3KXcuOKpbkLkWy5eCKS4u7hFutVGavJ8XXKK/AxcX9yC3Gkmd+Ms3Uq9BhouLu5nbuSTxxGPVVVFcXNzz3HGxY+4qRvXHF+6R4eLiHuF2GqJz1ynyDRMuLu5fcXNWHm1JVJVn4uLibubOxU01jPLnLOj94uLitrnV8sTkxanGrZDJ5+Pi4ra5eeiMo6paLplr4uLi4p7kVoOmSswjr9VkxcXFvYC7qjBaaNDi4uJeyc0bLfkWqlBCxcXFPcjNi5tJayRhjZ8ZNVlxcXG3cTvFzSTI8ijsHJlwcXEXcX8As9WQn+Gn1hwAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

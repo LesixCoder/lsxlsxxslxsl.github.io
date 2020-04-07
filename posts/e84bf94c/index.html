@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/e84bf94c/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/e84bf94c/">
+    
+    
+    <title>Javascript学习总结——字符串篇 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="javascript,编程笔记">
+    <meta name="description" content="1. toString() 和 valueOf()返回的都是自己 var str = &apos;abcdefg&apos;; console.log(str.toString()); // -&amp;gt; &apos;abcdefg&apos; console.log(str.valueOf()); // -&amp;gt; &apos;abcdefg&apos;  2. charAt(index)返回在指定位置的字符。 var str = &apos;abcdefg&apos;; var idx">
+<meta name="keywords" content="javascript,编程笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Javascript学习总结——字符串篇">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/e84bf94c/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="1. toString() 和 valueOf()返回的都是自己 var str = &apos;abcdefg&apos;; console.log(str.toString()); // -&amp;gt; &apos;abcdefg&apos; console.log(str.valueOf()); // -&amp;gt; &apos;abcdefg&apos;  2. charAt(index)返回在指定位置的字符。 var str = &apos;abcdefg&apos;; var idx">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-05-06T04:55:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Javascript学习总结——字符串篇">
+<meta name="twitter:description" content="1. toString() 和 valueOf()返回的都是自己 var str = &apos;abcdefg&apos;; console.log(str.toString()); // -&amp;gt; &apos;abcdefg&apos; console.log(str.valueOf()); // -&amp;gt; &apos;abcdefg&apos;  2. charAt(index)返回在指定位置的字符。 var str = &apos;abcdefg&apos;; var idx">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Javascript学习总结——字符串篇</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Javascript学习总结——字符串篇</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-05-06T04:55:36.000Z" itemprop="datePublished" class="page-time">
+  2017-05-06
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-toString-和-valueOf"><span class="post-toc-number">1.</span> <span class="post-toc-text">1. toString() 和 valueOf()</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-charAt-index"><span class="post-toc-number">2.</span> <span class="post-toc-text">2. charAt(index)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-charCodeAt-index"><span class="post-toc-number">3.</span> <span class="post-toc-text">3. charCodeAt(index)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-fromCharCode-n1-n2-nX"><span class="post-toc-number">4.</span> <span class="post-toc-text">4. fromCharCode(n1, n2, ..., nX)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-indexOf-searchvalue-start"><span class="post-toc-number">5.</span> <span class="post-toc-text">5. indexOf(searchvalue,start)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6-lastIndexOf-searchvalue-start"><span class="post-toc-number">6.</span> <span class="post-toc-text">6. lastIndexOf(searchvalue,start)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7-concat-string1-string2-stringX"><span class="post-toc-number">7.</span> <span class="post-toc-text">7. concat(string1, string2, ..., stringX)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#8-match-regexp"><span class="post-toc-number">8.</span> <span class="post-toc-text">8. match(regexp)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#9-replace-searchvalue-newvalue"><span class="post-toc-number">9.</span> <span class="post-toc-text">9. replace(searchvalue,newvalue)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#10-search-searchvalue"><span class="post-toc-number">10.</span> <span class="post-toc-text">10. search(searchvalue)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#11-slice-start-end"><span class="post-toc-number">11.</span> <span class="post-toc-text">11. slice(start,end)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#12-split-separator-limit"><span class="post-toc-number">12.</span> <span class="post-toc-text">12. split(separator,limit)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#13-substr-start-length"><span class="post-toc-number">13.</span> <span class="post-toc-text">13. substr(start,length)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#14-substring-from-to"><span class="post-toc-number">14.</span> <span class="post-toc-text">14. substring(from, to)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#15-toLowerCase"><span class="post-toc-number">15.</span> <span class="post-toc-text">15. toLowerCase()</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#16-toUpperCase"><span class="post-toc-number">16.</span> <span class="post-toc-text">16. toUpperCase()</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#17-trim-去除字符串两边的空白"><span class="post-toc-number">17.</span> <span class="post-toc-text">17. trim(): 去除字符串两边的空白</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#18-includes-searchvalue-start"><span class="post-toc-number">18.</span> <span class="post-toc-text">18. includes(searchvalue, start)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#19-startsWith-searchvalue-start"><span class="post-toc-number">19.</span> <span class="post-toc-text">19. startsWith(searchvalue, start)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#20-endsWith-searchvalue-start"><span class="post-toc-number">20.</span> <span class="post-toc-text">20. endsWith(searchvalue, start)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#21-repeat-num"><span class="post-toc-number">21.</span> <span class="post-toc-text">21. repeat(num)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#22"><span class="post-toc-number">22.</span> <span class="post-toc-text">22. ${}</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#String-HTML-包装方法"><span class="post-toc-number">22.1.</span> <span class="post-toc-text">String HTML 包装方法</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-anchor-name"><span class="post-toc-number">23.</span> <span class="post-toc-text">1. anchor(name)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-big"><span class="post-toc-number">24.</span> <span class="post-toc-text">2. big()</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-blink"><span class="post-toc-number">25.</span> <span class="post-toc-text">3. blink()</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-bold"><span class="post-toc-number">26.</span> <span class="post-toc-text">4. bold()</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-fixed"><span class="post-toc-number">27.</span> <span class="post-toc-text">5. fixed()</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6-fontcolor-color"><span class="post-toc-number">28.</span> <span class="post-toc-text">6. fontcolor(color)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7-fontsize-size"><span class="post-toc-number">29.</span> <span class="post-toc-text">7. fontsize(size)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#8-italics"><span class="post-toc-number">30.</span> <span class="post-toc-text">8. italics()</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#9-link-url"><span class="post-toc-number">31.</span> <span class="post-toc-text">9. link(url)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#10-small-url"><span class="post-toc-number">32.</span> <span class="post-toc-text">10. small(url)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#11-strike-url"><span class="post-toc-number">33.</span> <span class="post-toc-text">11. strike(url)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#12-sub-url"><span class="post-toc-number">34.</span> <span class="post-toc-text">12. sub(url)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#13-sup-url"><span class="post-toc-number">35.</span> <span class="post-toc-text">13. sup(url)</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/javascript/Javascript学习总结——字符串篇" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Javascript学习总结——字符串篇</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-05-06 12:55:36" datetime="2017-05-06T04:55:36.000Z" itemprop="datePublished">2017-05-06</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h3 id="1-toString-和-valueOf"><a href="#1-toString-和-valueOf" class="headerlink" title="1. toString() 和 valueOf()"></a>1. <code>toString()</code> 和 <code>valueOf()</code></h3><p>返回的都是自己</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdefg'</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>str<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> 'abcdefg'</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>str<span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> 'abcdefg'</span>
+</code></pre>
+<h3 id="2-charAt-index"><a href="#2-charAt-index" class="headerlink" title="2. charAt(index)"></a>2. <code>charAt(index)</code></h3><p>返回在指定位置的字符。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdefg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> idx <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">charAt</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>charAtEle<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> d</span>
+</code></pre>
+<h3 id="3-charCodeAt-index"><a href="#3-charCodeAt-index" class="headerlink" title="3. charCodeAt(index)"></a>3. <code>charCodeAt(index)</code></h3><p>返回指定位置的字符的 Unicode 编码。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdefg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> idx <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">charCodeAt</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>idx<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> 100  (d 的 Unicode编码是 100)</span>
+</code></pre>
+<h3 id="4-fromCharCode-n1-n2-nX"><a href="#4-fromCharCode-n1-n2-nX" class="headerlink" title="4. fromCharCode(n1, n2, ..., nX)"></a>4. <code>fromCharCode(n1, n2, ..., nX)</code></h3><p>将 Unicode 编码转为一个字符 接受一个或多个 Unicode 值，即要创建的字符串中的字符的 Unicode 编码。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> charCode1 <span class="token operator">=</span> String<span class="token punctuation">.</span><span class="token function">fromCharCode</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> charCode2 <span class="token operator">=</span> String<span class="token punctuation">.</span><span class="token function">fromCharCode</span><span class="token punctuation">(</span><span class="token number">72</span><span class="token punctuation">,</span> <span class="token number">69</span><span class="token punctuation">,</span> <span class="token number">76</span><span class="token punctuation">,</span> <span class="token number">76</span><span class="token punctuation">,</span> <span class="token number">79</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>charCode1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> d</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>charCode2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> HELLO</span>
+</code></pre>
+<h3 id="5-indexOf-searchvalue-start"><a href="#5-indexOf-searchvalue-start" class="headerlink" title="5. indexOf(searchvalue,start)"></a>5. <code>indexOf(searchvalue,start)</code></h3><p>返回某个指定的字符串值在字符串中首次出现的位置。如果没有找到匹配的字符串则返回 -1。</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">/*
+  *   searchvalue: 必需。规定需检索的字符串值
+  *   start:  可选的整数参数。规定在字符串中开始检索的位置。它的合法取值是 0 到 string Object.length - 1。如省略该参数，则将从字符串的首字符开始检索
+  */</span>
+<span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdbfg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> idx1 <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span><span class="token string">'b'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> idx2 <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span><span class="token string">'b'</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>idx1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> 1</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>idx2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> 4</span>
+</code></pre>
+<h3 id="6-lastIndexOf-searchvalue-start"><a href="#6-lastIndexOf-searchvalue-start" class="headerlink" title="6. lastIndexOf(searchvalue,start)"></a>6. <code>lastIndexOf(searchvalue,start)</code></h3><p>返回一个指定的字符串值最后出现的位置，如果指定第二个参数 start，则在一个字符串中的指定位置从后向前搜索。</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">/*
+  *   searchvalue: 必需。规定需检索的字符串值
+  *   start: 可选的整数参数。规定在字符串中开始检索的位置。它的合法取值是 0 到 stringObject.length - 1。如省略该参数，则将从字符串的最后一个字符处开始检索。
+  */</span>
+<span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdbfg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> idx1 <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">lastIndexOf</span><span class="token punctuation">(</span><span class="token string">'b'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> idx2 <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">lastIndexOf</span><span class="token punctuation">(</span><span class="token string">'b'</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>idx1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> 4</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>idx2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> 1</span>
+</code></pre>
+<h3 id="7-concat-string1-string2-stringX"><a href="#7-concat-string1-string2-stringX" class="headerlink" title="7. concat(string1, string2, ..., stringX)"></a>7. <code>concat(string1, string2, ..., stringX)</code></h3><p>concat() 方法用于连接两个或多个字符串。该方法没有改变原有字符串，但是会返回连接两个或多个字符串新字符串。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str1 <span class="token operator">=</span> <span class="token string">'abcd'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> str2 <span class="token operator">=</span> <span class="token string">'efg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> str3 <span class="token operator">=</span> str1<span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span>str2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>str3<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> 'abcdefg'</span>
+</code></pre>
+<h3 id="8-match-regexp"><a href="#8-match-regexp" class="headerlink" title="8. match(regexp)"></a>8. <code>match(regexp)</code></h3><p>在字符串内检索指定的值，或找到一个或多个正则表达式的匹配。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdbef'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> matchEle <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">match</span><span class="token punctuation">(</span><span class="token regex">/b/gi</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>matchEle<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> ["b", "b"]</span>
+</code></pre>
+<h3 id="9-replace-searchvalue-newvalue"><a href="#9-replace-searchvalue-newvalue" class="headerlink" title="9. replace(searchvalue,newvalue)"></a>9. <code>replace(searchvalue,newvalue)</code></h3><p>在字符串中用一些字符替换另一些字符，或替换一个与正则表达式匹配的子串</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">/*
+  *   searchvalue: 必须。规定子字符串或要替换的模式的 RegExp 对象。 请注意，如果该值是一个字符串，则将它作为要检索的直接量文本模式，而不是首先被转换为 RegExp 对象。
+  *   newvalue: 必需。一个字符串值。规定了替换文本或生成替换文本的函数。
+  */</span>
+<span class="token keyword">var</span> str1 <span class="token operator">=</span> <span class="token string">'abcdafg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> newStr1 <span class="token operator">=</span> str1<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex">/a/g</span><span class="token punctuation">,</span> <span class="token string">'z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>newStr1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> zbcdzfg</span>
+
+<span class="token keyword">var</span> str2 <span class="token operator">=</span> <span class="token string">'a1b2c3d4'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> newStr2 <span class="token operator">=</span> str2<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex">/\d/g</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> Math<span class="token punctuation">.</span><span class="token function">pow</span><span class="token punctuation">(</span>v<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>newStr2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> a1b4c9d16</span>
+</code></pre>
+<h3 id="10-search-searchvalue"><a href="#10-search-searchvalue" class="headerlink" title="10. search(searchvalue)"></a>10. <code>search(searchvalue)</code></h3><p>检索字符串中指定的子字符串，或检索与正则表达式相匹配的子字符串。如果没有找到任何匹配的子串，则返回 -1。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'Abcdaef'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> idx1 <span class="token operator">=</span> searchStr<span class="token punctuation">.</span><span class="token function">search</span><span class="token punctuation">(</span><span class="token regex">/a/</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> idx2 <span class="token operator">=</span> searchStr<span class="token punctuation">.</span><span class="token function">search</span><span class="token punctuation">(</span><span class="token regex">/a/i</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>idx1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> 4</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>idx2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> 0</span>
+</code></pre>
+<h3 id="11-slice-start-end"><a href="#11-slice-start-end" class="headerlink" title="11. slice(start,end)"></a>11. <code>slice(start,end)</code></h3><p>提取字符串的某个部分，并以新的字符串返回被提取的部分。</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">/*
+  *   start:必须. 要抽取的片断的起始下标。第一个字符位置为 0
+  *   end: 可选。 紧接着要抽取的片段的结尾的下标。若未指定此参数，则要提取的子串包括 start 到原字符串结尾的字符串。如果该参数是负数，那么它规定的是从字符串的尾部开始算起的位置。
+  */</span>
+<span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdefg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> newStr <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>newStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> bcdef</span>
+</code></pre>
+<h3 id="12-split-separator-limit"><a href="#12-split-separator-limit" class="headerlink" title="12. split(separator,limit)"></a>12. <code>split(separator,limit)</code></h3><p>把一个字符串分割成字符串数组。如果把空字符串 (“”) 用作 separator，那么 stringObject 中的每个字符之间都会被分割</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">/*
+  *   separator: 可选。字符串或正则表达式，从该参数指定的地方分割 string Object。
+  *   limit: 可选。该参数可指定返回的数组的最大长度。如果设置了该参数，返回的子串不会多于这个参数指定的数组。如果没有设置该参数，整个字符串都会被分割，不考虑它的长度。
+  */</span>
+<span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdecg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> splitStr1 <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">'c'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> splitStr2 <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>splitStr1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> ["ab", "de", "g"]</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>splitStr2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> ["a", "b", "c", "a", "e", "f", "g"]</span>
+</code></pre>
+<h3 id="13-substr-start-length"><a href="#13-substr-start-length" class="headerlink" title="13. substr(start,length)"></a>13. <code>substr(start,length)</code></h3><p>在字符串中抽取从 开始 下标开始的指定数目的字符。</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">/*
+  *   start: 必需。要抽取的子串的起始下标。必须是数值。如果是负数，那么该参数声明从字符串的尾部开始算起的位置。也就是说，-1 指字符串中最后一个字符，-2 指倒数第二个字符，以此类推。
+  *   length: 可选。子串中的字符数。必须是数值。如果省略了该参数，那么返回从 stringObject 的开始位置到结尾的字串。
+  */</span>
+<span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdefg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> newStr <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">substr</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>newStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> cd</span>
+</code></pre>
+<h3 id="14-substring-from-to"><a href="#14-substring-from-to" class="headerlink" title="14. substring(from, to)"></a>14. <code>substring(from, to)</code></h3><p>用于提取字符串中介于两个指定下标之间的字符。返回的子串包括 开始 处的字符，但不包括 结束 处的字符。</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">/*
+  *   from:必需。一个非负的整数，规定要提取的子串的第一个字符在 string Object 中的位置。
+  *   to: 可选。一个非负的整数，比要提取的子串的最后一个字符在 string Object 中的位置多 1。如果省略该参数，那么返回的子串会一直到字符串的结尾。
+  */</span>
+<span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdefg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> newStr <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>newStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> cd</span>
+</code></pre>
+<h3 id="15-toLowerCase"><a href="#15-toLowerCase" class="headerlink" title="15. toLowerCase()"></a>15. <code>toLowerCase()</code></h3><p>把字符串转换为小写。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'ABCDEFG'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> newStr <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">toLowerCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>newStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> abcdefg</span>
+</code></pre>
+<h3 id="16-toUpperCase"><a href="#16-toUpperCase" class="headerlink" title="16. toUpperCase()"></a>16. <code>toUpperCase()</code></h3><p>把字符串转换为大写</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdefg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> newStr <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">toUpperCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>newStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> ABCDEFG</span>
+</code></pre>
+<h3 id="17-trim-去除字符串两边的空白"><a href="#17-trim-去除字符串两边的空白" class="headerlink" title="17. trim(): 去除字符串两边的空白"></a>17. trim(): 去除字符串两边的空白</h3><pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">' abcdefg   '</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> newStr <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">trim</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>newStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// ->abcdefg</span>
+</code></pre>
+<h3 id="18-includes-searchvalue-start"><a href="#18-includes-searchvalue-start" class="headerlink" title="18. includes(searchvalue, start)"></a>18. <code>includes(searchvalue, start)</code></h3><p>用来判断一个字符串是否包含一个指定的值，如果是返回 true，否则 false</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdefg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> includesStr1 <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span><span class="token string">'a'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> includesStr2 <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">includes</span><span class="token punctuation">(</span><span class="token string">'z'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>includesStr1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> true</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>includesStr2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> false</span>
+</code></pre>
+<h3 id="19-startsWith-searchvalue-start"><a href="#19-startsWith-searchvalue-start" class="headerlink" title="19. startsWith(searchvalue, start)"></a>19. <code>startsWith(searchvalue, start)</code></h3><p>表示是否字符(串)位于 string 的头部位置, 如果是返回 true，否则 false</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdefg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> startsStr1 <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">startsWith</span><span class="token punctuation">(</span><span class="token string">'a'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> startsStr2 <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">startsWith</span><span class="token punctuation">(</span><span class="token string">'b'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>startsStr1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> true</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>startsStr2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> false</span>
+</code></pre>
+<h3 id="20-endsWith-searchvalue-start"><a href="#20-endsWith-searchvalue-start" class="headerlink" title="20. endsWith(searchvalue, start)"></a>20. <code>endsWith(searchvalue, start)</code></h3><p>表示是否字符(串)位于 string 的尾部位置, 如果是返回 true，否则 false</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdefg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> endsStr1 <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">endsWith</span><span class="token punctuation">(</span><span class="token string">'f'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> endsStr2 <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">endsWith</span><span class="token punctuation">(</span><span class="token string">'g'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>endsStr1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> false</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>endsStr2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> true</span>
+</code></pre>
+<h3 id="21-repeat-num"><a href="#21-repeat-num" class="headerlink" title="21. repeat(num)"></a>21. <code>repeat(num)</code></h3><p>参数 num 为重复字符串的次数</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abc'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> newStr <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">repeat</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//重复两次</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>newStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> abcabc</span>
+</code></pre>
+<h3 id="22"><a href="#22" class="headerlink" title="22. ${}"></a>22. <code>${}</code></h3><p>模板字符串</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'hello'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> tpl <span class="token operator">=</span> <span class="token template-string"><span class="token string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>str1<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> world`</span></span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>tpl<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> hello world</span>
+</code></pre>
+<hr>
+<h4 id="String-HTML-包装方法"><a href="#String-HTML-包装方法" class="headerlink" title="String HTML 包装方法"></a>String HTML 包装方法</h4><h3 id="1-anchor-name"><a href="#1-anchor-name" class="headerlink" title="1. anchor(name)"></a>1. <code>anchor(name)</code></h3><p>用于创建 HTML 锚。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'我是锚点'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> htmlStr <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">anchor</span><span class="token punctuation">(</span><span class="token string">'top'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>htmlStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> &lt;a name="top">我是锚点&lt;/a></span>
+</code></pre>
+<h3 id="2-big"><a href="#2-big" class="headerlink" title="2. big()"></a>2. <code>big()</code></h3><p>把字符串显示为大号字体</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdefg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> htmlStr <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">big</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>htmlStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> &lt;big>abcdefg&lt;/big></span>
+</code></pre>
+<h3 id="3-blink"><a href="#3-blink" class="headerlink" title="3. blink()"></a>3. <code>blink()</code></h3><p>显示闪动字符串</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdefg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> htmlStr <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">blink</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>htmlStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> &lt;blink>abcdefg&lt;/blink></span>
+</code></pre>
+<h3 id="4-bold"><a href="#4-bold" class="headerlink" title="4. bold()"></a>4. <code>bold()</code></h3><p>使用粗体显示字符串。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdefg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> htmlStr <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">bold</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>htmlStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> &lt;b>abcdefg&lt;/b></span>
+</code></pre>
+<h3 id="5-fixed"><a href="#5-fixed" class="headerlink" title="5. fixed()"></a>5. <code>fixed()</code></h3><p>以打字机文本显示字符串。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdefg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> htmlStr <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">fixed</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>htmlStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> &lt;tt>abcdefg&lt;/tt></span>
+</code></pre>
+<h3 id="6-fontcolor-color"><a href="#6-fontcolor-color" class="headerlink" title="6. fontcolor(color)"></a>6. <code>fontcolor(color)</code></h3><p>使用指定的颜色来显示字符串。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdefg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> htmlStr <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">fontcolor</span><span class="token punctuation">(</span><span class="token string">'red'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>htmlStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> &lt;font color="red">abcdefg&lt;/font></span>
+</code></pre>
+<h3 id="7-fontsize-size"><a href="#7-fontsize-size" class="headerlink" title="7. fontsize(size)"></a>7. <code>fontsize(size)</code></h3><p>使用指定的尺寸来显示字符串, size 参数必须是从 1 至 7 的数字。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdefg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> htmlStr <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">fontsize</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>htmlStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> &lt;font size="3">abcdefg&lt;/font></span>
+</code></pre>
+<h3 id="8-italics"><a href="#8-italics" class="headerlink" title="8. italics()"></a>8. <code>italics()</code></h3><p>使用斜体显示字符串。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdefg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> htmlStr <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">italics</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>htmlStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> &lt;i>abcdefg&lt;/i></span>
+</code></pre>
+<h3 id="9-link-url"><a href="#9-link-url" class="headerlink" title="9. link(url)"></a>9. <code>link(url)</code></h3><p>将字符串显示为链接</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdefg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> htmlStr <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">link</span><span class="token punctuation">(</span><span class="token string">'http://blog.liusixin.cn'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>htmlStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> &lt;a href="http://blog.liusixin.cn">abcdefg&lt;/a></span>
+</code></pre>
+<h3 id="10-small-url"><a href="#10-small-url" class="headerlink" title="10. small(url)"></a>10. <code>small(url)</code></h3><p>使用小字号来显示字符串。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdefg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> htmlStr <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">small</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>htmlStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> &lt;small>abcdefg&lt;/small></span>
+</code></pre>
+<h3 id="11-strike-url"><a href="#11-strike-url" class="headerlink" title="11. strike(url)"></a>11. <code>strike(url)</code></h3><p>用于显示加删除线的字符串</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdefg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> htmlStr <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">strike</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>htmlStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> &lt;strike>abcdefg&lt;/strike></span>
+</code></pre>
+<h3 id="12-sub-url"><a href="#12-sub-url" class="headerlink" title="12. sub(url)"></a>12. <code>sub(url)</code></h3><p>把字符串显示为下标</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdefg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> htmlStr <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">sub</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>htmlStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> &lt;sub>abcdefg&lt;/sub></span>
+</code></pre>
+<h3 id="13-sup-url"><a href="#13-sup-url" class="headerlink" title="13. sup(url)"></a>13. <code>sup(url)</code></h3><p>把字符串显示为上标</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'abcdefg'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> htmlStr <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">sup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>htmlStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> &lt;sup>abcdefg&lt;/sup></span>
+</code></pre>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-05-06T04:55:36.000Z" itemprop="dateUpdated">2017-05-06 12:55:36</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程笔记/">编程笔记</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/e84bf94c/&title=《Javascript学习总结——字符串篇》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/e84bf94c/&title=《Javascript学习总结——字符串篇》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/e84bf94c/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Javascript学习总结——字符串篇》 — Sixin的小站&url=http://coder.liusixin.cn/posts/e84bf94c/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/e84bf94c/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/da5041c4/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Javascript学习总结——数组篇</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/22b27e40/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">前端 css样式初始化</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/e84bf94c/&title=《Javascript学习总结——字符串篇》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/e84bf94c/&title=《Javascript学习总结——字符串篇》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/e84bf94c/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Javascript学习总结——字符串篇》 — Sixin的小站&url=http://coder.liusixin.cn/posts/e84bf94c/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/e84bf94c/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABx0lEQVR42u3aS27DMAwFQN//0ilQZJFFozxSnxrBaGUIjjLygqBIXVc8Hr/j9fl1vHs/eefaMXBxcae5j+EYc/Mt5Wt+2CouLu5Bbh688jCUEHMDLi7uPbnJcjkOFxf3O7jVmWpKhIuLezduclDJE5RxAjRef9lZDRcXd4LbK5iufd5e38XFxV3UlRgHlF4Jtfe/z9/i4uIe4VYTlCRxGa/ZS6EKlRhcXNyl3LycUT04Lb7egYuLu5m7KolJwlb1E/wxg4uLe5Cbh5g8HUk+RDXpwcXFPc+dv5TZa9nm28bFxT3DraYv1ZRlPJ+UUKfKIri4uC3uqiNNNQNptl1xcXGPcPMUJE9ceqGwerjCxcXdx82JzW8QNHFxcXHvz52pTCYhr3eUwsXFPcntlTILl6jiyxz5JnFxcXdzq5cheoeivGX7IbTh4uIe5OaFyzx4VbcRhT9cXNyD3Hz0WqTV+ciOi4u7jVsNKEnqM3PNqxc0cXFxd3Dz4JWXOarbKAQ4XFzcg9xeQaSX6FSDJi4u7p251abIzHWutyvg4uLeklvdUg6K2re4uLgHub0iaXWd6tFoqiyCi4s7wZ0pmPY2lqBxcXH/ifsDTlJN1DXMcpgAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/d3746340/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/d3746340/">
+    
+    
+    <title>Javascript学习总结——正则篇 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="javascript,编程笔记">
+    <meta name="description" content="修饰符: i: 执行对大小写不敏感的匹配。 g: 执行全局匹配（查找所有匹配而非在找到第一个匹配后停止）。 m: 执行多行匹配。  元字符：    \d: 匹配一个数字字符。等价于 [0-9]。      \D: 匹配一个非数字字符。等价于 [^0-9]。      \f: 匹配一个换页符。等价于 \x0c 和 \cL。      \n: 匹配一个换行符。等价于 \x0a 和 \cJ。">
+<meta name="keywords" content="javascript,编程笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Javascript学习总结——正则篇">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/d3746340/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="修饰符: i: 执行对大小写不敏感的匹配。 g: 执行全局匹配（查找所有匹配而非在找到第一个匹配后停止）。 m: 执行多行匹配。  元字符：    \d: 匹配一个数字字符。等价于 [0-9]。      \D: 匹配一个非数字字符。等价于 [^0-9]。      \f: 匹配一个换页符。等价于 \x0c 和 \cL。      \n: 匹配一个换行符。等价于 \x0a 和 \cJ。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-05-10T12:23:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Javascript学习总结——正则篇">
+<meta name="twitter:description" content="修饰符: i: 执行对大小写不敏感的匹配。 g: 执行全局匹配（查找所有匹配而非在找到第一个匹配后停止）。 m: 执行多行匹配。  元字符：    \d: 匹配一个数字字符。等价于 [0-9]。      \D: 匹配一个非数字字符。等价于 [^0-9]。      \f: 匹配一个换页符。等价于 \x0c 和 \cL。      \n: 匹配一个换行符。等价于 \x0a 和 \cJ。">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Javascript学习总结——正则篇</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Javascript学习总结——正则篇</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-05-10T12:23:36.000Z" itemprop="datePublished" class="page-time">
+  2017-05-10
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#修饰符"><span class="post-toc-number">1.</span> <span class="post-toc-text">修饰符:</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#元字符："><span class="post-toc-number">2.</span> <span class="post-toc-text">元字符：</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#方法"><span class="post-toc-number">3.</span> <span class="post-toc-text">方法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-compile-regexp-modifier"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">1. compile(regexp,modifier)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-exec-string"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">2. exec(string)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-test-string"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">3. test(string)</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-match-regexp"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">4. match(regexp)</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#常见正则表达式汇总"><span class="post-toc-number">4.</span> <span class="post-toc-text">常见正则表达式汇总</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#检测函数"><span class="post-toc-number">5.</span> <span class="post-toc-text">检测函数</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/javascript/Javascript学习总结——正则篇" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Javascript学习总结——正则篇</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-05-10 20:23:36" datetime="2017-05-10T12:23:36.000Z" itemprop="datePublished">2017-05-10</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="修饰符"><a href="#修饰符" class="headerlink" title="修饰符:"></a>修饰符:</h2><ul>
+<li>i: 执行对大小写不敏感的匹配。</li>
+<li>g: 执行全局匹配（查找所有匹配而非在找到第一个匹配后停止）。</li>
+<li>m: 执行多行匹配。</li>
+</ul>
+<h2 id="元字符："><a href="#元字符：" class="headerlink" title="元字符："></a>元字符：</h2><pre class=" language-js"><code class="language-js">    \d<span class="token punctuation">:</span> 匹配一个数字字符。等价于 <span class="token punctuation">[</span><span class="token number">0</span><span class="token operator">-</span><span class="token number">9</span><span class="token punctuation">]</span>。
+
+    \D<span class="token punctuation">:</span> 匹配一个非数字字符。等价于 <span class="token punctuation">[</span><span class="token operator">^</span><span class="token number">0</span><span class="token operator">-</span><span class="token number">9</span><span class="token punctuation">]</span>。
+
+    \f<span class="token punctuation">:</span> 匹配一个换页符。等价于 \x0c 和 \cL。
+
+    \n<span class="token punctuation">:</span> 匹配一个换行符。等价于 \x0a 和 \cJ。
+
+    \r<span class="token punctuation">:</span> 匹配一个回车符。等价于 \x0d 和 \cM。
+
+    \s<span class="token punctuation">:</span> 匹配任何空白字符，包括空格、制表符、换页符等等。等价于 <span class="token punctuation">[</span> \f\n\r\t\v<span class="token punctuation">]</span>。
+
+    \S<span class="token punctuation">:</span> 匹配任何非空白字符。等价于 <span class="token punctuation">[</span><span class="token operator">^</span> \f\n\r\t\v<span class="token punctuation">]</span>。
+
+    \t<span class="token punctuation">:</span> 匹配一个制表符。等价于 \x09 和 \cI。
+
+    \v<span class="token punctuation">:</span> 匹配一个垂直制表符。等价于 \x0b 和 \cK。
+
+    \w<span class="token punctuation">:</span> 匹配字母、数字、下划线。等价于<span class="token string">'[A-Za-z0-9_]'</span>。
+
+    \W<span class="token punctuation">:</span> 匹配非字母、数字、下划线。等价于 <span class="token string">'[^A-Za-z0-9_]'</span>。
+
+    \xn<span class="token punctuation">:</span> 匹配 n，其中 n 为十六进制转义值。十六进制转义值必须为确定的两个数字长。 <span class="token comment" spellcheck="true">// 例: '\x41' 匹配 "A"。'\x041' 则等价于 '\x04' &amp; "1"。正则表达式中可以使用 ASCII 编码。</span>
+
+    \num<span class="token punctuation">:</span> 匹配 num，其中 num 是一个正整数。对所获取的匹配的引用。 <span class="token comment" spellcheck="true">// 例: '(.)\1' 匹配两个连续的相同字符。</span>
+
+    \n<span class="token punctuation">:</span> 标识一个八进制转义值或一个向后引用。如果 \n 之前至少 n 个获取的子表达式，则 n 为向后引用。否则，如果 n 为八进制数字 <span class="token punctuation">(</span><span class="token number">0</span><span class="token operator">-</span><span class="token number">7</span><span class="token punctuation">)</span>，则 n 为一个八进制转义值。
+
+    \nm<span class="token punctuation">:</span> 标识一个八进制转义值或一个向后引用。如果 \nm 之前至少有 nm 个获得子表达式，则 nm 为向后引用。如果 \nm 之前至少有 n 个获取，则 n 为一个后跟文字 m 的向后引用。如果前面的条件都不满足，若 n 和 m 均为八进制数字 <span class="token punctuation">(</span><span class="token number">0</span><span class="token operator">-</span><span class="token number">7</span><span class="token punctuation">)</span>，则 \nm 将匹配八进制转义值 nm
+
+    \nml<span class="token punctuation">:</span> 如果 n 为八进制数字 <span class="token punctuation">(</span><span class="token number">0</span><span class="token operator">-</span><span class="token number">3</span><span class="token punctuation">)</span>，且 m 和 l 均为八进制数字 <span class="token punctuation">(</span><span class="token number">0</span><span class="token operator">-</span><span class="token number">7</span><span class="token punctuation">)</span>，则匹配八进制转义值 nml
+
+    \un<span class="token punctuation">:</span> 匹配 n，其中 n 是一个用四个十六进制数字表示的 Unicode 字符。 <span class="token comment" spellcheck="true">// 例: \u00A9 匹配版权符号 (?)。</span>
+
+    \<span class="token punctuation">:</span> 将下一个字符标记为一个特殊字符、或一个原义字符、或一个 向后引用、或一个八进制转义符。 <span class="token comment" spellcheck="true">// 例:'n' 匹配字符 "n"。'\n' 匹配一个换行符。序列 '\\' 匹配 "\" 而 "\(" 则匹配 "("。</span>
+
+    <span class="token operator">^</span><span class="token punctuation">:</span> 匹配输入字符串的开始位置。如果设置了 RegExp 对象的 Multiline 属性，<span class="token operator">^</span> 也匹配 <span class="token string">'\n'</span> 或 <span class="token string">'\r'</span> 之后的位置。 <span class="token comment" spellcheck="true">// 例： (^a) 就是匹配以字母a开头的字符串</span>
+    <span class="token operator">^</span><span class="token punctuation">:</span> 还有另个一个作用就是取反，比如<span class="token punctuation">[</span><span class="token operator">^</span>xyz<span class="token punctuation">]</span> 表示匹配的字符串不包含xyz <span class="token comment" spellcheck="true">// 例：[^xyz] 表示匹配的字符串不包含xyz</span>
+
+    $<span class="token punctuation">:</span> 匹配输入字符串的结束位置。如果设置了RegExp 对象的 Multiline 属性，$ 也匹配 <span class="token string">'\n'</span> 或 <span class="token string">'\r'</span> 之前的位置。 <span class="token comment" spellcheck="true">// 例： (b$) 就是匹配以字母b结尾的字符串</span>
+
+    <span class="token operator">*</span><span class="token punctuation">:</span> 匹配前面的子表达式零次或多次。 <span class="token comment" spellcheck="true">// 例: zo* 能匹配 "z" 以及 "zoo"。* 等价于{0,}。</span>
+
+    <span class="token operator">+</span><span class="token punctuation">:</span> 匹配前面的子表达式一次或多次。 <span class="token comment" spellcheck="true">// 例: 'zo+' 能匹配 "zo" 以及 "zoo"，但不能匹配 "z"。+ 等价于 {1,}。</span>
+
+    <span class="token operator">?</span><span class="token punctuation">:</span> 匹配前面的子表达式零次或一次。 <span class="token comment" spellcheck="true">// 例: "do(es)?" 可以匹配 "do" 或 "does" 。? 等价于 {0,1}。</span>
+    <span class="token operator">?</span><span class="token punctuation">:</span> 当该字符紧跟在任何一个其他限制符 <span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">,</span> <span class="token operator">+</span><span class="token punctuation">,</span> <span class="token operator">?</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>n<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>n<span class="token punctuation">,</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>n<span class="token punctuation">,</span>m<span class="token punctuation">}</span><span class="token punctuation">)</span> 后面时，匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。 <span class="token comment" spellcheck="true">// 例: 对于字符串 "oooo"，'o+?' 将匹配单个 "o"，而 'o+' 将匹配所有 'o'。</span>
+
+    <span class="token punctuation">{</span>n<span class="token punctuation">}</span><span class="token punctuation">:</span> n 是一个非负整数。匹配确定的 n 次。 <span class="token comment" spellcheck="true">// 例: 'o{2}' 不能匹配 "Bob" 中的 'o'，但是能匹配 "food" 中的两个 o</span>
+
+    <span class="token punctuation">{</span>n<span class="token punctuation">,</span><span class="token punctuation">}</span><span class="token punctuation">:</span> n 是一个非负整数。至少匹配n 次。 <span class="token comment" spellcheck="true">// 例: 'o{2,}' 不能匹配 "Bob" 中的 'o'，但能匹配 "foooood" 中的所有 o。'o{1,}' 等价于 'o+'。'o{0,}' 则等价于 'o*'。</span>
+
+    <span class="token punctuation">{</span>n<span class="token punctuation">,</span>m<span class="token punctuation">}</span><span class="token punctuation">:</span> m 和 n 均为非负整数，其中n <span class="token operator">&lt;=</span> m。最少匹配 n 次且最多匹配 m 次。 <span class="token comment" spellcheck="true">// 例: "o{1,3}" 将匹配 "fooooood" 中的前三个 o。'o{0,1}' 等价于 'o?'。请注意在逗号和两个数之间不能有空格。</span>
+
+    <span class="token punctuation">.</span><span class="token punctuation">:</span> 匹配除 <span class="token string">"\n"</span> 之外的任何单个字符。要匹配包括 <span class="token string">'\n'</span> 在内的任何字符，请使用像<span class="token string">"(.|\n)"</span>的模式。
+
+    <span class="token punctuation">(</span>pattern<span class="token punctuation">)</span><span class="token punctuation">:</span> 匹配 pattern 并获取这一匹配。所获取的匹配可以从产生的 Matches 集合得到，在VBScript 中使用 SubMatches 集合，在JScript 中则使用 $<span class="token number">0</span>…$<span class="token number">9</span> 属性。要匹配圆括号字符，请使用 <span class="token string">'\('</span> 或 <span class="token string">'\)'</span> <span class="token comment" spellcheck="true">// 例："(x)" 将匹配到 "x" 并将按顺序从 $1-$99 排序代替</span>
+  <span class="token comment" spellcheck="true">//例：</span>
+  <span class="token comment" spellcheck="true">// var url = "http://www.qidian.com/BookReader/1017141,20361055.aspx"</span>
+  <span class="token comment" spellcheck="true">// var reg = /(http:\/\/www\.qidian\.com\/BookReader\/)(\d+),(\d+).aspx/gmi</span>
+  <span class="token comment" spellcheck="true">// var rep=url.replace(reg,"$1ShowBook.aspx?bookId=$2&amp;chapterId=$3");</span>
+  <span class="token comment" spellcheck="true">// console.log(rep);</span>
+  <span class="token comment" spellcheck="true">// -> http://www.qidian.com/BookReader/ShowBook.aspx?bookId=1017141&amp;chapterId=20361055</span>
+
+    <span class="token punctuation">(</span><span class="token operator">?</span><span class="token punctuation">:</span>pattern<span class="token punctuation">)</span>：匹配 pattern 但不获取匹配结果，也就是说这是一个非获取匹配，不进行存储供以后使用。这在使用 <span class="token string">"或"</span> 字符 <span class="token punctuation">(</span><span class="token operator">|</span><span class="token punctuation">)</span> 来组合一个模式的各个部分是很有用。 <span class="token comment" spellcheck="true">// 例：'industr(?:y|ies) 就是一个比 'industry|industries' 更简略的表达式。</span>
+
+    <span class="token punctuation">(</span><span class="token operator">?</span><span class="token operator">=</span>pattern<span class="token punctuation">)</span><span class="token punctuation">:</span> 正向肯定预查（look ahead positive assert），在任何匹配pattern的字符串开始处匹配查找字符串。这是一个非获取匹配，也就是说，该匹配不需要获取供以后使用。 <span class="token comment" spellcheck="true">// 例: "Windows(?=95|98|NT|2000)"能匹配"Windows2000"中的"Windows"，但不能匹配"Windows3.1"中的"Windows"。预查不消耗字符，也就是说，在一个匹配发生后，在最后一次匹配之后立即开始下一次匹配的搜索，而不是从包含预查的字符之后开始。</span>
+
+    <span class="token punctuation">(</span><span class="token operator">?</span><span class="token operator">!</span>pattern<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token function">正向否定预查</span><span class="token punctuation">(</span>negative assert<span class="token punctuation">)</span>，在任何不匹配pattern的字符串开始处匹配查找字符串。这是一个非获取匹配，也就是说，该匹配不需要获取供以后使用。 <span class="token comment" spellcheck="true">// 例: "Windows(?!95|98|NT|2000)"能匹配"Windows3.1"中的"Windows"，但不能匹配"Windows2000"中的"Windows"。预查不消耗字符，也就是说，在一个匹配发生后，在最后一次匹配之后立即开始下一次匹配的搜索，而不是从包含预查的字符之后开始。</span>
+
+    <span class="token punctuation">(</span><span class="token operator">?</span><span class="token operator">&lt;=</span>pattern<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token function">反向</span><span class="token punctuation">(</span>look behind<span class="token punctuation">)</span>肯定预查，与正向肯定预查类似，只是方向相反。 <span class="token comment" spellcheck="true">// 例: "(?&lt;=95|98|NT|2000)Windows"能匹配"2000Windows"中的"Windows"，但不能匹配"3.1Windows"中的"Windows"。</span>
+
+    <span class="token punctuation">(</span><span class="token operator">?</span><span class="token operator">&lt;</span><span class="token operator">!</span>pattern<span class="token punctuation">)</span><span class="token punctuation">:</span> 反向否定预查，与正向否定预查类似，只是方向相反。 <span class="token comment" spellcheck="true">// 例: "(?&lt;!95|98|NT|2000)Windows"能匹配"3.1Windows"中的"Windows"，但不能匹配"2000Windows"中的"Windows"。</span>
+
+    x<span class="token operator">|</span>y<span class="token punctuation">:</span> 匹配 x 或 y。 <span class="token comment" spellcheck="true">// 例: 'z|food' 能匹配 "z" 或 "food"。'(z|f)ood' 则匹配 "zood" 或 "food"。</span>
+
+    <span class="token punctuation">[</span>xyz<span class="token punctuation">]</span><span class="token punctuation">:</span> 字符集合。匹配所包含的任意一个字符。 <span class="token comment" spellcheck="true">// 例: '[abc]' 可以匹配 "plain" 中的 'a'。</span>
+
+    <span class="token punctuation">[</span><span class="token operator">^</span>xyz<span class="token punctuation">]</span><span class="token punctuation">:</span> 负值字符集合。匹配未包含的任意字符。 <span class="token comment" spellcheck="true">// 例: '[^abc]' 可以匹配 "plain" 中的'p'、'l'、'i'、'n'。</span>
+
+    <span class="token punctuation">[</span>a<span class="token operator">-</span>z<span class="token punctuation">]</span><span class="token punctuation">:</span> 字符范围。匹配指定范围内的任意字符。 <span class="token comment" spellcheck="true">// 例: '[a-z]' 可以匹配 'a' 到 'z' 范围内的任意小写字母字符。</span>
+
+    <span class="token punctuation">[</span><span class="token operator">^</span>a<span class="token operator">-</span>z<span class="token punctuation">]</span><span class="token punctuation">:</span> 负值字符范围。匹配任何不在指定范围内的任意字符。 <span class="token comment" spellcheck="true">// 例: '[^a-z]' 可以匹配任何不在 'a' 到 'z' 范围内的任意字符。</span>
+
+    \b<span class="token punctuation">:</span> 匹配一个单词边界，也就是指单词和空格间的位置。 <span class="token comment" spellcheck="true">// 例: 'er\b' 可以匹配"never" 中的 'er'，但不能匹配 "verb" 中的 'er'。</span>
+
+    \B<span class="token punctuation">:</span> 匹配非单词边界。 <span class="token comment" spellcheck="true">// 例: 'er\B' 能匹配 "verb" 中的 'er'，但不能匹配 "never" 中的 'er'。</span>
+
+    \cx<span class="token punctuation">:</span> 匹配由 x 指明的控制字符。 <span class="token comment" spellcheck="true">// 例: \cM 匹配一个 Control-M 或回车符。x 的值必须为 A-Z 或 a-z 之一。否则，将 c 视为一个原义的 'c' 字符。</span>
+</code></pre>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><h3 id="1-compile-regexp-modifier"><a href="#1-compile-regexp-modifier" class="headerlink" title="1. compile(regexp,modifier)"></a>1. <code>compile(regexp,modifier)</code></h3><p>在脚本执行过程中编译正则表达式</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">/*
+    regexp: 正则表达式
+    modifier: 规定匹配的类型。"g" 用于全局匹配，"i" 用于区分大小写，"gi" 用于全局区分大小写的匹配。
+*/</span>
+<span class="token keyword">var</span> compileStr <span class="token operator">=</span> <span class="token string">'Every man in the world! Every woman on earth!'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> compilePatt <span class="token operator">=</span> <span class="token regex">/man/g</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> compilePatt1 <span class="token operator">=</span> <span class="token regex">/(wo)?man/g</span><span class="token punctuation">;</span>
+compilePatt1<span class="token punctuation">.</span><span class="token function">compile</span><span class="token punctuation">(</span>compilePatt1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">var</span> compileStrEle1 <span class="token operator">=</span> compileStr<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span>compilePatt<span class="token punctuation">,</span> <span class="token string">'person'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> compileStrEle2 <span class="token operator">=</span> compileStr<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span>compilePatt1<span class="token punctuation">,</span> <span class="token string">'person'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>compileStrEle1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> Every person in the world! Every woperson on earth!</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>compileStrEle2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> Every person in the world! Every person on earth!</span>
+</code></pre>
+<h3 id="2-exec-string"><a href="#2-exec-string" class="headerlink" title="2. exec(string)"></a>2. <code>exec(string)</code></h3><p>用于检索字符串中的正则表达式的匹配。如果字符串中有匹配的值返回该匹配值，否则返回 null。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> execStr <span class="token operator">=</span> <span class="token string">'Hello world!'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> execPatt <span class="token operator">=</span> <span class="token regex">/Hello/g</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> execStrEle <span class="token operator">=</span> execPatt<span class="token punctuation">.</span><span class="token function">exec</span><span class="token punctuation">(</span>execStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>execStrEle<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> Hello</span>
+</code></pre>
+<h3 id="3-test-string"><a href="#3-test-string" class="headerlink" title="3. test(string)"></a>3. <code>test(string)</code></h3><p>用于检测一个字符串是否匹配某个模式.如果字符串中有匹配的值返回 true ，否则返回 false</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> testStr <span class="token operator">=</span> <span class="token string">'Hello world!'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> testPatt <span class="token operator">=</span> <span class="token regex">/Hello/g</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> testPatt2 <span class="token operator">=</span> <span class="token regex">/Helloaaa/g</span><span class="token punctuation">;</span>
+
+<span class="token keyword">var</span> testStrEle <span class="token operator">=</span> testPatt<span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>testStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> testStrEle2 <span class="token operator">=</span> testPatt2<span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>testStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>testStrEle<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> true</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>testStrEle2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// -> false</span>
+</code></pre>
+<h3 id="4-match-regexp"><a href="#4-match-regexp" class="headerlink" title="4. match(regexp)"></a>4. <code>match(regexp)</code></h3><p>可在字符串内检索指定的值，或找到一个或多个正则表达式的匹配。如果没有找到任何匹配的文本， match() 将返回 null。否则，它将返回一个数组，其中存放了与它找到的匹配文本有关的信息。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> matchStr <span class="token operator">=</span> <span class="token string">'The rain in SPAIN stays mainly in the plain'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> matchEle <span class="token operator">=</span> matchStr<span class="token punctuation">.</span><span class="token function">match</span><span class="token punctuation">(</span><span class="token regex">/ain/gi</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>matchEle<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// -> ["ain", "AIN", "ain", "ain"]</span>
+</code></pre>
+<h2 id="常见正则表达式汇总"><a href="#常见正则表达式汇总" class="headerlink" title="常见正则表达式汇总"></a>常见正则表达式汇总</h2><pre class=" language-js"><code class="language-js"><span class="token regex">/^[1-9]\d*$/</span>　 　<span class="token comment" spellcheck="true">//匹配正整数</span>
+<span class="token operator">/</span><span class="token operator">^</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token operator">-</span><span class="token number">9</span><span class="token punctuation">]</span>\d<span class="token operator">*</span>$<span class="token operator">/</span> 　 <span class="token comment" spellcheck="true">//匹配负整数</span>
+<span class="token operator">/</span><span class="token operator">^</span><span class="token operator">-</span><span class="token operator">?</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token operator">-</span><span class="token number">9</span><span class="token punctuation">]</span>\d<span class="token operator">*</span>$<span class="token operator">/</span>　 <span class="token comment" spellcheck="true">//匹配整数</span>
+<span class="token operator">/</span><span class="token operator">^</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token operator">-</span><span class="token number">9</span><span class="token punctuation">]</span>\d<span class="token operator">*</span><span class="token operator">|</span><span class="token number">0</span>$<span class="token operator">/</span>　 <span class="token comment" spellcheck="true">//匹配非负整数（正整数 + 0）</span>
+<span class="token operator">/</span><span class="token operator">^</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token operator">-</span><span class="token number">9</span><span class="token punctuation">]</span>\d<span class="token operator">*</span><span class="token operator">|</span><span class="token number">0</span>$<span class="token operator">/</span>　<span class="token comment" spellcheck="true">//匹配非正整数（负整数 + 0）</span>
+<span class="token operator">/</span><span class="token operator">^</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token operator">-</span><span class="token number">9</span><span class="token punctuation">]</span>\d<span class="token operator">*</span>\<span class="token punctuation">.</span>\d<span class="token operator">*</span><span class="token operator">|</span><span class="token number">0</span>\<span class="token punctuation">.</span>\d<span class="token operator">*</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token operator">-</span><span class="token number">9</span><span class="token punctuation">]</span>\d<span class="token operator">*</span>$<span class="token operator">/</span>　　  <span class="token comment" spellcheck="true">//匹配正浮点数</span>
+<span class="token operator">/</span><span class="token operator">^</span><span class="token operator">-</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token operator">-</span><span class="token number">9</span><span class="token punctuation">]</span>\d<span class="token operator">*</span>\<span class="token punctuation">.</span>\d<span class="token operator">*</span><span class="token operator">|</span><span class="token number">0</span>\<span class="token punctuation">.</span>\d<span class="token operator">*</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token operator">-</span><span class="token number">9</span><span class="token punctuation">]</span>\d<span class="token operator">*</span><span class="token punctuation">)</span>$<span class="token operator">/</span>　 <span class="token comment" spellcheck="true">//匹配负浮点数</span>
+<span class="token operator">/</span><span class="token operator">^</span><span class="token operator">-</span><span class="token operator">?</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token operator">-</span><span class="token number">9</span><span class="token punctuation">]</span>\d<span class="token operator">*</span>\<span class="token punctuation">.</span>\d<span class="token operator">*</span><span class="token operator">|</span><span class="token number">0</span>\<span class="token punctuation">.</span>\d<span class="token operator">*</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token operator">-</span><span class="token number">9</span><span class="token punctuation">]</span>\d<span class="token operator">*</span><span class="token operator">|</span><span class="token number">0</span><span class="token operator">?</span>\<span class="token punctuation">.</span><span class="token number">0</span><span class="token operator">+</span><span class="token operator">|</span><span class="token number">0</span><span class="token punctuation">)</span>$<span class="token operator">/</span>　 <span class="token comment" spellcheck="true">//匹配浮点数</span>
+<span class="token operator">/</span><span class="token operator">^</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token operator">-</span><span class="token number">9</span><span class="token punctuation">]</span>\d<span class="token operator">*</span>\<span class="token punctuation">.</span>\d<span class="token operator">*</span><span class="token operator">|</span><span class="token number">0</span>\<span class="token punctuation">.</span>\d<span class="token operator">*</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token operator">-</span><span class="token number">9</span><span class="token punctuation">]</span>\d<span class="token operator">*</span><span class="token operator">|</span><span class="token number">0</span><span class="token operator">?</span>\<span class="token punctuation">.</span><span class="token number">0</span><span class="token operator">+</span><span class="token operator">|</span><span class="token number">0</span>$<span class="token operator">/</span>　　   <span class="token comment" spellcheck="true">//匹配非负浮点数（正浮点数 + 0）</span>
+<span class="token operator">/</span><span class="token operator">^</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token operator">-</span><span class="token number">9</span><span class="token punctuation">]</span>\d<span class="token operator">*</span>\<span class="token punctuation">.</span>\d<span class="token operator">*</span><span class="token operator">|</span><span class="token number">0</span>\<span class="token punctuation">.</span>\d<span class="token operator">*</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token operator">-</span><span class="token number">9</span><span class="token punctuation">]</span>\d<span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">|</span><span class="token number">0</span><span class="token operator">?</span>\<span class="token punctuation">.</span><span class="token number">0</span><span class="token operator">+</span><span class="token operator">|</span><span class="token number">0</span>$<span class="token operator">/</span>　<span class="token comment" spellcheck="true">//匹配非正浮点数（负浮点数 + 0）</span>
+<span class="token operator">/</span><span class="token operator">^</span><span class="token punctuation">[</span>A<span class="token operator">-</span>Za<span class="token operator">-</span>z<span class="token punctuation">]</span><span class="token operator">+</span>$<span class="token operator">/</span>　　    <span class="token comment" spellcheck="true">// 由26个英文字母组成的字符串</span>
+<span class="token operator">/</span><span class="token operator">^</span><span class="token punctuation">[</span>A<span class="token operator">-</span>Z<span class="token punctuation">]</span><span class="token operator">+</span>$<span class="token operator">/</span>　　       <span class="token comment" spellcheck="true">// 由26个英文字母的大写组成的字符串</span>
+<span class="token operator">/</span><span class="token operator">^</span><span class="token punctuation">[</span>a<span class="token operator">-</span>z<span class="token punctuation">]</span><span class="token operator">+</span>$<span class="token operator">/</span>　　       <span class="token comment" spellcheck="true">// 由26个英文字母的小写组成的字符串</span>
+<span class="token operator">/</span><span class="token operator">^</span><span class="token punctuation">[</span>A<span class="token operator">-</span>Za<span class="token operator">-</span>z0<span class="token number">-9</span><span class="token punctuation">]</span><span class="token operator">+</span>$<span class="token operator">/</span>　　 <span class="token comment" spellcheck="true">// 由数字和26个英文字母组成的字符串</span>
+<span class="token operator">/</span><span class="token operator">^</span>\w<span class="token operator">+</span>$<span class="token operator">/</span>              <span class="token comment" spellcheck="true">// 由数字、26个英文字母或者下划线组成的字符串</span>
+<span class="token operator">/</span><span class="token operator">^</span><span class="token punctuation">[</span>\x00<span class="token operator">-</span>\xff<span class="token punctuation">]</span><span class="token operator">+</span>$<span class="token operator">/</span>     <span class="token comment" spellcheck="true">// 匹配所有单字节长度的字符组成的字符串  </span>
+<span class="token operator">/</span><span class="token operator">^</span><span class="token punctuation">[</span><span class="token operator">^</span>\x00<span class="token operator">-</span>\xff<span class="token punctuation">]</span><span class="token operator">+</span>$<span class="token operator">/</span>    <span class="token comment" spellcheck="true">// 匹配所有双字节长度的字符组成的字符串</span>
+<span class="token operator">/</span><span class="token punctuation">[</span><span class="token operator">^</span>\x00<span class="token operator">-</span>\xff<span class="token punctuation">]</span><span class="token operator">+</span><span class="token operator">/</span>      <span class="token comment" spellcheck="true">// 字符串是否含有双字节字</span>
+<span class="token operator">/</span>n<span class="token punctuation">[</span>s<span class="token operator">|</span> <span class="token punctuation">]</span><span class="token operator">*</span>r<span class="token operator">/</span>           <span class="token comment" spellcheck="true">// 匹配空行的正则</span>
+<span class="token operator">/</span><span class="token punctuation">(</span><span class="token operator">^</span>s<span class="token operator">*</span><span class="token punctuation">)</span><span class="token operator">|</span><span class="token punctuation">(</span>s<span class="token operator">*</span>$<span class="token punctuation">)</span><span class="token operator">/</span>        <span class="token comment" spellcheck="true">// 匹配首尾空格的正则</span>
+<span class="token operator">/</span><span class="token operator">^</span><span class="token punctuation">[</span>a<span class="token operator">-</span>zA<span class="token operator">-</span>Z0<span class="token operator">-</span>9_<span class="token punctuation">]</span><span class="token punctuation">{</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token punctuation">}</span>$<span class="token operator">/</span> <span class="token comment" spellcheck="true">// 所有包含一个以上的字母、数字或下划线的字符串</span>
+<span class="token operator">/</span><span class="token punctuation">[</span><span class="token operator">^</span>\<span class="token string">"\']/            // 除了双引号("</span><span class="token punctuation">)</span><span class="token function">和单引号</span><span class="token punctuation">(</span>'<span class="token punctuation">)</span>之外的所有字符
+</code></pre>
+<h2 id="检测函数"><a href="#检测函数" class="headerlink" title="检测函数"></a>检测函数</h2><pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">checkStr</span><span class="token punctuation">(</span>str<span class="token punctuation">,</span> type<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">switch</span> <span class="token punctuation">(</span>type<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">case</span> <span class="token string">'phone'</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true">//手机号码</span>
+      <span class="token keyword">return</span> <span class="token regex">/^1[3|4|5|7|8][0-9]{9}$/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">'tel'</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true">//座机</span>
+      <span class="token keyword">return</span> <span class="token regex">/^(0\d{2,3}-\d{7,8})(-\d{1,4})?$/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">'card'</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true">//身份证</span>
+      <span class="token keyword">return</span> <span class="token regex">/^\d{15}|\d{18}$/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">'pwd'</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true">//密码以字母开头，长度在6~18之间，只能包含字母、数字和下划线</span>
+      <span class="token keyword">return</span> <span class="token regex">/^[a-zA-Z]\w{5,17}$/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">'postal'</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true">//邮政编码</span>
+      <span class="token keyword">return</span> <span class="token regex">/[1-9]\d{5}(?!\d)/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">'QQ'</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true">//QQ号</span>
+      <span class="token keyword">return</span> <span class="token regex">/^[1-9][0-9]{4,9}$/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">'email'</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true">//邮箱</span>
+      <span class="token keyword">return</span> <span class="token regex">/^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">'money'</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true">//金额(小数点2位)</span>
+      <span class="token keyword">return</span> <span class="token regex">/^\d*(?:\.\d{0,2})?$/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">'URL'</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true">//网址</span>
+      <span class="token keyword">return</span> <span class="token regex">/(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>
+        str
+      <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">'IP'</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true">//IP</span>
+      <span class="token keyword">return</span> <span class="token regex">/((?:(?:25[0-5]|2[0-4]\\d|[01]?\\d?\\d)\\.){3}(?:25[0-5]|2[0-4]\\d|[01]?\\d?\\d))/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>
+        str
+      <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">'date'</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true">//日期时间</span>
+      <span class="token keyword">return</span> <span class="token punctuation">(</span>
+        <span class="token regex">/^(\d{4})\-(\d{2})\-(\d{2}) (\d{2})(?:\:\d{2}|:(\d{2}):(\d{2}))$/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>
+          str
+        <span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token regex">/^(\d{4})\-(\d{2})\-(\d{2})$/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span>
+      <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">'number'</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true">//数字</span>
+      <span class="token keyword">return</span> <span class="token regex">/^[0-9]$/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">'english'</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true">//英文</span>
+      <span class="token keyword">return</span> <span class="token regex">/^[a-zA-Z]+$/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">'chinese'</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true">//中文</span>
+      <span class="token keyword">return</span> <span class="token regex">/^[\u4E00-\u9FA5]+$/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">'lower'</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true">//小写</span>
+      <span class="token keyword">return</span> <span class="token regex">/^[a-z]+$/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">'upper'</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true">//大写</span>
+      <span class="token keyword">return</span> <span class="token regex">/^[A-Z]+$/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">'HTML'</span><span class="token punctuation">:</span> <span class="token comment" spellcheck="true">//HTML标记</span>
+      <span class="token keyword">return</span> <span class="token regex">/&lt;("[^"]*"|'[^']*'|[^'">])*>/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">default</span><span class="token punctuation">:</span>
+      <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-05-10T12:23:36.000Z" itemprop="dateUpdated">2017-05-10 20:23:36</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程笔记/">编程笔记</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/d3746340/&title=《Javascript学习总结——正则篇》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/d3746340/&title=《Javascript学习总结——正则篇》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/d3746340/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Javascript学习总结——正则篇》 — Sixin的小站&url=http://coder.liusixin.cn/posts/d3746340/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/d3746340/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/36ac550f/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">微信内置浏览器清除缓存</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/da5041c4/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Javascript学习总结——数组篇</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/d3746340/&title=《Javascript学习总结——正则篇》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/d3746340/&title=《Javascript学习总结——正则篇》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/d3746340/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Javascript学习总结——正则篇》 — Sixin的小站&url=http://coder.liusixin.cn/posts/d3746340/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/d3746340/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABu0lEQVR42u3aS3LDIBAFwNz/0s4BXFLeYwSJU83KCyw1WkzNh6+veL3e1tWetf0PL1xc3DH3dbuS17/vvALlz788Ki4u7kFuEpgmv/ND/mDDxcX9KG77NFxc3P/Eva9K7oMXLi7uZ3GT4uf+QUkSc7RWw8XFHXDzLuW+31v6u7i4uEvcV7nyf+UpVPF2XFzcI9y2sJng7oufYicuLu5mbjtSzcuhtnSJBrq4uLjHuclANE9W2iZpnZHh4uJu5t4HpvxSRVss1SNYXFzcg9x5QjO5flF8Mlxc3F/ijlqZD41LLw+Ai4t7hJsUPPmjRy2PvL2Ci4u7mXv/srWhaR4i66ILFxf3CDdntQlNEvLaqx64uLgnuXX5MU5i2luas2oJFxd3hbvWtnig6orTpiju4uLibubOGxl5KvNA8YOLi7uN2yY3eWlU5FbJTlxc3M3cyTB1rUk6KpNwcXGPcNv2xCQNWmu+LB4GFxd3zM1HGmsJTT6GiQ6Di4t7kNsWRfkVzzaCFrUaLi7uH+O2QWreSMXFxf10bs6qW6i4uLgHuW2Cku/PWx7RUAcXF/cI94E57VIG0n4UXFzcI9xvH7HiMVpPIfsAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

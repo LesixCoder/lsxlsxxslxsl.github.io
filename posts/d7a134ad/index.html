@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/d7a134ad/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/d7a134ad/">
+    
+    
+    <title>Nodejs编写静态博客命令行工具 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="javascript,Nodejs,Koa2">
+    <meta name="description" content="前言Node.js 除了可以编写服务器端程序， 也可以用来编写一些命令行工具， 本文会如何使用 commander 模块来编写一个命令行工具， 并以一个静态博客系统构建工具作为实例。具体内容包含以下几部分：  commander 模块 markdown-it 模块 将 Markdown 转换成 HTML 实时监控文件变化 给 Markdown 内容套用模板 实时预览 生成整站静态页面  所使用到的">
+<meta name="keywords" content="javascript,Nodejs,Koa2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nodejs编写静态博客命令行工具">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/d7a134ad/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="前言Node.js 除了可以编写服务器端程序， 也可以用来编写一些命令行工具， 本文会如何使用 commander 模块来编写一个命令行工具， 并以一个静态博客系统构建工具作为实例。具体内容包含以下几部分：  commander 模块 markdown-it 模块 将 Markdown 转换成 HTML 实时监控文件变化 给 Markdown 内容套用模板 实时预览 生成整站静态页面  所使用到的">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180803-152629@2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180803-152802@2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180803-170704@2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180803-172852@2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180803-180209@2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180803-180803@2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180803-183555@2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180803-190933@2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180803-192155@2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180803-192257@2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180803-220042@2x.png">
+<meta property="og:updated_time" content="2017-12-05T13:24:50.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nodejs编写静态博客命令行工具">
+<meta name="twitter:description" content="前言Node.js 除了可以编写服务器端程序， 也可以用来编写一些命令行工具， 本文会如何使用 commander 模块来编写一个命令行工具， 并以一个静态博客系统构建工具作为实例。具体内容包含以下几部分：  commander 模块 markdown-it 模块 将 Markdown 转换成 HTML 实时监控文件变化 给 Markdown 内容套用模板 实时预览 生成整站静态页面  所使用到的">
+<meta name="twitter:image" content="http://cdn-blog.liusixin.cn/WX20180803-152629@2x.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Nodejs编写静态博客命令行工具</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Nodejs编写静态博客命令行工具</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-11-15T05:44:50.000Z" itemprop="datePublished" class="page-time">
+  2017-11-15
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#命令格式"><span class="post-toc-number">2.</span> <span class="post-toc-text">命令格式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#常见的命令格式"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">常见的命令格式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#定义静态博客命令格式"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">定义静态博客命令格式</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#编写命令行工具"><span class="post-toc-number">3.</span> <span class="post-toc-text">编写命令行工具</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#实时预览"><span class="post-toc-number">4.</span> <span class="post-toc-text">实时预览</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#启动-Web-服务器"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">启动 Web 服务器</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#渲染文章页面"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">渲染文章页面</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#文章元数据"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">文章元数据</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#增加模板"><span class="post-toc-number">4.4.</span> <span class="post-toc-text">增加模板</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#渲染文章列表"><span class="post-toc-number">4.5.</span> <span class="post-toc-text">渲染文章列表</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#生成静态博客"><span class="post-toc-number">5.</span> <span class="post-toc-text">生成静态博客</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#配置文件"><span class="post-toc-number">6.</span> <span class="post-toc-text">配置文件</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#创建空白博客模板"><span class="post-toc-number">7.</span> <span class="post-toc-text">创建空白博客模板</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#第三方服务"><span class="post-toc-number">8.</span> <span class="post-toc-text">第三方服务</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#评论组件"><span class="post-toc-number">8.1.</span> <span class="post-toc-text">评论组件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#分享组件"><span class="post-toc-number">8.2.</span> <span class="post-toc-text">分享组件</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Nodejs编写静态博客命令行工具" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Nodejs编写静态博客命令行工具</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-11-15 13:44:50" datetime="2017-11-15T05:44:50.000Z" itemprop="datePublished">2017-11-15</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Node.js 除了可以编写服务器端程序， 也可以用来编写一些命令行工具， 本文会如何使用 commander 模块来编写一个命令行工具， 并以一个静态博客系统构建工具作为实例。具体内容包含以下几部分：</p>
+<ul>
+<li>commander 模块</li>
+<li>markdown-it 模块</li>
+<li>将 Markdown 转换成 HTML</li>
+<li>实时监控文件变化</li>
+<li>给 Markdown 内容套用模板</li>
+<li>实时预览</li>
+<li>生成整站静态页面</li>
+</ul>
+<p><strong>所使用到的第三方模块：</strong></p>
+<ul>
+<li>commonder<ul>
+<li>解析命令行参数</li>
+<li><a href="http://tj.github.io/commander.js/" rel="external nofollow noopener noreferrer" target="_blank">http://tj.github.io/commander.js/</a></li>
+</ul>
+</li>
+<li>express<ul>
+<li><a href="http://expressjs.com/" rel="external nofollow noopener noreferrer" target="_blank">http://expressjs.com/</a></li>
+</ul>
+</li>
+<li>serve-static<ul>
+<li>静态文件服务中间件</li>
+<li><a href="bttps://www.npmjs.com/package/serve-static" rel="external nofollow noopener noreferrer" target="_blank">bttps://www.npmjs.com/package/serve-static</a></li>
+</ul>
+</li>
+<li>markdown-it<ul>
+<li>渲染 Markdown 格式的文档</li>
+<li><a href="https://www.npmjs.com/package/markdown-it" rel="external nofollow noopener noreferrer" target="_blank">https://www.npmjs.com/package/markdown-it</a></li>
+</ul>
+</li>
+<li>swig<ul>
+<li>swig 语法模板引擎</li>
+<li><a href="http://paularmstrong.github.io/swig/" rel="external nofollow noopener noreferrer" target="_blank">http://paularmstrong.github.io/swig/</a></li>
+</ul>
+</li>
+<li>rd<ul>
+<li>遍历目录下的所有文件，包括子目录</li>
+<li><a href="https://www.npmjs.com/package/rd" rel="external nofollow noopener noreferrer" target="_blank">https://www.npmjs.com/package/rd</a></li>
+</ul>
+</li>
+<li>fs-extra<ul>
+<li>扩展了 fs 模块的一些方法</li>
+<li><a href="https://www.npmjs.com/package/fs-extra" rel="external nofollow noopener noreferrer" target="_blank">https://www.npmjs.com/package/fs-extra</a></li>
+</ul>
+</li>
+<li>open<ul>
+<li>使用系统程序打开指定文件或网址</li>
+<li><a href="https://www.npmjs.com/package/open" rel="external nofollow noopener noreferrer" target="_blank">https://www.npmjs.com/package/open</a></li>
+</ul>
+</li>
+<li>moment<ul>
+<li>解析、格式化日期时间</li>
+<li><a href="http://momentjs.com/docs/" rel="external nofollow noopener noreferrer" target="_blank">http://momentjs.com/docs/</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="命令格式"><a href="#命令格式" class="headerlink" title="命令格式"></a>命令格式</h2><p>在编写命令行工具时，我们首先要定义命令的使用方法，比如：</p>
+<pre class=" language-shell"><code class="language-shell">$ XBlog new # 表示创建一个空的博客；
+$ XBlog build # 表示生成整站静态HTML页面等。
+</code></pre>
+<h3 id="常见的命令格式"><a href="#常见的命令格式" class="headerlink" title="常见的命令格式"></a>常见的命令格式</h3><p>一条命令一般包含以下几部分：</p>
+<pre class=" language-shell"><code class="language-shell">command [options] [arguments]
+
+- command # 命令名称，比如node。
+- options # 单词或单字，比如 --help或-h。
+- arguments # 参数，有时选项也带参数，比如：xss。
+</code></pre>
+<p>在查看命令帮助时，会出现 <code>&quot;[]&quot; &quot;&lt;&gt;&quot; &quot;|&quot;</code> 等符号:</p>
+<pre class=" language-shell"><code class="language-shell">- [] # 表示是可选的。
+- <> # 表示可变选项，一般是多选一，而且必须要选其一。
+- x|y|z # 多选一，如果加上"[]"，则可不选。
+- -abc # 多选，如果加上"[]", 则可不选。
+</code></pre>
+<p>比如，NPM 命令的使用方法描述如下：</p>
+<pre class=" language-shell"><code class="language-shell">$ npm <command>
+
+$ npm install
+$ npm list
+</code></pre>
+<p>以上是大多数命令行工具遵循的语法格式。</p>
+<h3 id="定义静态博客命令格式"><a href="#定义静态博客命令格式" class="headerlink" title="定义静态博客命令格式"></a>定义静态博客命令格式</h3><p>我们要实现的命令行生成工具包含以下功能：</p>
+<ul>
+<li>创建一个空的博客；</li>
+<li>文章使用 Markdown 格式编写；</li>
+<li>本地实时预览；</li>
+<li>生成整站静态 HTML；</li>
+</ul>
+<p>根据描述，我们先来定义这个命令行工具的使用方法：</p>
+<pre class=" language-shell"><code class="language-shell">XBlog create [dir] # 创建一个空的博客，dir为博客所在目录（可选，默认为当前目录）
+
+XBlog preview [dir] # 实时预览，dir为博客所在目录（可选，默认为当前目录）
+
+XBlog build [dir] [--output target] # 生成整站静态HTML, dir为博客所在目录（可选，默认为当前目录），target为生成的静态HTML存放目录
+</code></pre>
+<h2 id="编写命令行工具"><a href="#编写命令行工具" class="headerlink" title="编写命令行工具"></a>编写命令行工具</h2><p>在 Node 中，可以通过 <code>process.argv</code> 变量来取得启动时的参数，它是一个数组。比如：</p>
+<pre class=" language-shell"><code class="language-shell">$ node test.js build xxx
+# process.argv 的值为：
+['node', 'test.js', 'build', 'xxx']
+</code></pre>
+<p>第一个为命令名，第二个为程序文件名，从第三个参数起则是启动 Node 程序所传的参数，每个参数用空格隔开。由于这些参数都是字符串，为了支持更灵活的参数组合方法，需要编写一个专门的程序先来解析这些参数字符串，而 commander 模块已经为我们做好了。</p>
+<p>首先新建空的项目文件夹，然后<code>npm init -y</code>来初始化。</p>
+<pre class=" language-shell"><code class="language-shell">$ mkdir XBlog && cd XBlog
+$ npm init -y
+
+# 安装commander模块
+$ npm i commander -D
+</code></pre>
+<p>然后新建文件 <code>bin/XBlog</code> 并编辑</p>
+<pre class=" language-js"><code class="language-js">#<span class="token operator">!</span><span class="token operator">/</span>usr<span class="token operator">/</span>bin<span class="token operator">/</span>env node
+
+<span class="token keyword">var</span> program <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'commander'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 命令版本号</span>
+program<span class="token punctuation">.</span><span class="token function">version</span><span class="token punctuation">(</span><span class="token string">'0.0.1'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// help命令</span>
+program
+  <span class="token punctuation">.</span><span class="token function">command</span><span class="token punctuation">(</span><span class="token string">'help'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">description</span><span class="token punctuation">(</span><span class="token string">'显示使用帮助'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">action</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    program<span class="token punctuation">.</span><span class="token function">outputHelp</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// create命令</span>
+program
+  <span class="token punctuation">.</span><span class="token function">command</span><span class="token punctuation">(</span><span class="token string">'create [dir]'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">description</span><span class="token punctuation">(</span><span class="token string">'创建一个空的博客'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">action</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>dir<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'create %s'</span><span class="token punctuation">,</span> dir<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// preview命令</span>
+program
+  <span class="token punctuation">.</span><span class="token function">command</span><span class="token punctuation">(</span><span class="token string">'preview [dir]'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">description</span><span class="token punctuation">(</span><span class="token string">'实时预览'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">action</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>dir<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'preview %s'</span><span class="token punctuation">,</span> dir<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// build命令</span>
+program
+  <span class="token punctuation">.</span><span class="token function">command</span><span class="token punctuation">(</span><span class="token string">'build [dir]'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">description</span><span class="token punctuation">(</span><span class="token string">'生成整站静态HTML'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">option</span><span class="token punctuation">(</span><span class="token string">'-o, --output &lt;dir>'</span><span class="token punctuation">,</span> <span class="token string">'生成的静态HTML存放目录'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">action</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> options<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'create %s, output %s'</span><span class="token punctuation">,</span> dir<span class="token punctuation">,</span> options<span class="token punctuation">.</span>output<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 开始解析命令</span>
+program<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>process<span class="token punctuation">.</span>argv<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<ul>
+<li><code>command(&#39;help&#39;)</code> 表示当前是什么命令；</li>
+<li><code>description(&#39;显示使用帮助&#39;)</code> 当前命令的简单描述，在查看命令帮助时会显示出来；</li>
+<li><code>action(callback)</code> 为解析到当前命令时执行的回调函数。</li>
+<li><code>option(&#39;-o, --output &lt;dir&gt;&#39;, &#39;生成的静态HTML存放目录&#39;)</code> 表示在执行 build 命令时，还可以附加一些可选项，比如 <code>-o &lt;dir&gt;</code>用来指定生成的文件输出到哪里。</li>
+</ul>
+<p>第一行 <code>#!/usr/bin/env node</code> 指定当前文件使用哪个解释器执行。在 Linux Shell 环境下，文件具有执行权限时，可以直接通过 <code>./xxx</code> 来执行（一般要执行 Node 时是执行命令 <code>node xxx.js</code>), 如不指定解释器，则默认使用 bash 执行。</p>
+<p>现在编辑文件<code>package.json</code>, 增加 bin 属性：</p>
+<pre class=" language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"XBlog"</span><span class="token punctuation">,</span>
+  <span class="token property">"version"</span><span class="token operator">:</span> <span class="token string">"1.0.0"</span><span class="token punctuation">,</span>
+  <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">""</span><span class="token punctuation">,</span>
+  <span class="token property">"main"</span><span class="token operator">:</span> <span class="token string">"index.js"</span><span class="token punctuation">,</span>
+  <span class="token property">"scripts"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"test"</span><span class="token operator">:</span> <span class="token string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token property">"keywords"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token property">"author"</span><span class="token operator">:</span> <span class="token string">"liusixin"</span><span class="token punctuation">,</span>
+  <span class="token property">"license"</span><span class="token operator">:</span> <span class="token string">"MIT"</span><span class="token punctuation">,</span>
+  <span class="token property">"bin"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"XBlog"</span><span class="token operator">:</span> <span class="token string">"./bin/XBlog"</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token property">"devDependencies"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"commander"</span><span class="token operator">:</span> <span class="token string">"^2.10.0"</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>bin</code> 属性用来指定当前模块需要链接的命令，在这里我们指定了 XBlog 命令是执行文件 <code>./bin/XBlog</code>。</p>
+<p>为了让这个设置生效，还需要执行以下命令来进行链接：</p>
+<pre class=" language-shell"><code class="language-shell">$ sudo npm link
+</code></pre>
+<p>执行成功后，会显示</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180803-152629@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>现在我们试下执行： <code>XBlog help</code></p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180803-152802@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>说明我们这个命令行工具的基本框架已经完成了;</p>
+<h2 id="实时预览"><a href="#实时预览" class="headerlink" title="实时预览"></a>实时预览</h2><p>虽然实现了基本框架，但在功能上还是空白的。一个静态博客工具包含以下这些功能模块：</p>
+<ul>
+<li>渲染文章内容页面和文章列表页面；</li>
+<li>修改模板实时预览；</li>
+<li>创建基本的博客模板；</li>
+</ul>
+<p>我们先从实现 preview 命令入手。</p>
+<h3 id="启动-Web-服务器"><a href="#启动-Web-服务器" class="headerlink" title="启动 Web 服务器"></a>启动 Web 服务器</h3><p>为了使代码结构更加清晰，首先我们将 <code>bin/XBlog</code> 文件中 preview 命令的回调函数改为<code>require(&#39;../lib/cmd_preview&#39;);</code></p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// preview命令</span>
+program
+  <span class="token punctuation">.</span><span class="token function">command</span><span class="token punctuation">(</span><span class="token string">'preview [dir]'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">description</span><span class="token punctuation">(</span><span class="token string">'实时预览'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">action</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'../lib/cmd_preview'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>新建文件 <code>lib/cmd_preview.js</code></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> express <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'express'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> serveStatic <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'serve-static'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> path <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'path'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>dir<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  dir <span class="token operator">=</span> dir <span class="token operator">||</span> <span class="token string">'.'</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 指定当前博客项目所在的目录，如果没有指定则默认为当前目录</span>
+
+  <span class="token comment" spellcheck="true">// 初始化express</span>
+  <span class="token keyword">var</span> app <span class="token operator">=</span> <span class="token function">express</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> router <span class="token operator">=</span> express<span class="token punctuation">.</span><span class="token function">Router</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  app<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span><span class="token string">'/assets'</span><span class="token punctuation">,</span> <span class="token function">serveStatic</span><span class="token punctuation">(</span>path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token string">'assets'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 静态资源文件</span>
+  app<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span>router<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// 渲染文章</span>
+  router<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'/posts/*'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> res<span class="token punctuation">,</span> next<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 文章内容页面</span>
+    res<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span>req<span class="token punctuation">.</span>params<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// 渲染列表</span>
+  router<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> res<span class="token punctuation">,</span> next<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 文章列表页面</span>
+    res<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token string">'文章列表'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  app<span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>使用 express 来启动一个 Web 服务器，主要处理以下三部分内容：</p>
+<ul>
+<li>以 <code>&quot;/assets&quot;</code> 开头的 URL 为博客中用到的静态资源文件， 对应的是博客根目录下的 assets 目录；</li>
+<li>以 <code>&quot;/posts&quot;</code> 开头的 URL 为文章内容页面，比如访问的 URL 是 <code>/posts/2017-12/hello-world.html</code>, 对应的是源文件<code>_posts/2017-12/helloworld.md</code>;</li>
+<li><code>&quot;/&quot;</code> 为文章列表页面。</li>
+</ul>
+<p>由于使用到了 <code>express</code> 和 <code>serve-static</code> 两个模块，所以先安装它们：</p>
+<pre class=" language-shell"><code class="language-shell">$ npm i express serve-static -S
+</code></pre>
+<p>然后启动</p>
+<pre class=" language-shell"><code class="language-shell">$ XBlog preview
+</code></pre>
+<p>然后 浏览器输入 <code>http://localhost:3000</code> 查看效果</p>
+<h3 id="渲染文章页面"><a href="#渲染文章页面" class="headerlink" title="渲染文章页面"></a>渲染文章页面</h3><p>文章内容使用 Markdown 语法来编写，我们可以使用<code>markdown-it</code>模块来解析并将其转为相应的 HTML。模板引擎我们使用 swig。</p>
+<p>文章源文件存储在_post 目录下，比如文件<code>_posts/2017-12/hello-world.md</code> 对应的 URL 是 <code>/posts/2017-12/hello-world.html</code>。</p>
+<p>文件<code>lib/cmd_preview.js</code>:</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> express <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'express'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> serveStatic <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'serve-static'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> path <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'path'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'fs'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> md <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'markdown-it'</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  html<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  langPrefix<span class="token punctuation">:</span> <span class="token string">'code-'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>dir<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  dir <span class="token operator">=</span> dir <span class="token operator">||</span> <span class="token string">'.'</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 指定当前博客项目所在的目录，如果没有指定则默认为当前目录</span>
+
+  <span class="token comment" spellcheck="true">// 初始化express</span>
+  <span class="token keyword">var</span> app <span class="token operator">=</span> <span class="token function">express</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> router <span class="token operator">=</span> express<span class="token punctuation">.</span><span class="token function">Router</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  app<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span><span class="token string">'/assets'</span><span class="token punctuation">,</span> <span class="token function">serveStatic</span><span class="token punctuation">(</span>path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token string">'assets'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 静态资源文件</span>
+  app<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span>router<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// 渲染文章</span>
+  router<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'/posts/*'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> res<span class="token punctuation">,</span> next<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 文章内容页面</span>
+    <span class="token keyword">var</span> name <span class="token operator">=</span> <span class="token function">stripExtname</span><span class="token punctuation">(</span>req<span class="token punctuation">.</span>params<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">var</span> file <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token string">'_posts'</span><span class="token punctuation">,</span> name <span class="token operator">+</span> <span class="token string">'.md'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    fs<span class="token punctuation">.</span><span class="token function">readFile</span><span class="token punctuation">(</span>file<span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>err<span class="token punctuation">,</span> content<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token function">next</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> html <span class="token operator">=</span> <span class="token function">markdownToHTML</span><span class="token punctuation">(</span>content<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      res<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span>html<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// 渲染列表</span>
+  router<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> res<span class="token punctuation">,</span> next<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 文章列表页面</span>
+    res<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token string">'文章列表'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  app<span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 去掉文件名中的扩展名</span>
+<span class="token keyword">function</span> <span class="token function">stripExtname</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">0</span> <span class="token operator">-</span> path<span class="token punctuation">.</span><span class="token function">extname</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>i <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span> i <span class="token operator">=</span> name<span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+  <span class="token keyword">return</span> name<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// 将Markdown转换为HTML</span>
+<span class="token keyword">function</span> <span class="token function">markdownToHTML</span><span class="token punctuation">(</span>content<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> md<span class="token punctuation">.</span><span class="token function">render</span><span class="token punctuation">(</span>content <span class="token operator">||</span> <span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>我们随便写篇文章，保存到 <code>example/posts/2017-12/hello-world.md</code></p>
+<pre class=" language-md"><code class="language-md"># hello world
+</code></pre>
+<p>安装所需模块 <code>markdown-it</code> 并启动程序（注意 preview 命令后面有指定博客项目所在的目录，为<code>example</code>)</p>
+<pre class=" language-shell"><code class="language-shell">$ npm i markdown-it -S
+$ XBlog preview example
+</code></pre>
+<p>然后在浏览器中打开 <code>http://127.0.0.1:3000/posts/2017-12/hello-world.html</code></p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180803-170704@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<h3 id="文章元数据"><a href="#文章元数据" class="headerlink" title="文章元数据"></a>文章元数据</h3><p>一篇文章除内容外，一般还会带上一些元数据，比如文章标题、发表时间、标签等:</p>
+<pre class=" language-md"><code class="language-md">---
+title: hello-world
+date: 2017-12-01
+---
+</code></pre>
+<p>文件顶部在 “—” 之间的部分是文章的元数据</p>
+<p>修改文件<code>lib/cmd_preview.js</code>, 增加函数解析文章元数据：</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// 解析文章内容</span>
+<span class="token keyword">function</span> <span class="token function">parseSourceContent</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> split <span class="token operator">=</span> <span class="token string">'---\n'</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> i <span class="token operator">=</span> data<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span>split<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> info <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>i <span class="token operator">!==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> j <span class="token operator">=</span> data<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span>split<span class="token punctuation">,</span> i <span class="token operator">+</span> split<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>j <span class="token operator">!==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">var</span> str <span class="token operator">=</span> data<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span>i <span class="token operator">+</span> split<span class="token punctuation">.</span>length<span class="token punctuation">,</span> j<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">trim</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      data <span class="token operator">=</span> data<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span>j <span class="token operator">+</span> split<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      str<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">'\n'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>line<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> i <span class="token operator">=</span> line<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span><span class="token string">':'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>i <span class="token operator">!==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">var</span> key <span class="token operator">=</span> line<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> i<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">trim</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">var</span> value <span class="token operator">=</span> line<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span>i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">trim</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          info<span class="token punctuation">[</span>key<span class="token punctuation">]</span> <span class="token operator">=</span> value<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  info<span class="token punctuation">.</span>source <span class="token operator">=</span> data<span class="token punctuation">;</span>
+  <span class="token keyword">return</span> info<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>再修改渲染文章路由处理部分</p>
+<pre class=" language-js"><code class="language-js">fs<span class="token punctuation">.</span><span class="token function">readFile</span><span class="token punctuation">(</span>file<span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>err<span class="token punctuation">,</span> content<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token function">next</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">// var html = markdownToHTML(content.toString());</span>
+  <span class="token keyword">var</span> post <span class="token operator">=</span> <span class="token function">parseSourceContent</span><span class="token punctuation">(</span>content<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>post<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> html <span class="token operator">=</span> <span class="token function">markdownToHTML</span><span class="token punctuation">(</span>post<span class="token punctuation">.</span>source<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  res<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span>html<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>重新启动程序并刷新页面，可看到文章的标题不见了，而在控制台中可看到这样的输出：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180803-172852@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>其中 title 和 date 为我们在文章源文件中设置的元数据，而 source 则为文章的内容。有了这些元数据，我们接下来就可以做更多的事情了。</p>
+<h3 id="增加模板"><a href="#增加模板" class="headerlink" title="增加模板"></a>增加模板</h3><p>上面的示例中，没有好看样式，显得略丑， 接下来我们给它接上一个模板。</p>
+<p>修改文件<code>lib/cmd_preview.js</code>:</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> swig <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'swig'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+swig<span class="token punctuation">.</span><span class="token function">setDefaults</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  cache<span class="token punctuation">:</span> <span class="token boolean">false</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token operator">...</span>
+<span class="token comment" spellcheck="true">// 渲染模板</span>
+<span class="token keyword">function</span> <span class="token function">renderFile</span><span class="token punctuation">(</span>file<span class="token punctuation">,</span> data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> swig<span class="token punctuation">.</span><span class="token function">render</span><span class="token punctuation">(</span>fs<span class="token punctuation">.</span><span class="token function">readFileSync</span><span class="token punctuation">(</span>file<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    filename<span class="token punctuation">:</span> file<span class="token punctuation">,</span>
+    autoescape<span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+    locals<span class="token punctuation">:</span> data
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<blockquote>
+<p>为了编程方便，此处使用 <code>fs.readFileSync()</code> 这个方法来读取文件内容，在读取过程中它会造成进程阻塞，但在本例中不会造成影响。</p>
+</blockquote>
+<p>修改原来渲染文章内容的部分：</p>
+<pre class=" language-js"><code class="language-js">fs<span class="token punctuation">.</span><span class="token function">readFile</span><span class="token punctuation">(</span>file<span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>err<span class="token punctuation">,</span> content<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token function">next</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> post <span class="token operator">=</span> <span class="token function">parseSourceContent</span><span class="token punctuation">(</span>content<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  post<span class="token punctuation">.</span>content <span class="token operator">=</span> <span class="token function">markdownToHTML</span><span class="token punctuation">(</span>post<span class="token punctuation">.</span>source<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  post<span class="token punctuation">.</span>layout <span class="token operator">=</span> post<span class="token punctuation">.</span>layout <span class="token operator">||</span> <span class="token string">'post'</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> html <span class="token operator">=</span> <span class="token function">renderFile</span><span class="token punctuation">(</span>path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token string">'_layout'</span><span class="token punctuation">,</span> post<span class="token punctuation">.</span>layout <span class="token operator">+</span> <span class="token string">'.html'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    post<span class="token punctuation">:</span> post
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  res<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span>html<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>在渲染模板时，传递<code>post</code>变量进去，在模板中可以通过<code>post.content</code>来取得文章的内容，通过<code>post.xxx</code>来取得文章的元数据<code>XXX</code>。可以通过元数据<code>layout</code>来指定要渲染的模块，默认为<code>post</code>, 模板文件存储在 <code>_layout</code> 目录下。</p>
+<p>新建模板文件，保存到<code>example/_layout/post.html</code></p>
+<pre class=" language-html"><code class="language-html"><span class="token doctype">&lt;!DOCTYPE html></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">charset</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>UTF-8<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">></span></span>{{config.title|escape}}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>stylesheet<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>/assets/style.css<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span><span class="token punctuation">></span></span>{{post.title|escape}}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">></span></span>日期：{{post.date|escape}}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>hr</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>post-content<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>{{post.content}}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span>
+</code></pre>
+<p>引用了一个 CSS 文件，<code>example/assets/style.css</code>:</p>
+<pre class=" language-css"><code class="language-css"><span class="token selector">html </span><span class="token punctuation">{</span>
+  <span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token hexcode">#eee</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token selector">body </span><span class="token punctuation">{</span>
+  <span class="token property">width</span><span class="token punctuation">:</span> <span class="token number">800</span>px<span class="token punctuation">;</span>
+  <span class="token property">min-height</span><span class="token punctuation">:</span> <span class="token number">500</span>px<span class="token punctuation">;</span>
+  <span class="token property">margin</span><span class="token punctuation">:</span> <span class="token number">0</span> auto<span class="token punctuation">;</span>
+  <span class="token property">padding</span><span class="token punctuation">:</span> <span class="token number">40</span>px<span class="token punctuation">;</span>
+  <span class="token property">line-height</span><span class="token punctuation">:</span> <span class="token number">1.6</span><span class="token punctuation">;</span>
+  <span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token hexcode">#fff</span><span class="token punctuation">;</span>
+  <span class="token property">font-family</span><span class="token punctuation">:</span> <span class="token string">'Helvetica Neue'</span>, Helvetica, Arial, sans-serif<span class="token punctuation">;</span>
+  <span class="token property">font-weight</span><span class="token punctuation">:</span> <span class="token number">300</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token selector">ul </span><span class="token punctuation">{</span>
+  <span class="token property">margin</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token property">padding</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token property">list-style</span><span class="token punctuation">:</span> none<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token selector">li i </span><span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> block<span class="token punctuation">;</span>
+  <span class="token property">margin-top</span><span class="token punctuation">:</span> <span class="token number">20</span>px<span class="token punctuation">;</span>
+  <span class="token property">border-bottom</span><span class="token punctuation">:</span> <span class="token number">1</span>px solid <span class="token hexcode">#888</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token selector">pre </span><span class="token punctuation">{</span>
+  <span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token hexcode">#f5f5f5</span><span class="token punctuation">;</span>
+  <span class="token property">margin</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token property">padding</span><span class="token punctuation">:</span> <span class="token number">8</span>px <span class="token number">12</span>px<span class="token punctuation">;</span>
+  <span class="token property">font-family</span><span class="token punctuation">:</span> <span class="token string">'Helvetica Neue'</span>, Helvetica, Arial, sans-serif<span class="token punctuation">;</span>
+  <span class="token property">font-size</span><span class="token punctuation">:</span> <span class="token number">14</span>px<span class="token punctuation">;</span>
+  <span class="token property">font-weight</span><span class="token punctuation">:</span> <span class="token number">300</span><span class="token punctuation">;</span>
+  <span class="token property">color</span><span class="token punctuation">:</span> <span class="token hexcode">#000</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token selector"><span class="token class">.post-date</span> </span><span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> inline-block<span class="token punctuation">;</span>
+  <span class="token property">padding</span><span class="token punctuation">:</span> <span class="token number">0</span>px <span class="token number">16</span>px<span class="token punctuation">;</span>
+  <span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token hexcode">#888</span><span class="token punctuation">;</span>
+  <span class="token property">color</span><span class="token punctuation">:</span> <span class="token hexcode">#fff</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token selector"><span class="token class">.post-title</span> </span><span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> inline-block<span class="token punctuation">;</span>
+  <span class="token property">margin-left</span><span class="token punctuation">:</span> <span class="token number">6</span>px<span class="token punctuation">;</span>
+  <span class="token property">text-decoration</span><span class="token punctuation">:</span> none<span class="token punctuation">;</span>
+  <span class="token property">font-weight</span><span class="token punctuation">:</span> bold<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token selector"><span class="token class">.post-title</span><span class="token pseudo-class">:hover</span> </span><span class="token punctuation">{</span>
+  <span class="token property">color</span><span class="token punctuation">:</span> <span class="token hexcode">#f00</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>安装 swig 模块并启动程序：</p>
+<pre class=" language-shell"><code class="language-shell">$ npm i swig -S
+$ XBlog preview example
+</code></pre>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180803-180209@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>可以看到美观多了。接下来我们试试换个模板，给文章添加元数据：</p>
+<pre class=" language-md"><code class="language-md">layout: post2
+</code></pre>
+<p>新建模板文件<code>example/_layout/post2.html</code>:</p>
+<pre class=" language-html"><code class="language-html"><span class="token doctype">&lt;!DOCTYPE html></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">charset</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>UTF-8<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">></span></span>{{config.title|escape}}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span><span class="token punctuation">></span></span>{{post.title|escape}}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">></span></span>日期：{{post.date|escape}}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>hr</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>post-content<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>{{post.content}}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span>
+</code></pre>
+<p>区别是 post2 里没有引 css 文件。我们再看下效果:</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180803-180803@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<h3 id="渲染文章列表"><a href="#渲染文章列表" class="headerlink" title="渲染文章列表"></a>渲染文章列表</h3><p>要渲染文章列表，则首先要遍历所有文章，并且按照发表时间来排序，然后将其标题渲染出来。每篇文章均存储在 <code>_posts</code> 目录下，为了方便管理，我们采用的格式是 <code>发表年月/文件名.md</code>，可以借助<code>rd</code>模块来遍历整个 <code>_posts</code> 目录下的 <code>.md</code> 文件。</p>
+<p>修改文件<code>lib/cmd_preview.js</code>:</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> rd <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'rd'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token operator">...</span>
+<span class="token comment" spellcheck="true">// 渲染列表</span>
+router<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> res<span class="token punctuation">,</span> next<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">// 文章列表页面</span>
+  <span class="token keyword">var</span> list <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> sourceDir <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token string">'_posts'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  rd<span class="token punctuation">.</span><span class="token function">eachFileFilterSync</span><span class="token punctuation">(</span>sourceDir<span class="token punctuation">,</span> <span class="token regex">/\.md$/</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>f<span class="token punctuation">,</span> s<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> source <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">readFileSync</span><span class="token punctuation">(</span>f<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">var</span> post <span class="token operator">=</span> <span class="token function">parseSourceContent</span><span class="token punctuation">(</span>source<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    post<span class="token punctuation">.</span>timestamp <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>post<span class="token punctuation">.</span>date<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    post<span class="token punctuation">.</span>url <span class="token operator">=</span> <span class="token string">'/posts/'</span> <span class="token operator">+</span> <span class="token function">stripExtname</span><span class="token punctuation">(</span>f<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span>sourceDir<span class="token punctuation">.</span>length <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">'.html'</span><span class="token punctuation">;</span>
+    list<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>post<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+  list<span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> b<span class="token punctuation">.</span>timestamp <span class="token operator">-</span> a<span class="token punctuation">.</span>timestamp<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+  <span class="token keyword">var</span> html <span class="token operator">=</span> <span class="token function">renderFile</span><span class="token punctuation">(</span>path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token string">'_layout'</span><span class="token punctuation">,</span> <span class="token string">'index.html'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    posts<span class="token punctuation">:</span> list
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  res<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token string">'html'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<ul>
+<li><code>rd.eachFileFilterSync(dir, pattern, callback)</code>遍历所有文件，<code>dir</code>为遍历目录，<code>pattern</code>为过滤规则正则，此例子中我们只读取 <code>md</code> 后缀的文件，<code>callback</code> 为回调函数，每读取到一个文件就会执行一次，它的第一个参数为这个文件的完整路径；</li>
+<li>在得到文章列表之后，我们还需要对文章按发表时间降序排序，首先我们先通过 <code>post.timestamp = new Date(post.date);</code> 得到文章发表时间的时间戳，然后通过数组的 <code>sort()</code>来进行排序；</li>
+<li><code>post.url</code> 为文章的链接，主要为了在渲染文章列表时，点击跳转详细内容页面，通过 <code>&#39;/posts/&#39; + stripExtname(f.slice(sourceDir.length + 1)) + &#39;.html&#39;</code> 来取得。其原理为先取得文章源文件在 <code>_posts</code> 目录下的相对路径，然后将其后缀名<code>.md</code>改为<code>.html</code>即<br>可。</li>
+</ul>
+<p>新建文章列表的模板文件为<code>_layout/index.html</code>,</p>
+<pre class=" language-html"><code class="language-html"><span class="token doctype">&lt;!DOCTYPE html></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">charset</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>UTF-8<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">></span></span>{{config.title|escape}}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>stylesheet<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>/assets/style.css<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span><span class="token punctuation">></span></span>{{post.title|escape}}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ul</span><span class="token punctuation">></span></span>
+    {% for post in posts %}
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>post-date<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>{{post.date|escape}}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>post-title<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>{{post.url|escape}}<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        {{post.title|escape}}
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">></span></span>
+    {% endfor %}
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ul</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span>
+</code></pre>
+<p>我们再随便添加几篇文章，并安装 rd 模块，然后启动程序</p>
+<pre class=" language-shell"><code class="language-shell">$ npm i rd -S
+$ XBlog preview example
+</code></pre>
+<p>然后在浏览器中打开 <code>http://localhost:3000</code></p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180803-183555@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>这样，我们的静态博客实时预览就完成了。</p>
+<h2 id="生成静态博客"><a href="#生成静态博客" class="headerlink" title="生成静态博客"></a>生成静态博客</h2><p>生成静态博客内容时渲染文章的程序与实时预览时基本一样，区别是这一步不是等待用户访问时再渲染文章，而是直接遍历所有文章并直接渲染，然后把渲染后的页面直接保存为文件，因此我们可以先把这些公共的程序提取出来。</p>
+<p>首先将渲染文章的内容部分和渲染文章的列表部分的程序提取处理， 分别命名为<code>renderPost()</code>和<code>renderIndex()</code>, 新建文件<code>lib/utils.js</code>:</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> swig <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'swig'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> rd <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'rd'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> path <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'path'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'fs'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> md <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'markdown-it'</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  html<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  langPrefix<span class="token punctuation">:</span> <span class="token string">'code-'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+swig<span class="token punctuation">.</span><span class="token function">setDefaults</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  cache<span class="token punctuation">:</span> <span class="token boolean">false</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 去掉文件名中的扩展名</span>
+<span class="token keyword">function</span> <span class="token function">stripExtname</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">0</span> <span class="token operator">-</span> path<span class="token punctuation">.</span><span class="token function">extname</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>i <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span> i <span class="token operator">=</span> name<span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+  <span class="token keyword">return</span> name<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// 将Markdown转换为HTML</span>
+<span class="token keyword">function</span> <span class="token function">markdownToHTML</span><span class="token punctuation">(</span>content<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> md<span class="token punctuation">.</span><span class="token function">render</span><span class="token punctuation">(</span>content <span class="token operator">||</span> <span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// 解析文章内容</span>
+<span class="token keyword">function</span> <span class="token function">parseSourceContent</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> split <span class="token operator">=</span> <span class="token string">'---\n'</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> i <span class="token operator">=</span> data<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span>split<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> info <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>i <span class="token operator">!==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> j <span class="token operator">=</span> data<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span>split<span class="token punctuation">,</span> i <span class="token operator">+</span> split<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>j <span class="token operator">!==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">var</span> str <span class="token operator">=</span> data<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span>i <span class="token operator">+</span> split<span class="token punctuation">.</span>length<span class="token punctuation">,</span> j<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">trim</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      data <span class="token operator">=</span> data<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span>j <span class="token operator">+</span> split<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      str<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">'\n'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>line<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> i <span class="token operator">=</span> line<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span><span class="token string">':'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>i <span class="token operator">!==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">var</span> key <span class="token operator">=</span> line<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> i<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">trim</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">var</span> value <span class="token operator">=</span> line<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span>i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">trim</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          info<span class="token punctuation">[</span>key<span class="token punctuation">]</span> <span class="token operator">=</span> value<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  info<span class="token punctuation">.</span>source <span class="token operator">=</span> data<span class="token punctuation">;</span>
+  <span class="token keyword">return</span> info<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// 渲染模板</span>
+<span class="token keyword">function</span> <span class="token function">renderFile</span><span class="token punctuation">(</span>file<span class="token punctuation">,</span> data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> swig<span class="token punctuation">.</span><span class="token function">render</span><span class="token punctuation">(</span>fs<span class="token punctuation">.</span><span class="token function">readFileSync</span><span class="token punctuation">(</span>file<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    filename<span class="token punctuation">:</span> file<span class="token punctuation">,</span>
+    autoescape<span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+    locals<span class="token punctuation">:</span> data
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// 遍历所有文章</span>
+<span class="token keyword">function</span> <span class="token function">eachSourceFile</span><span class="token punctuation">(</span>sourceDir<span class="token punctuation">,</span> callback<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  rd<span class="token punctuation">.</span><span class="token function">eachFileFilterSync</span><span class="token punctuation">(</span>sourceDir<span class="token punctuation">,</span> <span class="token regex">/\.md$/</span><span class="token punctuation">,</span> callback<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// 渲染文章</span>
+<span class="token keyword">function</span> <span class="token function">renderPost</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> file<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> content <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">readFileSync</span><span class="token punctuation">(</span>file<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> post <span class="token operator">=</span> <span class="token function">parseSourceContent</span><span class="token punctuation">(</span>content<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  post<span class="token punctuation">.</span>content <span class="token operator">=</span> <span class="token function">markdownToHTML</span><span class="token punctuation">(</span>post<span class="token punctuation">.</span>source<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  post<span class="token punctuation">.</span>layout <span class="token operator">=</span> post<span class="token punctuation">.</span>layout <span class="token operator">||</span> <span class="token string">'post'</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> html <span class="token operator">=</span> <span class="token function">renderFile</span><span class="token punctuation">(</span>path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token string">'_layout'</span><span class="token punctuation">,</span> post<span class="token punctuation">.</span>layout <span class="token operator">+</span> <span class="token string">'.html'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    post<span class="token punctuation">:</span> post
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> html<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// 渲染文章列表</span>
+<span class="token keyword">function</span> <span class="token function">renderIndex</span><span class="token punctuation">(</span>dir<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> list <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> sourceDir <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token string">'_posts'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">eachSourceFile</span><span class="token punctuation">(</span>sourceDir<span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>f<span class="token punctuation">,</span> s<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> source <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">readFileSync</span><span class="token punctuation">(</span>f<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">var</span> post <span class="token operator">=</span> <span class="token function">parseSourceContent</span><span class="token punctuation">(</span>source<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    post<span class="token punctuation">.</span>timestamp <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>post<span class="token punctuation">.</span>date<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    post<span class="token punctuation">.</span>url <span class="token operator">=</span>
+      <span class="token string">'/posts/'</span> <span class="token operator">+</span> <span class="token function">stripExtname</span><span class="token punctuation">(</span>f<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span>sourceDir<span class="token punctuation">.</span>length <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">'.html'</span><span class="token punctuation">;</span>
+    list<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>post<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  list<span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> b<span class="token punctuation">.</span>timestamp <span class="token operator">-</span> a<span class="token punctuation">.</span>timestamp<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">var</span> html <span class="token operator">=</span> <span class="token function">renderFile</span><span class="token punctuation">(</span>path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token string">'_layout'</span><span class="token punctuation">,</span> <span class="token string">'index.html'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    posts<span class="token punctuation">:</span> list
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> html<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+exports<span class="token punctuation">.</span>renderPost <span class="token operator">=</span> renderPost<span class="token punctuation">;</span>
+exports<span class="token punctuation">.</span>renderIndex <span class="token operator">=</span> renderIndex<span class="token punctuation">;</span>
+exports<span class="token punctuation">.</span>stripExtname <span class="token operator">=</span> stripExtname<span class="token punctuation">;</span>
+exports<span class="token punctuation">.</span>eachSourceFile <span class="token operator">=</span> eachSourceFile<span class="token punctuation">;</span>
+</code></pre>
+<p>优化<code>lib/cmd_preview.js</code>:</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> express <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'express'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> serveStatic <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'serve-static'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> path <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'path'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> utils <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'./utils'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>dir<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  dir <span class="token operator">=</span> dir <span class="token operator">||</span> <span class="token string">'.'</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 指定当前博客项目所在的目录，如果没有指定则默认为当前目录</span>
+
+  <span class="token comment" spellcheck="true">// 初始化express</span>
+  <span class="token keyword">var</span> app <span class="token operator">=</span> <span class="token function">express</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> router <span class="token operator">=</span> express<span class="token punctuation">.</span><span class="token function">Router</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  app<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span><span class="token string">'/assets'</span><span class="token punctuation">,</span> <span class="token function">serveStatic</span><span class="token punctuation">(</span>path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token string">'assets'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 静态资源文件</span>
+  app<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span>router<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// 渲染文章</span>
+  router<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'/posts/*'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> res<span class="token punctuation">,</span> next<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 文章内容页面</span>
+    <span class="token keyword">var</span> name <span class="token operator">=</span> utils<span class="token punctuation">.</span><span class="token function">stripExtname</span><span class="token punctuation">(</span>req<span class="token punctuation">.</span>params<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">var</span> file <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token string">'_posts'</span><span class="token punctuation">,</span> name <span class="token operator">+</span> <span class="token string">'.md'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">var</span> html <span class="token operator">=</span> utils<span class="token punctuation">.</span><span class="token function">renderPost</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> file<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    res<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span>html<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// 渲染列表</span>
+  router<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> res<span class="token punctuation">,</span> next<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 文章列表页面</span>
+    <span class="token keyword">var</span> html <span class="token operator">=</span> utils<span class="token punctuation">.</span><span class="token function">renderIndex</span><span class="token punctuation">(</span>dir<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    res<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span>html<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  app<span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`Blog is running`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>重新启动预览程序，可以看到程序正常运行</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180803-190933@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p><strong>接下来实现 build 命令</strong></p>
+<p>修改文件<code>bin/XBlog</code>:</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// build命令</span>
+program
+  <span class="token punctuation">.</span><span class="token function">command</span><span class="token punctuation">(</span><span class="token string">'build [dir]'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">description</span><span class="token punctuation">(</span><span class="token string">'生成整站静态HTML'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">option</span><span class="token punctuation">(</span><span class="token string">'-o, --output &lt;dir>'</span><span class="token punctuation">,</span> <span class="token string">'生成的静态HTML存放目录'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">action</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'../lib/cmd_build'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>新建文件<code>lib/cmd_build.js</code></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> path <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'path'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> utils <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'./utils'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'fs-extra'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> options<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  dir <span class="token operator">=</span> dir <span class="token operator">||</span> <span class="token string">'.'</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> outputDir <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>options<span class="token punctuation">.</span>output <span class="token operator">||</span> dir<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// 写入文件</span>
+  <span class="token keyword">function</span> <span class="token function">outputFile</span><span class="token punctuation">(</span>file<span class="token punctuation">,</span> content<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'生成页面：%s'</span><span class="token punctuation">,</span> file<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span>outputDir<span class="token punctuation">.</span>length <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    fs<span class="token punctuation">.</span><span class="token function">outputFileSync</span><span class="token punctuation">(</span>file<span class="token punctuation">,</span> content<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment" spellcheck="true">// 生成文章内容页面</span>
+  <span class="token keyword">var</span> sourceDir <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token string">'_posts'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  utils<span class="token punctuation">.</span><span class="token function">eachSourceFile</span><span class="token punctuation">(</span>sourceDir<span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>f<span class="token punctuation">,</span> s<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> html <span class="token operator">=</span> utils<span class="token punctuation">.</span><span class="token function">renderPost</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> f<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">var</span> relativeFile <span class="token operator">=</span>
+      utils<span class="token punctuation">.</span><span class="token function">stripExtname</span><span class="token punctuation">(</span>f<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span>sourceDir<span class="token punctuation">.</span>length <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">'.html'</span><span class="token punctuation">;</span>
+    <span class="token keyword">var</span> file <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>outputDir<span class="token punctuation">,</span> <span class="token string">'posts'</span><span class="token punctuation">,</span> relativeFile<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">outputFile</span><span class="token punctuation">(</span>file<span class="token punctuation">,</span> html<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// 生成首页</span>
+  <span class="token keyword">var</span> htmlIndex <span class="token operator">=</span> utils<span class="token punctuation">.</span><span class="token function">renderIndex</span><span class="token punctuation">(</span>dir<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> fileIndex <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>outputDir<span class="token punctuation">,</span> <span class="token string">'index.html'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">outputFile</span><span class="token punctuation">(</span>fileIndex<span class="token punctuation">,</span> htmlIndex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<ul>
+<li><code>build</code> 命令允许通过 <code>--output &lt;dir&gt;</code> 选项来指定文件的输出路径，如果没有指定则默认输出到当前博客项目所在的目录， 通过 <code>path.resolve(options.output || dir)</code>来取得，并保存到变量<code>outputDir</code>中；</li>
+<li>保存文件时使用<code>fs-extra</code>模块的 <code>fs.outputFileSync()</code> 函数来做，其好处是可以不用管目录是否存在，如果目录不存在，则模块会自动帮我们创建。</li>
+</ul>
+<p>安装<code>fs-extra</code>模块并执行 build 命令：</p>
+<pre class=" language-shell"><code class="language-shell">$ npm i fs-extra -S
+$ XBlog build example
+</code></pre>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180803-192155@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>同时可以看到生成目录</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180803-192257@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>如果想要输出到别的目录，可以指定 <code>--output</code>,比如：</p>
+<pre class=" language-shell"><code class="language-shell">$ XBlog build example --output output
+</code></pre>
+<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>有时需要在渲染页面时用到一些公共的数据，在启动实时预览程序时希望可以自已指定要监听的端口，这时我们可以通过博客目录下的<code>config.json</code>来指定这些数据。</p>
+<p>修改文件<code>lib/utils.js</code>：</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// 读取配置文件</span>
+<span class="token keyword">function</span> <span class="token function">loadConfig</span><span class="token punctuation">(</span>dir<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> content <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">readFileSync</span><span class="token punctuation">(</span>path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token string">'config.json'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> data <span class="token operator">=</span> JSON<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>content<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> data<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+exports<span class="token punctuation">.</span>loadConfig <span class="token operator">=</span> loadConfig<span class="token punctuation">;</span>
+</code></pre>
+<p>新建文件<code>example/config.json</code>:</p>
+<pre class=" language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"port"</span><span class="token operator">:</span> <span class="token number">3100</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>修改文件<code>lib/cmd_preview.js</code>，顶部增加代码</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> open <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'open'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token operator">...</span>
+<span class="token keyword">var</span> config <span class="token operator">=</span> utils<span class="token punctuation">.</span><span class="token function">loadConfig</span><span class="token punctuation">(</span>dir<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> port <span class="token operator">=</span> config<span class="token punctuation">.</span>port <span class="token operator">||</span> <span class="token number">3000</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> url <span class="token operator">=</span> <span class="token string">'http://127.0.0.1:'</span> <span class="token operator">+</span> port<span class="token punctuation">;</span>
+app<span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span>port<span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`Blog is running`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token function">open</span><span class="token punctuation">(</span>url<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<ul>
+<li>通过配置文件 <code>port</code> 属性指定监听端口，如果没有则默认<code>3000</code>;</li>
+<li><code>open</code> 模块用于调用系统浏览器打开指定网址，在<code>preview</code>命令执行后，将自动在浏览器中打开博客首页。</li>
+</ul>
+<p>安装<code>open</code>模块并执行<code>preview</code>命令：</p>
+<pre class=" language-shell"><code class="language-shell">S npm i open -S
+S XBlog preview example
+</code></pre>
+<p>执行命令后，就可以看到浏览器会自动打开<code>http://127.0.0.1:3100</code>。</p>
+<p>接下来我们实现在模板中也可以通过 config 变量来访问到配置数据。</p>
+<p>修改文件<code>lib/utils.js</code>, 将<code>renderPost()</code>和<code>renderIndex()</code>修改：</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// 渲染文章</span>
+<span class="token keyword">function</span> <span class="token function">renderPost</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> file<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> content <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">readFileSync</span><span class="token punctuation">(</span>file<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> post <span class="token operator">=</span> <span class="token function">parseSourceContent</span><span class="token punctuation">(</span>content<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  post<span class="token punctuation">.</span>content <span class="token operator">=</span> <span class="token function">markdownToHTML</span><span class="token punctuation">(</span>post<span class="token punctuation">.</span>source<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  post<span class="token punctuation">.</span>layout <span class="token operator">=</span> post<span class="token punctuation">.</span>layout <span class="token operator">||</span> <span class="token string">'post'</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">var</span> config <span class="token operator">=</span> <span class="token function">loadConfig</span><span class="token punctuation">(</span>dir<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> layout <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token string">'_layout'</span><span class="token punctuation">,</span> post<span class="token punctuation">.</span>layout <span class="token operator">+</span> <span class="token string">'.html'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> html <span class="token operator">=</span> <span class="token function">renderFile</span><span class="token punctuation">(</span>layout<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    config<span class="token punctuation">:</span> config<span class="token punctuation">,</span>
+    post<span class="token punctuation">:</span> post
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> html<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// 渲染文章列表</span>
+<span class="token keyword">function</span> <span class="token function">renderIndex</span><span class="token punctuation">(</span>dir<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> list <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> sourceDir <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token string">'_posts'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">eachSourceFile</span><span class="token punctuation">(</span>sourceDir<span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>f<span class="token punctuation">,</span> s<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> source <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">readFileSync</span><span class="token punctuation">(</span>f<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">var</span> post <span class="token operator">=</span> <span class="token function">parseSourceContent</span><span class="token punctuation">(</span>source<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    post<span class="token punctuation">.</span>timestamp <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>post<span class="token punctuation">.</span>date<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    post<span class="token punctuation">.</span>url <span class="token operator">=</span>
+      <span class="token string">'/posts/'</span> <span class="token operator">+</span> <span class="token function">stripExtname</span><span class="token punctuation">(</span>f<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span>sourceDir<span class="token punctuation">.</span>length <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">'.html'</span><span class="token punctuation">;</span>
+    list<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>post<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  list<span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> b<span class="token punctuation">.</span>timestamp <span class="token operator">-</span> a<span class="token punctuation">.</span>timestamp<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">var</span> config <span class="token operator">=</span> <span class="token function">loadConfig</span><span class="token punctuation">(</span>dir<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> layout <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token string">'_layout'</span><span class="token punctuation">,</span> <span class="token string">'index.html'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> html <span class="token operator">=</span> <span class="token function">renderFile</span><span class="token punctuation">(</span>layout<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    config<span class="token punctuation">:</span> config<span class="token punctuation">,</span>
+    posts<span class="token punctuation">:</span> list
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> html<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<blockquote>
+<p>在渲染时通过<code>loadConfig()</code>来读取配置信息，并作为 config 变量传递给模板。</p>
+</blockquote>
+<h2 id="创建空白博客模板"><a href="#创建空白博客模板" class="headerlink" title="创建空白博客模板"></a>创建空白博客模板</h2><p>在创建一个新的博客项目时，为了方便使用，我们希望这个工具能自动创建一些必需的文件，比如页面模板和默认配置文件，这样就可以马上编写文章了。</p>
+<p>把上面创建的一些文件保存在 tpl 目录下：</p>
+<ul>
+<li>将<code>example/_layout/index.html</code>复制到<code>tpl/_layout/index.html</code>;</li>
+<li>将<code>example/_layout/post.html</code>复制到<code>tpl/_layout/post.html</code>;</li>
+<li>将<code>example/assets/style.css</code>复制到<code>tpl/assets/style.css</code>;</li>
+<li>将<code>example/config.json</code>复制到<code>tpl/config.json</code>。</li>
+</ul>
+<p>一个空的博客项目包含以下目录：</p>
+<ul>
+<li><code>_layout</code>目录，存放模板文件；</li>
+<li><code>_posts</code>目录，存放文章内容源文件；</li>
+<li><code>posts</code>目录，存放生成的博客页面；</li>
+<li><code>assets</code>目录，存放博客页面中引用到的静态资源。</li>
+</ul>
+<p>我们还可以在新博客自动创建一篇 hello, world 文章。</p>
+<p>修改文件<code>bin/XBlog</code>, 将 create 命令部分改为：</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// create命令</span>
+program
+  <span class="token punctuation">.</span><span class="token function">command</span><span class="token punctuation">(</span><span class="token string">'create [dir]'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">description</span><span class="token punctuation">(</span><span class="token string">'创建一个空的博客'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">action</span><span class="token punctuation">(</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'../lib/cmd_create'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>新建文件<code>lib/cmd_create.js</code></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> path <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'path'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> utils <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'./utils'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'fs-extra'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> moment <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'moment'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>dir<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  dir <span class="token operator">=</span> dir <span class="token operator">||</span> <span class="token string">'.'</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// 创建基本目录</span>
+  fs<span class="token punctuation">.</span><span class="token function">mkdirsSync</span><span class="token punctuation">(</span>path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token string">'_layout'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  fs<span class="token punctuation">.</span><span class="token function">mkdirsSync</span><span class="token punctuation">(</span>path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token string">'_posts'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  fs<span class="token punctuation">.</span><span class="token function">mkdirsSync</span><span class="token punctuation">(</span>path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token string">'assets'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  fs<span class="token punctuation">.</span><span class="token function">mkdirsSync</span><span class="token punctuation">(</span>path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token string">'posts'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// 复制模板文件</span>
+  <span class="token keyword">var</span> tplDir <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>__dirname<span class="token punctuation">,</span> <span class="token string">'../tpl'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  fs<span class="token punctuation">.</span><span class="token function">copySync</span><span class="token punctuation">(</span>tplDir<span class="token punctuation">,</span> dir<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// 创建第一篇文章</span>
+  <span class="token function">newPost</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token string">'hello, world'</span><span class="token punctuation">,</span> <span class="token string">'这是我的第一篇文章'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'OK'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 创建一篇文章</span>
+<span class="token keyword">function</span> <span class="token function">newPost</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> title<span class="token punctuation">,</span> content<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> data <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token string">'---'</span><span class="token punctuation">,</span>
+    <span class="token string">'title: '</span> <span class="token operator">+</span> title<span class="token punctuation">,</span>
+    <span class="token string">'date: '</span> <span class="token operator">+</span> <span class="token function">moment</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span><span class="token string">'YYYY-MM-DD'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token string">'---'</span><span class="token punctuation">,</span>
+    <span class="token string">''</span><span class="token punctuation">,</span>
+    content
+  <span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">'\n'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> name <span class="token operator">=</span> <span class="token function">moment</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span><span class="token string">'YYYY-MM'</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">'/hello-world.md'</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> file <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token string">'_posts'</span><span class="token punctuation">,</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  fs<span class="token punctuation">.</span><span class="token function">outputFileSync</span><span class="token punctuation">(</span>file<span class="token punctuation">,</span> data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<ul>
+<li>使用<code>fs-extra</code>模块提供的<code>mkdirsSync()</code>来创建目录， 可以不用管其父目录是否存在，模块会自动帮我们创建；</li>
+<li>使用<code>fs-extra</code>模块提供的<code>copySync()</code>来复制一个目录；</li>
+<li>使用<code>moment</code>模块来生成日期字符串。</li>
+</ul>
+<p>安装 moment 模块，创建一个空的项目并预览：</p>
+<pre class=" language-shell"><code class="language-shell">$ npm i moment -S
+$ XBlog create new_blog
+$ XBlog preview new_blog
+</code></pre>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180803-220042@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>至此，静态博客的基本功能已经完成了。</p>
+<h2 id="第三方服务"><a href="#第三方服务" class="headerlink" title="第三方服务"></a>第三方服务</h2><h3 id="评论组件"><a href="#评论组件" class="headerlink" title="评论组件"></a>评论组件</h3><p>由于这个博客是静态页面，所以无法在服务器端处理用户对文章内容的评论。现在网上已有很多第三方的评论组件，我们可以在模板中简单地填写一些代码即可使用到这些服务。以下是一些常用的第三方评论组件。</p>
+<ul>
+<li>多说：社会化评论系统、社交评论插件，详细介绍见 <a href="http://duoshuo.com/" rel="external nofollow noopener noreferrer" target="_blank">http://duoshuo.com/</a>。</li>
+<li>Disqus：The Web’s Community of Communities, 详细介绍见 <a href="https://disqus.com" rel="external nofollow noopener noreferrer" target="_blank">https://disqus.com</a>。</li>
+</ul>
+<p>我们在模板文件<code>_layout/post.html</code>末尾添加以下多说评论组件的代码:</p>
+<pre class=" language-html"><code class="language-html"><span class="token comment" spellcheck="true">&lt;!-- 多说评论框start --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>ds-thread<span class="token punctuation">"</span></span> <span class="token attr-name">data-thread-key</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token attr-name">data-title</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>{{post.title|escape}}<span class="token punctuation">"</span></span> <span class="token attr-name">data-url</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token comment" spellcheck="true">&lt;!-- 多说评论框end --></span>
+<span class="token comment" spellcheck="true">&lt;!-- 多说公共JS代码start (一个网页只需插入一次） --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/javascript<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script language-javascript">
+  <span class="token keyword">var</span> duoshuoQuery <span class="token operator">=</span> <span class="token punctuation">{</span>
+    short_name<span class="token punctuation">:</span> <span class="token string">"node-in-action-blog"</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">var</span> ds <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'script'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      ds<span class="token punctuation">.</span>type <span class="token operator">=</span> <span class="token string">'text/javascript'</span><span class="token punctuation">;</span>
+      ds<span class="token punctuation">.</span><span class="token keyword">async</span> <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+      ds<span class="token punctuation">.</span>src <span class="token operator">=</span> <span class="token punctuation">(</span>document<span class="token punctuation">.</span>location<span class="token punctuation">.</span>protocol <span class="token operator">==</span> <span class="token string">'https:'</span> <span class="token operator">?</span> <span class="token string">'https:'</span> <span class="token punctuation">:</span> <span class="token string">'http:'</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">'//static.duoshuo.com/embed.js'</span><span class="token punctuation">;</span>
+      ds<span class="token punctuation">.</span>charset <span class="token operator">=</span> <span class="token string">'UTF-8'</span><span class="token punctuation">;</span>
+      <span class="token punctuation">(</span>document<span class="token punctuation">.</span><span class="token function">getElementsByTagName</span><span class="token punctuation">(</span><span class="token string">'head'</span><span class="token punctuation">)</span><span class="token punctuation">[</span>O<span class="token punctuation">]</span> <span class="token operator">||</span> document<span class="token punctuation">.</span><span class="token function">getElementsByTagName</span><span class="token punctuation">(</span><span class="token string">'body'</span><span class="token punctuation">)</span><span class="token punctuation">[</span>O<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>ds<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+<span class="token comment" spellcheck="true">&lt;!-- 多说公共JS代码end --></span>
+</code></pre>
+<h3 id="分享组件"><a href="#分享组件" class="headerlink" title="分享组件"></a>分享组件</h3><p>可以使用国内的 “加网” 提供的分享组件，详细介绍见<a href="http://www.jiathis.com/" rel="external nofollow noopener noreferrer" target="_blank">http://www.jiathis.com/</a>。</p>
+<p>我们在模板文件<code>_layout/post.html</code>末尾添加以下 JiaThis 分享组件：</p>
+<pre class=" language-html"><code class="language-html"><span class="token comment" spellcheck="true">&lt;!-- JiaThis Button BEGIN --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>jiathis—style_32x32<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>jiathis_button_qzone<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>jiathis button tsina<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>jiathis_button_tqq<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>jiathis button weixin<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>jiathis button renren<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.jiathis.com/share<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>jiathis jiathis_txt jtico jtico_jiathis <span class="token punctuation">"</span></span> <span class="token attr-name">target</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>_blank<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>jiathis_counter_style<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/javascript<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://v3.jiathis.com/code/jia.js<span class="token punctuation">"</span></span> <span class="token attr-name">charset</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>utf-8<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script language-javascript"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+<span class="token comment" spellcheck="true">&lt;!-- JiaThis Button END --></span>
+</code></pre>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-12-05T13:24:50.000Z" itemprop="dateUpdated">2017-12-05 21:24:50</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Koa2/">Koa2</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Nodejs/">Nodejs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/d7a134ad/&title=《Nodejs编写静态博客命令行工具》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/d7a134ad/&title=《Nodejs编写静态博客命令行工具》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/d7a134ad/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Nodejs编写静态博客命令行工具》 — Sixin的小站&url=http://coder.liusixin.cn/posts/d7a134ad/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/d7a134ad/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/a76d942d/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">前后端漏洞分析与安全防御总结</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/5a581879/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">JavaScript设计模式--结构型设计模式</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/d7a134ad/&title=《Nodejs编写静态博客命令行工具》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/d7a134ad/&title=《Nodejs编写静态博客命令行工具》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/d7a134ad/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Nodejs编写静态博客命令行工具》 — Sixin的小站&url=http://coder.liusixin.cn/posts/d7a134ad/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/d7a134ad/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABx0lEQVR42u3awW7DIBAE0Pz/T7tSr62dGTamrvQ4RUmMH5cVzPJ6xeP4Hvl/jh9jbc7FgYuLO+Yel+Ns6rNvzp69njMx4OLi7ufmhSl/6mye689vbLi4uA/jXhedtQ0QLi7uf+des/JNzx/UXVxc3CVucvhJFpAHIref1XBxcQfcNjC94/ON+S4uLm7JPcrRBp2Tp36ZBxcXdws3b5MkcUa+Jcq3UMUZCxcX90PctUg0WUx7dImubuDi4m7ktlcrJsubBK+4uLg7ufmm5FMN1LWIFhcXdz+3bZDkZSvfxLzx4OLibuTmm5UkOml7IsV7cXFxN3KT2LSNOOfFruj04uLi3sBtty9JmNK2WKIIBhcXdzu3LSttUWsLKC4u7hO4edlKQpP2wBN1UXFxcbdwJxes5y2WtatguLi4d3PbQtaWtvxqRdRqxcXF3cidHEvm3KJc4uLibuSuxaZrxSiPX0etFFxc3AG3LSh5m7YNO9pfcXFx7+Z+9ngTNUUmBQ4XF3cjd95GLQKOpaKJi4v7TG7bZG1njvZiuLi4D+bm4UgOihaMi4u7kTtpuCZR7NrRaBSL4OLiDrhtYJovJnlZckzCxcXdyP0C8UCLsi00KscAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

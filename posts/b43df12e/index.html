@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/b43df12e/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/b43df12e/">
+    
+    
+    <title>纯前端实现裁剪压缩图片 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="javascript,HTML5,插件">
+    <meta name="description" content="前言由于前端是不能直接操作本地文件的， 要么通过 &amp;lt;input type= &amp;quot;file&amp;quot;&amp;gt; 用户单击选择文件或者拖拽的方式，要么使用 Flash 等三方的控件。同时 HTMLS 崛起，可以在前端使用原生的 API 实现图片的处理，这样可以减少后端服务器的压力，同时对用户也是友好的。 这里面有几个核心的功能：  支持拖拽 压缩 裁剪编辑 上传和上传进度显示  实践接下">
+<meta name="keywords" content="javascript,HTML5,插件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="纯前端实现裁剪压缩图片">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/b43df12e/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="前言由于前端是不能直接操作本地文件的， 要么通过 &amp;lt;input type= &amp;quot;file&amp;quot;&amp;gt; 用户单击选择文件或者拖拽的方式，要么使用 Flash 等三方的控件。同时 HTMLS 崛起，可以在前端使用原生的 API 实现图片的处理，这样可以减少后端服务器的压力，同时对用户也是友好的。 这里面有几个核心的功能：  支持拖拽 压缩 裁剪编辑 上传和上传进度显示  实践接下">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-06-13T16:11:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="纯前端实现裁剪压缩图片">
+<meta name="twitter:description" content="前言由于前端是不能直接操作本地文件的， 要么通过 &amp;lt;input type= &amp;quot;file&amp;quot;&amp;gt; 用户单击选择文件或者拖拽的方式，要么使用 Flash 等三方的控件。同时 HTMLS 崛起，可以在前端使用原生的 API 实现图片的处理，这样可以减少后端服务器的压力，同时对用户也是友好的。 这里面有几个核心的功能：  支持拖拽 压缩 裁剪编辑 上传和上传进度显示  实践接下">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">纯前端实现裁剪压缩图片</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">纯前端实现裁剪压缩图片</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-06-13T14:21:46.000Z" itemprop="datePublished" class="page-time">
+  2018-06-13
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#实践"><span class="post-toc-number">2.</span> <span class="post-toc-text">实践</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-拖拽显示图片"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">1. 拖拽显示图片</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-压缩图片"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">2. 压缩图片</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3-裁剪图片"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">3. 裁剪图片</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-1-简单裁剪"><span class="post-toc-number">2.3.1.</span> <span class="post-toc-text">3.1 简单裁剪</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-2-裁剪加翻转"><span class="post-toc-number">2.3.2.</span> <span class="post-toc-text">3.2 裁剪加翻转</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-3-旋转加翻转剪裁"><span class="post-toc-number">2.3.3.</span> <span class="post-toc-text">3.3 旋转加翻转剪裁</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#4-文件上传和上传进度"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">4. 文件上传和上传进度</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/Web高效编程/纯前端实现裁剪压缩图片" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">纯前端实现裁剪压缩图片</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-06-13 22:21:46" datetime="2018-06-13T14:21:46.000Z" itemprop="datePublished">2018-06-13</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>由于前端是不能直接操作本地文件的， 要么通过 <code>&lt;input type= &quot;file&quot;&gt;</code> 用户单击选择文件或者拖拽的方式，要么使用 Flash 等三方的控件。同时 HTMLS 崛起，可以在前端使用原生的 API 实现图片的处理，这样可以减少后端服务器的压力，同时对用户也是友好的。</p>
+<p>这里面有几个核心的功能：</p>
+<ol>
+<li>支持拖拽</li>
+<li>压缩</li>
+<li>裁剪编辑</li>
+<li>上传和上传进度显示</li>
+</ol>
+<h1 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h1><p><strong>接下来会依次介绍每个功能的实现！</strong></p>
+<h2 id="1-拖拽显示图片"><a href="#1-拖拽显示图片" class="headerlink" title="1. 拖拽显示图片"></a>1. 拖拽显示图片</h2><p>拖拽读取的功能主要是要兼听 HTML5 的 <code>drag</code> 事件， 这个没什么好说的，主要在于怎么读取用户拖过来的图片并把它转成 base64 以在本地显示。</p>
+<p><strong>监听 drop 事件</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> handler <span class="token operator">=</span> <span class="token punctuation">{</span>
+  init<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>$container<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 需要把dragover的默认行为禁掉，不然会跳页</span>
+    $container<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'dragover'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      event<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    $container<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'drop'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      event<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token comment" spellcheck="true">// 这里获取拖过来的图片文件， 为一个File对象</span>
+      <span class="token keyword">var</span> file <span class="token operator">=</span> event<span class="token punctuation">.</span>originalEvent<span class="token punctuation">.</span>dataTransfer<span class="token punctuation">.</span>files<span class="token punctuation">[</span>O<span class="token punctuation">]</span><span class="token punctuation">;</span>
+      handler<span class="token punctuation">.</span><span class="token function">handleDrop</span><span class="token punctuation">(</span><span class="token function">$</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">,</span> file<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>这里获取到图片文件之后交给 <code>handleDrop</code> 来处理。</p>
+<p>注意如果使用 <code>input</code>, 则监听 <code>input</code> 的 <code>change</code> 事件，</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// 如果使用的是 input，监听change事件</span>
+$container<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'change'</span><span class="token punctuation">,</span> <span class="token string">'input[type=file]'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token keyword">this</span><span class="token punctuation">.</span>value<span class="token punctuation">)</span> <span class="token keyword">return</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> file <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>files<span class="token punctuation">[</span>O<span class="token punctuation">]</span><span class="token punctuation">;</span>
+  handler<span class="token punctuation">.</span><span class="token function">handleDrop</span><span class="token punctuation">(</span><span class="token function">$</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">closest</span><span class="token punctuation">(</span><span class="token string">'.container'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> file<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>在 <code>handleDrop</code> 函数里， 读取 file 的内容， 并把它转成 base64 的格式：</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// 读取File内容并转base64</span>
+handleDrop<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>$container<span class="token punctuation">,</span> file<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> $img <span class="token operator">=</span> $container<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token string">"img"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  handler<span class="token punctuation">.</span><span class="token function">readimgFile</span><span class="token punctuation">(</span>file<span class="token punctuation">,</span> $img<span class="token punctuation">,</span> $container<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>readimgFile</code> 读取图片文件内容</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// 读取图片文件内容</span>
+readimgFile<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>file<span class="token punctuation">,</span> $img<span class="token punctuation">,</span> $container<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> reader <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FileReader</span><span class="token punctuation">(</span>file<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// 根据mime type检验用户是否选则是图片文件</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>file<span class="token punctuation">.</span>type<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">!==</span> <span class="token string">"image"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// util.toast("You should choose an image file"); // 工具弹出插件，如果没有请自行封装</span>
+    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">"You should choose an image file"</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  reader<span class="token punctuation">.</span>onload <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 获取图片base64内容</span>
+    <span class="token keyword">var</span> base64 <span class="token operator">=</span> event<span class="token punctuation">.</span>target<span class="token punctuation">.</span>result<span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 如果图片大千1MB, 将body置半透明</span>
+  <span class="token comment" spellcheck="true">/*
+    *  如果图片有几个 MB 的，展示的时候会被卡一下， 通过把页面变虚的方式告诉用户现在正在处理之中，页面不可操作，请稍等一会。
+    */</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>file<span class="token punctuation">.</span>size <span class="token operator">></span> ONE_MB<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">$</span><span class="token punctuation">(</span><span class="token string">"body"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">css</span><span class="token punctuation">(</span><span class="token string">"opacity"</span><span class="token punctuation">,</span> <span class="token number">0.5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// 因为这里图片太大会被卡一下， 整个页面会不可操作</span>
+    $img<span class="token punctuation">.</span><span class="token function">attr</span><span class="token punctuation">(</span><span class="token string">"src"</span><span class="token punctuation">,</span> baseUrl<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 还原</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>file<span class="token punctuation">.</span>size <span class="token operator">></span> ONE_MB<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">$</span><span class="token punctuation">(</span><span class="token string">"body"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">css</span><span class="token punctuation">(</span><span class="token string">"opacity"</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// 然后再调一个压缩和上传的函数</span>
+    handler<span class="token punctuation">.</span><span class="token function">compressAndUpload</span><span class="token punctuation">(</span>$img<span class="token punctuation">,</span> base64<span class="token punctuation">,</span> file<span class="token punctuation">,</span> $container<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment" spellcheck="true">// 读取为base64格式</span>
+  reader<span class="token punctuation">.</span><span class="token function">readAsDataURL</span><span class="token punctuation">(</span>file<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>通过 <code>FileReader</code> 读取文件内容， 调的是 <code>readAsDataURL</code>, 这个 API 能够把二进制图片内容转成 base64 的格式， 读取完之后会触发 <code>onload</code> 事件， 在 <code>onload</code> 里面进行显示和上传。</p>
+<p>还会有一个问题， 就是 ios 系统拍摄的照片，如果不是横着拍的，展示出来的照片旋转角度会有问题，即不管你怎么拍，ios 实际存的图片都是横着放的，因此需要用户自己手动去旋转。<br>旋转的角度放在了 exif 的数据结构里面，把这个读出来就知道它的旋转角度了， 用一个 EXIF 的库读取</p>
+<pre class=" language-js"><code class="language-js">readImgFile<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>file<span class="token punctuation">,</span> $img<span class="token punctuation">,</span> $container<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  EXIF<span class="token punctuation">.</span><span class="token function">getData</span><span class="token punctuation">(</span>file<span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> orientation <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>exifdata<span class="token punctuation">.</span>Orientation<span class="token punctuation">,</span>
+      rotateDeg <span class="token operator">=</span> O<span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 如果不是ios拍的照片或者是横拍的，则不用处理，直接读取</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> orientation <span class="token operator">===</span> <span class="token string">"undefined"</span> <span class="token operator">||</span> orientation <span class="token operator">===</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">// 原本的readImgFile, 添加一个rotateDeg的参数</span>
+      handler<span class="token punctuation">.</span><span class="token function">doReadImgFile</span><span class="token punctuation">(</span>file<span class="token punctuation">,</span> $img<span class="token punctuation">,</span> $container<span class="token punctuation">,</span> rotateDeg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// 否刻用canvas旋转一下</span>
+    <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      rotateDeg <span class="token operator">=</span> orientation <span class="token operator">===</span> <span class="token number">6</span> <span class="token operator">?</span> <span class="token number">90</span> <span class="token operator">*</span> Math<span class="token punctuation">.</span>PI <span class="token operator">/</span> <span class="token number">180</span> <span class="token punctuation">:</span>
+        orientation <span class="token operator">===</span> <span class="token number">8</span> <span class="token operator">?</span> <span class="token operator">-</span><span class="token number">90</span> <span class="token operator">*</span> Math<span class="token punctuation">.</span>PI <span class="token operator">/</span> <span class="token number">180</span> <span class="token punctuation">:</span>
+        orientation <span class="token operator">===</span> <span class="token number">3</span> <span class="token operator">?</span> <span class="token number">180</span> <span class="token operator">*</span> Math<span class="token punctuation">.</span>PI <span class="token operator">/</span> <span class="token number">180</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">;</span>
+      handler<span class="token punctuation">.</span><span class="token function">doReadImgFile</span><span class="token punctuation">(</span>file<span class="token punctuation">,</span> $img<span class="token punctuation">,</span> $container<span class="token punctuation">,</span> rotateDeg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>知道角度之后， 就可以用 canvas 处理了， 在下面的压缩图片再进行说明， 因为压缩也要用到 canvas。</p>
+<h2 id="2-压缩图片"><a href="#2-压缩图片" class="headerlink" title="2. 压缩图片"></a>2. 压缩图片</h2><p>压缩图片可以借助 canvas, canvas 可以很方便地实现压缩，其原理是把一张图片画到一个小的画布，然后再把这个画布的内容导出 base64, 就能够拿到一张被压小的图片了。</p>
+<p>在 <code>compress</code> 函数里面进行压缩</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// 设定图片最大压缩宽度为1500px</span>
+<span class="token keyword">var</span> maxWidth <span class="token operator">=</span> <span class="token number">1500</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> resultimg <span class="token operator">=</span> handler<span class="token punctuation">.</span><span class="token function">compress</span><span class="token punctuation">(</span>$img<span class="token punctuation">[</span>O<span class="token punctuation">]</span><span class="token punctuation">,</span> maxWidth<span class="token punctuation">,</span> file<span class="token punctuation">.</span>type<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 调用压缩</span>
+</code></pre>
+<p>在 compress 这个函数里首先创建一个 canvas 对象，然后计算这个画布的大小，</p>
+<pre class=" language-js"><code class="language-js">compress<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>img<span class="token punctuation">,</span> maxWidth<span class="token punctuation">,</span> mimeType<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// 创建一个canvas对象</span>
+  <span class="token keyword">var</span> cvs <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'canvas'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> width <span class="token operator">=</span> img<span class="token punctuation">.</span>naturalWidth<span class="token punctuation">,</span>
+    height <span class="token operator">=</span> img<span class="token punctuation">.</span>naturalHeight<span class="token punctuation">,</span>
+    imgRatio <span class="token operator">=</span> width <span class="token operator">/</span> height<span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">// 如果图片维度超过了给定的maxWidth 1500,</span>
+  <span class="token comment" spellcheck="true">// 为了保持图片宽高比， 计算画布的大小</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>width <span class="token operator">></span> maxWidth<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    width <span class="token operator">=</span> maxWidth<span class="token punctuation">;</span>
+    height <span class="token operator">=</span> width <span class="token operator">/</span> imgRatio<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  cvs<span class="token punctuation">.</span>width <span class="token operator">=</span> width<span class="token punctuation">;</span>
+  cvs<span class="token punctuation">.</span>height <span class="token operator">=</span> height<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>接下来把大的图片画到一个小的画布上</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> ctx <span class="token operator">=</span> cvs<span class="token punctuation">.</span><span class="token function">getContext</span><span class="token punctuation">(</span><span class="token string">'2d'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ctx<span class="token punctuation">.</span><span class="token function">drawImage</span><span class="token punctuation">(</span>
+  img<span class="token punctuation">,</span>
+  O<span class="token punctuation">,</span>
+  O<span class="token punctuation">,</span>
+  img<span class="token punctuation">.</span>naturalWidth<span class="token punctuation">,</span>
+  img<span class="token punctuation">.</span>naturalHeight<span class="token punctuation">,</span>
+  <span class="token number">0</span><span class="token punctuation">,</span>
+  <span class="token number">0</span><span class="token punctuation">,</span>
+  width<span class="token punctuation">,</span>
+  height
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// 图片质量进行适当压缩</span>
+<span class="token keyword">var</span> quality <span class="token operator">=</span> width <span class="token operator">>=</span> <span class="token number">1500</span> <span class="token operator">?</span> <span class="token number">0.5</span> <span class="token punctuation">:</span> width <span class="token operator">></span> <span class="token number">600</span> <span class="token operator">?</span> <span class="token number">0.6</span> <span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// 导出图片为base64</span>
+<span class="token keyword">var</span> newImageData <span class="token operator">=</span> cvs<span class="token punctuation">.</span><span class="token function">toDataURL</span><span class="token punctuation">(</span>mimeType<span class="token punctuation">,</span> quality<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> resultImg <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Image</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+resultImg<span class="token punctuation">.</span>src <span class="token operator">=</span> newImageData<span class="token punctuation">;</span>
+<span class="token keyword">return</span> resultImg<span class="token punctuation">;</span>
+</code></pre>
+<p>最后一行返回了一个被压缩过的小图片。这里有个问题需要注意一下，有的浏览器在把 base64 赋值给 new 出来的 Image 的 src 时，是异步的操作，特别是 Safari, 所以要用监听 onload, 才能对此图片进行下一步的处理</p>
+<pre class=" language-js"><code class="language-js">resultImg<span class="token punctuation">.</span>onload <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  ctx<span class="token punctuation">.</span><span class="token function">drawImage</span><span class="token punctuation">(</span>
+    img<span class="token punctuation">,</span>
+    O<span class="token punctuation">,</span>
+    O<span class="token punctuation">,</span>
+    img<span class="token punctuation">.</span>naturalWidth<span class="token punctuation">,</span>
+    img<span class="token punctuation">.</span>naturalHeight<span class="token punctuation">,</span>
+    <span class="token number">0</span><span class="token punctuation">,</span>
+    <span class="token number">0</span><span class="token punctuation">,</span>
+    width<span class="token punctuation">,</span>
+    height
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+resultImg<span class="token punctuation">.</span>src <span class="token operator">=</span> newImageData<span class="token punctuation">;</span>
+</code></pre>
+<p>由于前面提到 ios 拍的照片需要旋转一下， 在压缩的时候可以一起处理。也就是说，如果需要旋转的话，那么画在 canvas 上面的时候就把它旋转好了</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> ctx <span class="token operator">=</span> cvs<span class="token punctuation">.</span><span class="token function">getContext</span><span class="token punctuation">(</span><span class="token string">"2d"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> destX <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span>
+  destY <span class="token operator">=</span> O<span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>rotateDeg<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  ctx<span class="token punctuation">.</span><span class="token function">translate</span><span class="token punctuation">(</span>cvs<span class="token punctuation">.</span>width <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">,</span> cvs<span class="token punctuation">.</span>height <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  ctx<span class="token punctuation">.</span><span class="token function">rotate</span><span class="token punctuation">(</span>rotateDeg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  destX <span class="token operator">=</span> <span class="token operator">-</span>width <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">;</span>
+  destY <span class="token operator">=</span> <span class="token operator">-</span>height <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token operator">...</span>
+ctx<span class="token punctuation">.</span><span class="token function">drawImage</span><span class="token punctuation">(</span>img<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> img<span class="token punctuation">.</span>naturalWidth<span class="token punctuation">,</span> img<span class="token punctuation">.</span>naturalHeight<span class="token punctuation">,</span> destX<span class="token punctuation">,</span> destY<span class="token punctuation">,</span> width<span class="token punctuation">,</span> height<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>需要先把 canvas 的原点移到画布的中心，然后再进行旋转，默认原点是在左上角，原理和<code>transform</code>类似。</p>
+<p>这样就解决了 ios 图片旋转的问题，得到一张旋转和压缩调节过的图片之后，再用它进行裁剪和编辑。</p>
+<h2 id="3-裁剪图片"><a href="#3-裁剪图片" class="headerlink" title="3. 裁剪图片"></a>3. 裁剪图片</h2><p>裁剪图片，使用了一个 cropper 插件，这个插件还是挺强大的， 支待裁剪、旋转、翻转，但是它并没有对图片真正的处理，只是记录了用户做了哪些变换，然后你自己再去处理。</p>
+<h3 id="3-1-简单裁剪"><a href="#3-1-简单裁剪" class="headerlink" title="3.1 简单裁剪"></a>3.1 简单裁剪</h3><p>假设用户没有进行旋转和翻转，只是简单地选了区域裁剪了一下，那就简单很多。</p>
+<p>最简单的办法就是创建一个 canvas, 它的大小就是选框的大小， 然后根据起点 x、y 和宽高把图片相应的位置画到这个画布，再导出图片就可以了。</p>
+<p>由于考虑到需要翻转， 所以用第二种方法：创建一个和图片一样大小的 canvas, 把图片原封不动地画上去， 然后把选中区域的数据 <code>imageData</code> 存起来， 重新设置画布的大小为选中框的大小， 再把 <code>imageData</code> 画上去，最后再导出就可以了，</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> cvs <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'canvas'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> img <span class="token operator">=</span> $img<span class="token punctuation">[</span>O<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> width <span class="token operator">=</span> img<span class="token punctuation">.</span>naturalWidth<span class="token punctuation">,</span>
+  height <span class="token operator">=</span> img<span class="token punctuation">.</span>naturalHeight<span class="token punctuation">,</span>
+cvs<span class="token punctuation">.</span>width <span class="token operator">=</span> width<span class="token punctuation">;</span>
+cvs<span class="token punctuation">.</span>height <span class="token operator">=</span> height<span class="token punctuation">;</span>
+
+<span class="token keyword">var</span> ctx <span class="token operator">=</span> cvs<span class="token punctuation">.</span><span class="token function">getContext</span><span class="token punctuation">(</span><span class="token string">"2d"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> destX <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span>
+    destY <span class="token operator">=</span> O<span class="token punctuation">;</span>
+ctx<span class="token punctuation">.</span><span class="token function">drawImage</span><span class="token punctuation">(</span>img<span class="token punctuation">,</span> destX<span class="token punctuation">,</span> destY<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 把选中框里的图片内容存起来</span>
+<span class="token keyword">var</span> imageData <span class="token operator">=</span> ctx<span class="token punctuation">.</span><span class="token function">getImageData</span><span class="token punctuation">(</span>cropOptions<span class="token punctuation">.</span>x<span class="token punctuation">,</span> cropOptions<span class="token punctuation">.</span>y<span class="token punctuation">,</span> cropOptions<span class="token punctuation">.</span>width<span class="token punctuation">,</span> cropoptions<span class="token punctuation">.</span>height<span class="token punctuation">)</span><span class="token punctuation">;</span>
+cvs<span class="token punctuation">.</span>width <span class="token operator">=</span> cropOptions<span class="token punctuation">.</span>width<span class="token punctuation">;</span>
+cvs<span class="token punctuation">.</span>height <span class="token operator">=</span> cropOptions<span class="token punctuation">.</span>height<span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// 然后再画上去</span>
+ctx<span class="token punctuation">.</span><span class="token function">putImageData</span><span class="token punctuation">(</span>imageData<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<h3 id="3-2-裁剪加翻转"><a href="#3-2-裁剪加翻转" class="headerlink" title="3.2 裁剪加翻转"></a>3.2 裁剪加翻转</h3><p>如果用户做了翻转， 只需要在 <code>drawlmage</code> 之前对画布做一下翻转变化</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">if</span> <span class="token punctuation">(</span>cropOptions<span class="token punctuation">.</span>scaleX <span class="token operator">===</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token operator">||</span> cropOptions<span class="token punctuation">.</span>scaleY <span class="token operator">===</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// 水平翻转</span>
+  destX <span class="token operator">=</span> cropOptions<span class="token punctuation">.</span>scaleX <span class="token operator">===</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token operator">?</span> width <span class="token operator">*</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">// 垂直翻转</span>
+  destY <span class="token operator">=</span> cropOptions<span class="token punctuation">.</span>scaleY <span class="token operator">===</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token operator">?</span> height <span class="token operator">*</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  ctx<span class="token punctuation">.</span><span class="token function">scale</span><span class="token punctuation">(</span>cropOptions<span class="token punctuation">.</span>scaleX<span class="token punctuation">,</span> cropOptions<span class="token punctuation">.</span>scaleY<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+ctx<span class="token punctuation">.</span><span class="token function">drawlmage</span><span class="token punctuation">(</span>img<span class="token punctuation">,</span> destX<span class="token punctuation">,</span> destY<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>其他的都不用变，就可以实现上下左右翻转了，难点在于既要翻转又要旋转</p>
+<h3 id="3-3-旋转加翻转剪裁"><a href="#3-3-旋转加翻转剪裁" class="headerlink" title="3.3 旋转加翻转剪裁"></a>3.3 旋转加翻转剪裁</h3><p>两种变化叠加没办法直接通过变化 canvas 的坐标一次性 <code>drawImage</code> 上去，有两种办法，第一种是用 <code>imageData</code> 进行数学变换，计算一遍得到 <code>imageData</code> 里面从第一行到最后一行每个像素新的 rgba 值是多少，然后再画上去。第二种是创建第二个 canvas，第一个 canvas 做翻转时把它画到第二个 canvas，第二个再进行旋转，我们用第二种办法</p>
+<p>在第一个 canvas 画完之后，创建第二个 canvas 进行旋转。</p>
+<pre class=" language-js"><code class="language-js">ctx<span class="token punctuation">.</span><span class="token function">drawlmage</span><span class="token punctuation">(</span>img<span class="token punctuation">,</span> destX<span class="token punctuation">,</span> destY<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">//rotate</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>cropOptions<span class="token punctuation">.</span>rotate <span class="token operator">!==</span> O<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> newCanvas <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'canvas'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    deg <span class="token operator">=</span> <span class="token punctuation">(</span>cropOptions<span class="token punctuation">.</span>rotate <span class="token operator">/</span> <span class="token number">180</span><span class="token punctuation">)</span> <span class="token operator">*</span> Math<span class="token punctuation">.</span>PI<span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">// 旋转之后， 导致画布变大， 需要计算一下</span>
+  newCanvas<span class="token punctuation">.</span>width <span class="token operator">=</span>
+    Math<span class="token punctuation">.</span><span class="token function">abs</span><span class="token punctuation">(</span>width <span class="token operator">*</span> Math<span class="token punctuation">.</span><span class="token function">cos</span><span class="token punctuation">(</span>deg<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> Math<span class="token punctuation">.</span><span class="token function">abs</span><span class="token punctuation">(</span>height <span class="token operator">*</span> Math<span class="token punctuation">.</span><span class="token function">sin</span><span class="token punctuation">(</span>deg<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  newCanvas<span class="token punctuation">.</span>height <span class="token operator">=</span>
+    Math<span class="token punctuation">.</span><span class="token function">abs</span><span class="token punctuation">(</span>width <span class="token operator">*</span> Math<span class="token punctuation">.</span><span class="token function">sin</span><span class="token punctuation">(</span>deg<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> Math<span class="token punctuation">.</span><span class="token function">abs</span><span class="token punctuation">(</span>height <span class="token operator">*</span> Math<span class="token punctuation">.</span><span class="token function">cos</span><span class="token punctuation">(</span>deg<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> newContext <span class="token operator">=</span> newCanvas<span class="token punctuation">.</span><span class="token function">getContext</span><span class="token punctuation">(</span><span class="token string">'2d'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  newContext<span class="token punctuation">.</span><span class="token function">save</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  newContext<span class="token punctuation">.</span><span class="token function">translate</span><span class="token punctuation">(</span>newCanvas<span class="token punctuation">.</span>width <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">,</span> newCanvas<span class="token punctuation">.</span>height <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  newContext<span class="token punctuation">.</span><span class="token function">rotate</span><span class="token punctuation">(</span>deg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">(</span>destX <span class="token operator">=</span> <span class="token operator">-</span>width <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>destY <span class="token operator">=</span> <span class="token operator">-</span>height <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">// 将第一个canvas的内容在经旋转后的坐标系画上来</span>
+  newContext<span class="token punctuation">.</span><span class="token function">drawImage</span><span class="token punctuation">(</span>cvs<span class="token punctuation">,</span> destX<span class="token punctuation">,</span> destY<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  newContext<span class="token punctuation">.</span><span class="token function">restore</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="4-文件上传和上传进度"><a href="#4-文件上传和上传进度" class="headerlink" title="4. 文件上传和上传进度"></a>4. 文件上传和上传进度</h2><p>文件上传只能通过表单提交的形式，编码方式为 <code>multipart/form-data</code>, 可以通过写个 form 标签进行提交， 也可以用 AJAX 模拟表单提交的格式。</p>
+<p>首先创建一个 AJAX 请求，并设置编码方式</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> xhr <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">XMLHttpRequest</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+xhr<span class="token punctuation">.</span><span class="token function">open</span><span class="token punctuation">(</span><span class="token string">'POST'</span><span class="token punctuation">,</span> upload_url<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> boundary <span class="token operator">=</span> <span class="token string">'someboundary'</span><span class="token punctuation">;</span>
+xhr<span class="token punctuation">.</span><span class="token function">setRequestHeader</span><span class="token punctuation">(</span>
+  <span class="token string">'Content-Type'</span><span class="token punctuation">,</span>
+  <span class="token string">'multipart/form-data; boundary='</span> <span class="token operator">+</span> boundary
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>然后拼表单格式的数据进行上传</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// 拼表单提交的数据形式</span>
+<span class="token keyword">var</span> data <span class="token operator">=</span> img<span class="token punctuation">.</span>src<span class="token punctuation">;</span>
+data <span class="token operator">=</span> data<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token string">'data:'</span> <span class="token operator">+</span> file<span class="token punctuation">.</span>type <span class="token operator">+</span> <span class="token string">';base64,'</span><span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+xhr<span class="token punctuation">.</span><span class="token function">sendAsBinary</span><span class="token punctuation">(</span>
+  <span class="token punctuation">[</span>
+    <span class="token comment" spellcheck="true">//name=data</span>
+    <span class="token string">'--'</span> <span class="token operator">+</span> boundary<span class="token punctuation">,</span>
+    <span class="token string">'Content-Disposition: form-data; name="data"; filename="'</span> <span class="token operator">+</span> file<span class="token punctuation">.</span>name <span class="token operator">+</span> <span class="token string">'"'</span><span class="token punctuation">,</span>
+    <span class="token string">'Content-Type: '</span> <span class="token operator">+</span> file<span class="token punctuation">.</span>type<span class="token punctuation">,</span>
+    <span class="token string">''</span><span class="token punctuation">,</span>
+    <span class="token function">atob</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token string">'--'</span> <span class="token operator">+</span> boundary<span class="token punctuation">,</span>
+    <span class="token comment" spellcheck="true">// name=docName</span>
+    <span class="token string">'--'</span> <span class="token operator">+</span> boundary<span class="token punctuation">,</span>
+    <span class="token string">'Content-Disposition: form-data; name="docName"'</span><span class="token punctuation">,</span>
+    <span class="token string">''</span><span class="token punctuation">,</span>
+    file<span class="token punctuation">.</span>name<span class="token punctuation">,</span>
+    <span class="token string">'--'</span> <span class="token operator">+</span> boundary <span class="token operator">+</span> <span class="token string">'--'</span>
+  <span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">'\r\n'</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p><code>atob</code> 将 base64 解码为二进制的格式， 符合表单提交的数据格式要求。</p>
+<p>表单数据不同的字段是用 <code>boundary</code> 的随机字符串分隔的， 拼好之后用 <code>sendAsBinary</code> 发出去。 这个上传功能参考了一个 JIC 插件， 但是由于这个 API 已经废弃了， 所以新代码不推荐再使用这种方式。</p>
+<p>在调这个函数之前先监听下它的事件</p>
+<p><strong>1. 上传的进度</strong></p>
+<pre class=" language-js"><code class="language-js">xhr<span class="token punctuation">.</span>upload<span class="token punctuation">.</span>onprogress <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>event<span class="token punctuation">.</span>lengthComputable<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">duringCallback</span><span class="token punctuation">(</span><span class="token punctuation">(</span>event<span class="token punctuation">.</span>loaded <span class="token operator">/</span> event<span class="token punctuation">.</span>total<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>这里调用 <code>duringCallback</code> 的回调函数， 给这个回调函数传了当前进度的参数， 用这个参数就可以设置进度条的过程了。 进度条可以自已实现， 或者直接上网找一个。</p>
+<p><strong>2. 成功和失败</strong></p>
+<p>需要对成功和失败做一些反馈处理，</p>
+<pre class=" language-js"><code class="language-js">xhr<span class="token punctuation">.</span>onreadystatechange <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>readyState <span class="token operator">===</span> <span class="token number">4</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>status <span class="token operator">===</span> <span class="token number">200</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">successCallback</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>responseText<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>status <span class="token operator">>=</span> <span class="token number">400</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>errorCallback<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">errorCallback</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>responseText<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>至此整个功能就拆解说明完了， 上面的代码可以兼容到 IE10, <code>FileReader</code> 的 API 到 IElO 才兼容，问题应该不大。这个东西一来减少了后端的压力， 二来不用和后端来回交互， 对用户体验来说还是比较好的， 除了上面说的有一个地方会被卡一下之外。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-06-13T16:11:46.000Z" itemprop="dateUpdated">2018-06-14 00:11:46</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HTML5/">HTML5</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/插件/">插件</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/b43df12e/&title=《纯前端实现裁剪压缩图片》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/b43df12e/&title=《纯前端实现裁剪压缩图片》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/b43df12e/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《纯前端实现裁剪压缩图片》 — Sixin的小站&url=http://coder.liusixin.cn/posts/b43df12e/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/b43df12e/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/4a24537/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">HTTP2 的深入探究</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/7189c795/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">JTalk 第八期 前端安全大起底 总结</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/b43df12e/&title=《纯前端实现裁剪压缩图片》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/b43df12e/&title=《纯前端实现裁剪压缩图片》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/b43df12e/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《纯前端实现裁剪压缩图片》 — Sixin的小站&url=http://coder.liusixin.cn/posts/b43df12e/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/b43df12e/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAAByElEQVR42u3ay47CMAwF0P7/TzNbpJmG6zgJMDpdofLoCQsrvs51xdfj6bq7//zu3f3f3712XLi4uG3uY3jdccf05DPj5d0uFRcX9yB3XGjGnxlDx0UwN+Di4n4+N4cmC8DFxf1/3Lww4eLifhc3aX46i8ybq2W9Gi4uboObp5T7Xm/Jd3Fxcae4j+JVbYSqkcqLp+Pi4h7h5gUlGa7kY9R8+4KLi/tebh5M5O1NZwsV9Wq4uLgbuJ0DVdUIIx/ERjsyXFzczdy52LQTgCbF8Y/n4uLiHufm253+Eau5wAUXF/cMN291qnFqZ1xaGLfg4uJu4M79UB6bdpqr27qLi4u7mbsqMO08PtnW4OLivotbLUAddDWIwcXFPc/Nf3TVJmZu+IqLi3uSOzdESVZfbZPKB7NwcXE3c6sbkX7AOh7MRM0PLi7uZu44/siPZ03OcKq7MFxc3G3cHeWmf/+q/kO4uLhLudV4Yu2DkzI3uRhcXNw2d1UsMn6dtEnRYnBxcQ9yq4VmLkBJylx52oOLi/sx3GpjMxet4uLifgt3VbQ6GaHi4uIe5FaDj/zAVvVQ17JeDRcXt8HthJudeDRpkFr5Li4u7gz3B0CiAS8yiKpNAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

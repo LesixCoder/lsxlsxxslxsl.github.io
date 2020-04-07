@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/a76d942d/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/a76d942d/">
+    
+    
+    <title>前后端漏洞分析与安全防御总结 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="前端安全">
+    <meta name="description" content="web 安全主要分以下几个层面  代码层面 架构层面 运维层面  本来主要围绕架构层面进行展开，如何写一个没有漏洞的网站。了解安全问题的原因，避免开发带漏洞的代码，如何开发安全的 web 项目。具体会遇到以下的安全问题，我们以此来研究及如何防御 安全问题  用户身份被盗用 用户密码泄露 用户资料被盗取 网站数据库泄露 其它  主要攻击手段分为以下几种  跨站脚本攻击 xss（cross site">
+<meta name="keywords" content="前端安全">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前后端漏洞分析与安全防御总结">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/a76d942d/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="web 安全主要分以下几个层面  代码层面 架构层面 运维层面  本来主要围绕架构层面进行展开，如何写一个没有漏洞的网站。了解安全问题的原因，避免开发带漏洞的代码，如何开发安全的 web 项目。具体会遇到以下的安全问题，我们以此来研究及如何防御 安全问题  用户身份被盗用 用户密码泄露 用户资料被盗取 网站数据库泄露 其它  主要攻击手段分为以下几种  跨站脚本攻击 xss（cross site">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/836049-20160322214747901-1548153978.jpg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180604-232214-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180605-151139-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180605-151324-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180605-151341-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180605-160201-2x-2.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180605-160643-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180605-161009-2x.png">
+<meta property="og:updated_time" content="2017-11-25T11:42:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前后端漏洞分析与安全防御总结">
+<meta name="twitter:description" content="web 安全主要分以下几个层面  代码层面 架构层面 运维层面  本来主要围绕架构层面进行展开，如何写一个没有漏洞的网站。了解安全问题的原因，避免开发带漏洞的代码，如何开发安全的 web 项目。具体会遇到以下的安全问题，我们以此来研究及如何防御 安全问题  用户身份被盗用 用户密码泄露 用户资料被盗取 网站数据库泄露 其它  主要攻击手段分为以下几种  跨站脚本攻击 xss（cross site">
+<meta name="twitter:image" content="http://cdn-blog.liusixin.cn/836049-20160322214747901-1548153978.jpg">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">前后端漏洞分析与安全防御总结</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">前后端漏洞分析与安全防御总结</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-11-22T05:22:00.000Z" itemprop="datePublished" class="page-time">
+  2017-11-22
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/后端/">后端</a></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-跨站脚本攻击-xss"><span class="post-toc-number">1.</span> <span class="post-toc-text">1. 跨站脚本攻击 xss</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-1-XSS-攻击分类"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">1.1 XSS 攻击分类:</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-1-1-反射型-xss-攻击"><span class="post-toc-number">1.1.1.</span> <span class="post-toc-text">1.1.1 反射型 xss 攻击</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-1-2-存贮型-xss-攻击"><span class="post-toc-number">1.1.2.</span> <span class="post-toc-text">1.1.2 存贮型 xss 攻击</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-2-防御-XSS"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">1.2 防御 XSS</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-2-1-浏览器自带防御"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">1.2.1 浏览器自带防御</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-2-2-html-转义"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">1.2.2 html 转义</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-2-3-js-脚本转换"><span class="post-toc-number">1.2.3.</span> <span class="post-toc-text">1.2.3 js 脚本转换</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-2-4-富文本过滤"><span class="post-toc-number">1.2.4.</span> <span class="post-toc-text">1.2.4 富文本过滤</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-2-5-CSP-内容安全策略-推荐"><span class="post-toc-number">1.2.5.</span> <span class="post-toc-text">1.2.5 CSP 内容安全策略(推荐)</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-跨站请求伪造攻击-CSRF（cross-site-request-forgy）"><span class="post-toc-number">2.</span> <span class="post-toc-text">2. 跨站请求伪造攻击 CSRF（cross site request forgy）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-1-CSRF-防御"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">2.1 CSRF 防御</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3-前端-cookie-安全性"><span class="post-toc-number">3.</span> <span class="post-toc-text">3. 前端 cookie 安全性</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-1-cookie-登录用户凭证"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">3.1 cookie - 登录用户凭证</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#3-1-1-用户-ID（隐患）"><span class="post-toc-number">3.1.1.</span> <span class="post-toc-text">3.1.1 用户 ID（隐患）</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#3-1-2-用户-ID-签名"><span class="post-toc-number">3.1.2.</span> <span class="post-toc-text">3.1.2 用户 ID + 签名</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#3-1-3-SessionId-持久化"><span class="post-toc-number">3.1.3.</span> <span class="post-toc-text">3.1.3 SessionId(持久化)</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-2-cookies-和-xss-关系"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">3.2 cookies 和 xss 关系</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-3-cookies-和-csrf-关系"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">3.3 cookies 和 csrf 关系</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-4-cookies-安全策略"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">3.4 cookies - 安全策略</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#3-4-2-私有变换（加密）"><span class="post-toc-number">3.4.1.</span> <span class="post-toc-text">3.4.2 私有变换（加密）</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#4-点击劫持攻击"><span class="post-toc-number">4.</span> <span class="post-toc-text">4. 点击劫持攻击</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-1-点击劫持防御"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">4.1 点击劫持防御</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#4-1-1-javascript-禁止内嵌"><span class="post-toc-number">4.1.1.</span> <span class="post-toc-text">4.1.1 javascript 禁止内嵌</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#4-1-2-X-FRAME-OPTIONS-禁止内嵌"><span class="post-toc-number">4.1.2.</span> <span class="post-toc-text">4.1.2 X-FRAME-OPTIONS 禁止内嵌</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#5-传输过程安全问题"><span class="post-toc-number">5.</span> <span class="post-toc-text">5. 传输过程安全问题</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-1-传输链路窃听篡改"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">5.1 传输链路窃听篡改</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-2-https-防御"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">5.2 https 防御</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#5-2-1-https-部署"><span class="post-toc-number">5.2.1.</span> <span class="post-toc-text">5.2.1 https 部署</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#6-密码安全问题"><span class="post-toc-number">6.</span> <span class="post-toc-text">6. 密码安全问题</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6-1-密码存储"><span class="post-toc-number">6.1.</span> <span class="post-toc-text">6.1 密码存储</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#6-1-1-严禁明文存储"><span class="post-toc-number">6.1.1.</span> <span class="post-toc-text">6.1.1 严禁明文存储</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#6-1-2-单向变换"><span class="post-toc-number">6.1.2.</span> <span class="post-toc-text">6.1.2 单向变换</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6-2-密码传输安全性"><span class="post-toc-number">6.2.</span> <span class="post-toc-text">6.2 密码传输安全性</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#7-SQL-注入攻击"><span class="post-toc-number">7.</span> <span class="post-toc-text">7. SQL 注入攻击</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7-1-sql-注入攻击案例"><span class="post-toc-number">7.1.</span> <span class="post-toc-text">7.1 sql 注入攻击案例</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7-2-sql-注入攻击防御"><span class="post-toc-number">7.2.</span> <span class="post-toc-text">7.2 sql 注入攻击防御</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7-3-NoSQL-注入攻击和防御"><span class="post-toc-number">7.3.</span> <span class="post-toc-text">7.3 NoSQL 注入攻击和防御</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#8-接入层上传问题"><span class="post-toc-number">8.</span> <span class="post-toc-text">8. 接入层上传问题</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#8-1-上传攻击"><span class="post-toc-number">8.1.</span> <span class="post-toc-text">8.1 上传攻击</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#8-2-防御"><span class="post-toc-number">8.2.</span> <span class="post-toc-text">8.2 防御</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#9-信息泄露和社会工程学"><span class="post-toc-number">9.</span> <span class="post-toc-text">9. 信息泄露和社会工程学</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#9-1-OAuth-思想"><span class="post-toc-number">9.1.</span> <span class="post-toc-text">9.1 OAuth 思想</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#9-1-1-利用-OAuth-思想防止资料泄露"><span class="post-toc-number">9.1.1.</span> <span class="post-toc-text">9.1.1 利用 OAuth 思想防止资料泄露</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#10-其它安全问题"><span class="post-toc-number">10.</span> <span class="post-toc-text">10. 其它安全问题</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#10-1-拒绝服务攻击-DOS"><span class="post-toc-number">10.1.</span> <span class="post-toc-text">10.1 拒绝服务攻击 DOS</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#10-1-1-大规模分布式拒绝服务攻击-DDOS"><span class="post-toc-number">10.1.1.</span> <span class="post-toc-text">10.1.1 大规模分布式拒绝服务攻击 DDOS</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#10-1-2-DOS-攻击防御"><span class="post-toc-number">10.1.2.</span> <span class="post-toc-text">10.1.2 DOS 攻击防御</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#10-1-3-DOS-攻击预防"><span class="post-toc-number">10.1.3.</span> <span class="post-toc-text">10.1.3 DOS 攻击预防</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#10-2-重放攻击"><span class="post-toc-number">10.2.</span> <span class="post-toc-text">10.2 重放攻击</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#10-2-1-防御"><span class="post-toc-number">10.2.1.</span> <span class="post-toc-text">10.2.1 防御</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">11.</span> <span class="post-toc-text">总结</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#cookies-和-session-关系"><span class="post-toc-number">11.1.</span> <span class="post-toc-text">cookies 和 session 关系</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#cookies-特性"><span class="post-toc-number">11.2.</span> <span class="post-toc-text">cookies 特性</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#cookies-属性"><span class="post-toc-number">11.3.</span> <span class="post-toc-text">cookies 属性</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#删除一个-cookis-值？"><span class="post-toc-number">11.4.</span> <span class="post-toc-text">删除一个 cookis 值？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#https-如何保证数据不被窃听的"><span class="post-toc-number">11.5.</span> <span class="post-toc-text">https 如何保证数据不被窃听的</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#https-如何保证不被中间人攻击"><span class="post-toc-number">11.6.</span> <span class="post-toc-text">https 如何保证不被中间人攻击</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#部署-https-的步骤"><span class="post-toc-number">11.7.</span> <span class="post-toc-text">部署 https 的步骤</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/前端安全/前后端漏洞分析与安全防御总结" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">前后端漏洞分析与安全防御总结</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-11-22 13:22:00" datetime="2017-11-22T05:22:00.000Z" itemprop="datePublished">2017-11-22</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/后端/">后端</a></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p><strong>web 安全主要分以下几个层面</strong></p>
+<ul>
+<li>代码层面</li>
+<li>架构层面</li>
+<li>运维层面</li>
+</ul>
+<p>本来主要围绕架构层面进行展开，如何写一个没有漏洞的网站。了解安全问题的原因，避免开发带漏洞的代码，如何开发安全的 web 项目。具体会遇到以下的安全问题，我们以此来研究及如何防御</p>
+<p><strong>安全问题</strong></p>
+<ul>
+<li>用户身份被盗用</li>
+<li>用户密码泄露</li>
+<li>用户资料被盗取</li>
+<li>网站数据库泄露</li>
+<li>其它</li>
+</ul>
+<p>主要<strong>攻击手段</strong>分为以下几种</p>
+<ul>
+<li>跨站脚本攻击 xss（cross site scripting）</li>
+<li>跨站请求伪造攻击 CSRF（cross site request forgy）</li>
+<li>前端 cookie 安全性</li>
+<li>点击劫持攻击</li>
+<li>传输过程安全问题</li>
+<li>用户密码安全问题</li>
+<li>SQL 注入攻击</li>
+<li>信息泄露和社会工程学</li>
+<li>其它安全问题</li>
+</ul>
+<h2 id="1-跨站脚本攻击-xss"><a href="#1-跨站脚本攻击-xss" class="headerlink" title="1. 跨站脚本攻击 xss"></a>1. 跨站脚本攻击 xss</h2><p>跨站脚本（cross site script）为了避免与样式 css 混淆，所以简称为 XSS。</p>
+<p>XSS 是一种经常出现在 web 应用中的计算机安全漏洞，也是 web 中最主流的攻击方式。那么什么是 XSS 呢？</p>
+<p>XSS 是指恶意攻击者利用网站没有对用户提交数据进行转义处理或者过滤不足的缺点，进而添加一些代码，嵌入到 web 页面中去。使别的用户访问都会执行相应的嵌入代码。从而盗取用户资料、利用用户身份进行某种动作或者对访问者进行病毒侵害的一种攻击方式。</p>
+<p><strong>攻击原理:</strong></p>
+<p>客户端提交的数据本来就是应用所需要的，但是恶意攻击者利用网站对客户端提交数据的信任，在数据中插入一些符号以及 javascript 代码，那么这些数据将会成为应用代码中的一部分了。那么攻击者就可以肆无忌惮地展开攻击。</p>
+<p><strong>攻击危害:</strong></p>
+<ul>
+<li>获取页面数据 - 偷取网站任意数据</li>
+<li>获取 cookies - 偷取用户资料</li>
+<li>劫持前端逻辑 - 偷取用户密码和登录态</li>
+<li>发送请求 - 欺骗用户</li>
+</ul>
+<h3 id="1-1-XSS-攻击分类"><a href="#1-1-XSS-攻击分类" class="headerlink" title="1.1 XSS 攻击分类:"></a>1.1 XSS 攻击分类:</h3><p>主要分为两大类</p>
+<ul>
+<li>反射型（url 参数直接注入）</li>
+<li>存储型（存储到 DB 后读取时注入）</li>
+</ul>
+<blockquote>
+<p>了解即可，不必细究，XSS 根源就是没完全过滤客户端提交的数据</p>
+</blockquote>
+<h4 id="1-1-1-反射型-xss-攻击"><a href="#1-1-1-反射型-xss-攻击" class="headerlink" title="1.1.1 反射型 xss 攻击"></a>1.1.1 反射型 xss 攻击</h4><p>又称为非持久性跨站点脚本攻击，它是最常见的类型的 XSS。漏洞产生的原因是攻击者注入的数据反映在响应中。一个典型的非持久性 XSS 包含一个带 XSS 攻击向量的链接(即每次攻击需要用户的点击)。</p>
+<pre><code>正常发送消息：
+
+http://www.test.com/message.php?send=Hello,World！
+
+接收者将会接收信息并显示Hello,Word
+
+非正常发送消息：
+
+http://www.test.com/message.php?send=&lt;script&gt;alert(‘danger!’)&lt;/script&gt;！
+
+接收者接收消息显示的时候将会弹出警告窗口
+</code></pre><h4 id="1-1-2-存贮型-xss-攻击"><a href="#1-1-2-存贮型-xss-攻击" class="headerlink" title="1.1.2 存贮型 xss 攻击"></a>1.1.2 存贮型 xss 攻击</h4><p>又称为持久型跨站点脚本，它一般发生在 XSS 攻击向量(一般指 XSS 攻击代码)存储在网站数据库，当一个页面被用户打开的时候执行。每当用户打开浏览器,脚本执行。持久的 XSS 相比非持久性 XSS 攻击危害性更大,因为每当用户打开页面，查看内容时脚本将自动执行。谷歌的 orkut 曾经就遭受到 XSS。</p>
+<p>从名字就可了解到存储型 XSS 攻击就是将攻击代码存入数据库中，然后客户端打开时就执行这些攻击代码。例如留言板</p>
+<p>留言板表单中的表单域：<code>&lt;input type=“text” name=“content” value=“这里是用户填写的数据”&gt;</code></p>
+<pre><code>正常操作：
+
+用户是提交相应留言信息；将数据存储到数据库；其他用户访问留言板，应用去数据并显示。
+
+非正常操作：
+
+攻击者在value填写&lt;script&gt;alert(‘attach!’)&lt;/script&gt;【或者html其他标签（破坏样式。。。）、一段攻击型代码】；
+
+将数据存储到数据库中；
+
+其他用户取出数据显示的时候，将会执行这些攻击性代码
+</code></pre><p><strong>XSS 攻击注入点:</strong></p>
+<ul>
+<li>HTML 节点内容</li>
+</ul>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/javascript<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script language-javascript"><span class="token function">alert</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+</code></pre>
+<ul>
+<li>HTML 属性</li>
+</ul>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>img</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>1<span class="token punctuation">"</span></span> <span class="token attr-name">onerror</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>alert(1)<span class="token punctuation">"</span></span> <span class="token attr-name">alt</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+</code></pre>
+<ul>
+<li>JavasSript 代码</li>
+</ul>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/javascript<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script language-javascript"><span class="token keyword">var</span> data<span class="token operator">=</span><span class="token string">"##{data}"</span><span class="token punctuation">;</span><span class="token keyword">var</span> data<span class="token operator">=</span><span class="token string">"hello"</span><span class="token punctuation">;</span><span class="token function">alert</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token string">""</span><span class="token punctuation">;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+</code></pre>
+<ul>
+<li>富文本</li>
+<li>得保留 HTML</li>
+<li>HTML 有 XSS 攻击风险</li>
+</ul>
+<h3 id="1-2-防御-XSS"><a href="#1-2-防御-XSS" class="headerlink" title="1.2 防御 XSS"></a>1.2 防御 XSS</h3><ul>
+<li>浏览器自带防御</li>
+<li>html 转义（针对 html 标签和属性）</li>
+<li>js 脚本转换</li>
+<li>富文本过滤（一般在输入的时候）</li>
+<li>CSP（content security policy）- 最好解决方案</li>
+</ul>
+<h4 id="1-2-1-浏览器自带防御"><a href="#1-2-1-浏览器自带防御" class="headerlink" title="1.2.1 浏览器自带防御"></a>1.2.1 浏览器自带防御</h4><p>只针对反射型（html 内容或 html 属性），并不是所有浏览器都支持</p>
+<h4 id="1-2-2-html-转义"><a href="#1-2-2-html-转义" class="headerlink" title="1.2.2 html 转义"></a>1.2.2 html 转义</h4><pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> escapeHtml <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>str<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token string">''</span><span class="token punctuation">;</span>
+  str<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex">/&amp;/g</span><span class="token punctuation">,</span> <span class="token string">'&amp;amp;'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//只能在最前面，会对下面做转义</span>
+  str<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex">/&lt;/g</span><span class="token punctuation">,</span> <span class="token string">'&amp;lt;'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//&lt;>html标签，引号html属性</span>
+  str<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex">/>/g</span><span class="token punctuation">,</span> <span class="token string">'&amp;gt;'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  str <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex">/"/g</span><span class="token punctuation">,</span> <span class="token string">'&amp;quto;'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  str <span class="token operator">=</span> str<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token operator">/</span><span class="token string">'/g, '</span><span class="token operator">&amp;</span>##<span class="token number">39</span><span class="token punctuation">;</span>'<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">//str = str.replace(/ /g, '&amp;##32;'); //空格可能有问题，对html属性最好加引号</span>
+  <span class="token keyword">return</span> str<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<h4 id="1-2-3-js-脚本转换"><a href="#1-2-3-js-脚本转换" class="headerlink" title="1.2.3 js 脚本转换"></a>1.2.3 js 脚本转换</h4><pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/javascript<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script language-javascript">
+  <span class="token keyword">var</span> data<span class="token operator">=</span><span class="token string">"##{data}"</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> data<span class="token operator">=</span><span class="token string">"hello"</span><span class="token punctuation">;</span><span class="token function">alert</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token string">""</span><span class="token punctuation">;</span>
+</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+var escapeForJs = function(str) {
+  if(!str) return '';
+  str = str.replace(/\\/g, '\\\\')
+  str = str.replace(/"/g, '\\"')
+}
+</code></pre>
+<blockquote>
+<p>更好的方式是使用 <code>JSON.stringify</code> 转换</p>
+</blockquote>
+<h4 id="1-2-4-富文本过滤"><a href="#1-2-4-富文本过滤" class="headerlink" title="1.2.4 富文本过滤"></a>1.2.4 富文本过滤</h4><ul>
+<li>按黑名单过滤</li>
+</ul>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> xssFilter <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>html<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>html<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token string">''</span><span class="token punctuation">;</span>
+  html <span class="token operator">=</span> html<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex">/&lt;\s*\/?script\s*>/g</span><span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  html <span class="token operator">=</span> html<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token operator">/</span>javascript<span class="token punctuation">:</span><span class="token punctuation">[</span><span class="token operator">^</span><span class="token string">'"]*/g, '</span>'<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  html <span class="token operator">=</span> html<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex">/onerror\s*=\s*['"]?[^'"]*['"]?/g</span><span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> html<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// 标签太多，属性太多，不适合此办法</span>
+</code></pre>
+<ul>
+<li>按白名单保留部分标签和属性</li>
+</ul>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// cheerio库</span>
+
+<span class="token keyword">var</span> xssFilter <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>html<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>html<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token string">''</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> cheerio <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'cheerio'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> $ <span class="token operator">=</span> cheerio<span class="token punctuation">.</span><span class="token function">load</span><span class="token punctuation">(</span>html<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// 白名单</span>
+  <span class="token keyword">var</span> whiteList <span class="token operator">=</span> <span class="token punctuation">{</span>
+    img<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'src'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    font<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'color'</span><span class="token punctuation">,</span> <span class="token string">'size'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    a<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'href'</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token function">$</span><span class="token punctuation">(</span><span class="token string">'*'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">each</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>index<span class="token punctuation">,</span> elem<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>whiteList<span class="token punctuation">[</span>elem<span class="token punctuation">.</span>name<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">$</span><span class="token punctuation">(</span>elem<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> attr <span class="token keyword">in</span> elem<span class="token punctuation">.</span>attribs<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>whiteList<span class="token punctuation">[</span>elem<span class="token punctuation">.</span>name<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span>attr<span class="token punctuation">)</span> <span class="token operator">===</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">$</span><span class="token punctuation">(</span>elem<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">attr</span><span class="token punctuation">(</span>attr<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>html<span class="token punctuation">,</span> $<span class="token punctuation">.</span><span class="token function">html</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> $<span class="token punctuation">.</span><span class="token function">html</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// 第三方库js-xss(根据白名单过滤HTML)</span>
+<span class="token comment" spellcheck="true">// npm install xss</span>
+<span class="token keyword">var</span> xssFilter <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>html<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>html<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token string">''</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> xss <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'xss'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> ret <span class="token operator">=</span> <span class="token function">xss</span><span class="token punctuation">(</span>html<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>html<span class="token punctuation">,</span> ret<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> ret<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<h4 id="1-2-5-CSP-内容安全策略-推荐"><a href="#1-2-5-CSP-内容安全策略-推荐" class="headerlink" title="1.2.5 CSP 内容安全策略(推荐)"></a>1.2.5 CSP 内容安全策略(推荐)</h4><pre class=" language-shell"><code class="language-shell"># 指定哪些内容可执行
+child-src
+connect-src
+default-src
+font-src
+frame-src
+img-src
+manifest-src
+media-src
+object-src
+script-src
+style-src
+worker-src
+</code></pre>
+<pre class=" language-shell"><code class="language-shell"># 指定可信任来源
+
+<host-source> # 主机
+
+<scheme-source> 'self' # 协议，self指同域
+                'unsafe-inline' # 直接插入页面的内容
+                'unsafe-eval' # eval函数
+                'none' # 不信任任何内容
+                'nonce-<base64-value>' # 一次凭证，指定内容与页面匹配才信任
+                <hash-source> # 哈希
+                'strict-dynamic' # 信任脚本内部引入的脚本
+</hash-source></base64-value></scheme-source></host-source></code></pre>
+<pre class=" language-shell"><code class="language-shell"># 格式
+# 设置头信息
+Content-Security-Policy: default-src "self" http://www.example.com;
+                         content-src "none";
+</code></pre>
+<h2 id="2-跨站请求伪造攻击-CSRF（cross-site-request-forgy）"><a href="#2-跨站请求伪造攻击-CSRF（cross-site-request-forgy）" class="headerlink" title="2. 跨站请求伪造攻击 CSRF（cross site request forgy）"></a>2. 跨站请求伪造攻击 CSRF（cross site request forgy）</h2><p>跟 XSS 攻击一样，存在巨大的危害性，攻击者盗用了你的身份，以你的名义发送恶意请求，对服务器来说这个请求是完全合法的，但是却完成了攻击者所期望的一个操作。</p>
+<p><strong>CSRF 攻击原理:</strong></p>
+<p>第三方网站通过访问主网站后端带上 cookie 信息进行用户伪造<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/836049-20160322214747901-1548153978.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure><br><strong>CSRF 危害:</strong></p>
+<ul>
+<li>利用用户登录态</li>
+<li>用户不知情</li>
+<li>完成业务请求</li>
+<li>盗取用户资金</li>
+<li>冒充用户发帖背锅</li>
+<li>损坏网站名誉</li>
+</ul>
+<h3 id="2-1-CSRF-防御"><a href="#2-1-CSRF-防御" class="headerlink" title="2.1 CSRF 防御"></a>2.1 CSRF 防御</h3><ul>
+<li>禁止第三方网站带 Cookies<ul>
+<li>same-site 属性（同一站点）-但是只有 chrome 是完全可以</li>
+</ul>
+</li>
+<li>在前端页面加入验证信息（ccap 模块生成验证码-npm install ccap –save）<ul>
+<li>验证码（攻击者网站不访问前端就没法拿到验证码通不过验证）</li>
+<li>token</li>
+</ul>
+</li>
+</ul>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// 将token放入表单及cookie中，然后校验两者是否一致</span>
+<span class="token keyword">var</span> csrfToken <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">9999999</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ctx<span class="token punctuation">.</span>cookies<span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span><span class="token string">'csrfToken'</span><span class="token punctuation">,</span> csrfToken<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<ul>
+<li>验证 referer</li>
+</ul>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// 禁止来自第三方网站的请求</span>
+<span class="token keyword">var</span> referer <span class="token operator">=</span> ctx<span class="token punctuation">.</span>request<span class="token punctuation">.</span>headers<span class="token punctuation">.</span>referer<span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token regex">/^https?:\/\/localhost/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>referer<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">'非法请求'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="3-前端-cookie-安全性"><a href="#3-前端-cookie-安全性" class="headerlink" title="3. 前端 cookie 安全性"></a>3. 前端 cookie 安全性</h2><ul>
+<li>前端数据存储</li>
+<li>后端通过 http 头设置</li>
+<li>请求时通过 http 头传给后端</li>
+<li>前端可读写</li>
+<li>遵守同源策略（协议，域名，端口）</li>
+</ul>
+<p><strong>cookie 特性:</strong></p>
+<ul>
+<li>域名</li>
+<li>有效期</li>
+<li>路径</li>
+<li>http-only</li>
+<li>secure（https）</li>
+<li>samesite</li>
+</ul>
+<p><strong>cookie 作用:</strong></p>
+<ul>
+<li>存储个性化设置</li>
+<li>存储未登录时用户唯一标识</li>
+<li>存储已登录用户的凭证<ul>
+<li>前端提交用户名和密码</li>
+<li>后端验证用户名和密码</li>
+<li>后端通过 http 头设置用户凭证</li>
+<li>后续访问时后盾先验证用户凭证</li>
+</ul>
+</li>
+<li>存储其它业务数据</li>
+</ul>
+<h3 id="3-1-cookie-登录用户凭证"><a href="#3-1-cookie-登录用户凭证" class="headerlink" title="3.1 cookie - 登录用户凭证"></a>3.1 cookie - 登录用户凭证</h3><h4 id="3-1-1-用户-ID（隐患）"><a href="#3-1-1-用户-ID（隐患）" class="headerlink" title="3.1.1 用户 ID（隐患）"></a>3.1.1 用户 ID（隐患）</h4><h4 id="3-1-2-用户-ID-签名"><a href="#3-1-2-用户-ID-签名" class="headerlink" title="3.1.2 用户 ID + 签名"></a>3.1.2 用户 ID + 签名</h4><pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// crypt.js</span>
+<span class="token keyword">var</span> crypt <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> KEY <span class="token operator">=</span> <span class="token string">'##ksdfidf312##!@%dj1'</span><span class="token punctuation">;</span>
+crypt<span class="token punctuation">.</span>cryptUserId <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>userId<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> crypto <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'crypto'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> sign <span class="token operator">=</span> <span class="token punctuation">(</span>crypto<span class="token punctuation">.</span>createHmac <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token string">'sha256'</span><span class="token punctuation">,</span> KEY<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  sign<span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span>userId <span class="token operator">+</span> <span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> sign<span class="token punctuation">.</span><span class="token function">digest</span><span class="token punctuation">(</span><span class="token string">'hex'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> crypt<span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 登录模块</span>
+ctx<span class="token punctuation">.</span>cookies<span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span><span class="token string">'sign'</span><span class="token punctuation">,</span> crypt<span class="token punctuation">.</span><span class="token function">cryptUserId</span><span class="token punctuation">(</span>user<span class="token punctuation">.</span>id<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  httpOnly<span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  sameSite<span class="token punctuation">:</span> <span class="token string">'strict'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ctx<span class="token punctuation">.</span>cookies<span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span><span class="token string">'userId'</span><span class="token punctuation">,</span> crypt<span class="token punctuation">.</span><span class="token function">cryptUserId</span><span class="token punctuation">(</span>user<span class="token punctuation">.</span>id<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  httpOnly<span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  sameSite<span class="token punctuation">:</span> <span class="token string">'strict'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 验证</span>
+<span class="token keyword">const</span> crypt <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'./crypt'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">var</span> userId <span class="token operator">=</span> ctx<span class="token punctuation">.</span>cookies<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'userId'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> sign <span class="token operator">=</span> ctx<span class="token punctuation">.</span>cookies<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'sign'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> correctSign <span class="token operator">=</span> <span class="token function">cryptUserId</span><span class="token punctuation">(</span>userId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>correctSign <span class="token operator">!==</span> sign<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">'err'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h4 id="3-1-3-SessionId-持久化"><a href="#3-1-3-SessionId-持久化" class="headerlink" title="3.1.3 SessionId(持久化)"></a>3.1.3 SessionId(持久化)</h4><pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// session.js</span>
+
+<span class="token keyword">var</span> session <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> cache <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+session<span class="token punctuation">.</span><span class="token keyword">set</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>userId<span class="token punctuation">,</span> obj<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> sessionId <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>cache<span class="token punctuation">[</span>sessionId<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    cache<span class="token punctuation">[</span>sessionId<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  cache<span class="token punctuation">[</span>sessionId<span class="token punctuation">]</span><span class="token punctuation">.</span>content <span class="token operator">=</span> obj<span class="token punctuation">;</span>
+  <span class="token keyword">return</span> sessionId<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+session<span class="token punctuation">.</span><span class="token keyword">get</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>sessionId<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> cache<span class="token punctuation">[</span>sessionId<span class="token punctuation">]</span> <span class="token operator">&amp;&amp;</span> cache<span class="token punctuation">[</span>sessionId<span class="token punctuation">]</span><span class="token punctuation">.</span>content<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> session<span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// user.js</span>
+<span class="token keyword">const</span> session <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'./session'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">var</span> sessionId <span class="token operator">=</span> session<span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span>user<span class="token punctuation">.</span>id<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  userId<span class="token punctuation">:</span> user<span class="token punctuation">.</span>id
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ctx<span class="token punctuation">.</span>cookies<span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span><span class="token string">'sessionId'</span><span class="token punctuation">,</span> sessionId<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  httpOnly<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  sameSite<span class="token punctuation">:</span> <span class="token string">'strict'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// site.js</span>
+<span class="token keyword">const</span> session <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'./session'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">var</span> sessionId <span class="token operator">=</span> ctx<span class="token punctuation">.</span>cookies<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'sessionId'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> sessionObj <span class="token operator">=</span> session<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span>sessionId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>sessionObj <span class="token operator">||</span> <span class="token operator">!</span>sessionObj<span class="token punctuation">.</span>userId<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">'session不存在'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> userId <span class="token operator">=</span> sessionObj<span class="token punctuation">.</span>userId<span class="token punctuation">;</span>
+</code></pre>
+<h3 id="3-2-cookies-和-xss-关系"><a href="#3-2-cookies-和-xss-关系" class="headerlink" title="3.2 cookies 和 xss 关系"></a>3.2 cookies 和 xss 关系</h3><ul>
+<li>xss 可能偷取 cookies</li>
+<li>http-only 的 cookie 不会被偷</li>
+</ul>
+<h3 id="3-3-cookies-和-csrf-关系"><a href="#3-3-cookies-和-csrf-关系" class="headerlink" title="3.3 cookies 和 csrf 关系"></a>3.3 cookies 和 csrf 关系</h3><ul>
+<li>csrf 利用了用户 cookies</li>
+<li>攻击站点无法读写 cookies</li>
+<li>最好能阻止第三方使用 cookies</li>
+</ul>
+<h3 id="3-4-cookies-安全策略"><a href="#3-4-cookies-安全策略" class="headerlink" title="3.4 cookies - 安全策略"></a>3.4 cookies - 安全策略</h3><ul>
+<li>签名防篡改</li>
+<li>私有变换（加密）- 信息隐藏</li>
+<li>http-only（防止 xss）</li>
+<li>secure（https）</li>
+<li>same-site（主要 csrf 攻击，兼容性不好）</li>
+</ul>
+<h4 id="3-4-2-私有变换（加密）"><a href="#3-4-2-私有变换（加密）" class="headerlink" title="3.4.2 私有变换（加密）"></a>3.4.2 私有变换（加密）</h4><pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// 加密(node加密模块)</span>
+<span class="token keyword">var</span> crypto <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'crypto'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> KEY <span class="token operator">=</span> <span class="token string">'9851##%*!df1%!'</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> cipher <span class="token operator">=</span> crypto<span class="token punctuation">.</span><span class="token function">createCipher</span><span class="token punctuation">(</span><span class="token string">'des'</span><span class="token punctuation">,</span> KEY<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> text <span class="token operator">=</span> cipher<span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span><span class="token string">'hello world'</span><span class="token punctuation">,</span> <span class="token string">'utf8'</span><span class="token punctuation">,</span> <span class="token string">'hex'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 一边加密一边输出</span>
+text <span class="token operator">+</span><span class="token operator">=</span> cipher<span class="token punctuation">.</span><span class="token function">final</span><span class="token punctuation">(</span><span class="token string">'hex'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>text<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 解密</span>
+<span class="token keyword">var</span> decipher <span class="token operator">=</span> crypto<span class="token punctuation">.</span><span class="token function">createDecipher</span><span class="token punctuation">(</span><span class="token string">'des'</span><span class="token punctuation">,</span> KEY<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> originalText <span class="token operator">=</span> decipher<span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span>text<span class="token punctuation">,</span> <span class="token string">'hex'</span><span class="token punctuation">,</span> <span class="token string">'utf8'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+originalText <span class="token operator">+</span><span class="token operator">=</span> decipher<span class="token punctuation">.</span><span class="token function">final</span><span class="token punctuation">(</span><span class="token string">'utf8'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>originalText<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<blockquote>
+<p>签名和加密是有区别的。<strong>签名</strong>的文件仍然是明文，内容公开，签名可以验证是否是用户传达的文件。<strong>加密</strong>的文件是密文，用户无法获取。</p>
+</blockquote>
+<h2 id="4-点击劫持攻击"><a href="#4-点击劫持攻击" class="headerlink" title="4. 点击劫持攻击"></a>4. 点击劫持攻击</h2><p><strong>原理：</strong></p>
+<p>通过 iframe 将目标网站放到页面上，将透明度设为 0，直接点击的是 iframe;</p>
+<p><strong>特征：</strong></p>
+<ul>
+<li>用户亲手操作</li>
+<li>用户不知情</li>
+</ul>
+<h3 id="4-1-点击劫持防御"><a href="#4-1-点击劫持防御" class="headerlink" title="4.1 点击劫持防御"></a>4.1 点击劫持防御</h3><ul>
+<li>javascript 禁止内嵌（有局限性）</li>
+<li>X-FRAME-OPTIONS 禁止内嵌（ie8 以上）（推荐）</li>
+<li>其他辅助手段<ul>
+<li>验证码</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-1-1-javascript-禁止内嵌"><a href="#4-1-1-javascript-禁止内嵌" class="headerlink" title="4.1.1 javascript 禁止内嵌"></a>4.1.1 javascript 禁止内嵌</h4><p>html5 新属性<code>sandbox</code>，什么都不加默认会禁用掉很多功能</p>
+<pre class=" language-html"><code class="language-html"><span class="token comment" spellcheck="true">&lt;!-- 允许表单提交 --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>iframe</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://xxxx.cn:1211/post/15<span class="token punctuation">"</span></span> <span class="token attr-name">sandbox</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>allow-forms<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>iframe</span><span class="token punctuation">></span></span>
+<span class="token comment" spellcheck="true">&lt;!-- sandbox禁用功能 --></span>
+</code></pre>
+<blockquote>
+<p>这种方式有局限性，sandbox 即使加上有时候也会存在劫持。</p>
+</blockquote>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/javascript<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script language-javascript">
+  <span class="token keyword">if</span><span class="token punctuation">(</span>top<span class="token punctuation">.</span>location <span class="token operator">!=</span> window<span class="token punctuation">.</span>location<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    top<span class="token punctuation">.</span>location <span class="token operator">=</span> window<span class="token punctuation">.</span>location<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+</code></pre>
+<h4 id="4-1-2-X-FRAME-OPTIONS-禁止内嵌"><a href="#4-1-2-X-FRAME-OPTIONS-禁止内嵌" class="headerlink" title="4.1.2 X-FRAME-OPTIONS 禁止内嵌"></a>4.1.2 X-FRAME-OPTIONS 禁止内嵌</h4><pre class=" language-js"><code class="language-js">ctx<span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span><span class="token string">'X-Frame-Options'</span><span class="token punctuation">,</span> <span class="token string">'DENY'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+DENY<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 禁止内嵌</span>
+SAME <span class="token operator">-</span> ORIGIN<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 同一网站</span>
+SAMEORIGIN<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 嵌入页和被嵌入页在用一个域</span>
+ALLOW <span class="token operator">-</span> FROM<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 网址</span>
+</code></pre>
+<h2 id="5-传输过程安全问题"><a href="#5-传输过程安全问题" class="headerlink" title="5. 传输过程安全问题"></a>5. 传输过程安全问题</h2><ul>
+<li>传输链路窃听篡改</li>
+<li>https</li>
+</ul>
+<h3 id="5-1-传输链路窃听篡改"><a href="#5-1-传输链路窃听篡改" class="headerlink" title="5.1 传输链路窃听篡改"></a>5.1 传输链路窃听篡改</h3><p>我们可以用 anyproxy 代理软件来模拟攻击<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180604-232214-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure></p>
+<ul>
+<li>http 窃听<ul>
+<li>窃听用户密码</li>
+<li>窃听传输敏感信息</li>
+<li>非法获取个人信息</li>
+</ul>
+</li>
+<li>http 篡改<ul>
+<li>插入广告</li>
+<li>重定向网站</li>
+<li>无法防御 xss 和 csrf 攻击</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-2-https-防御"><a href="#5-2-https-防御" class="headerlink" title="5.2 https 防御"></a>5.2 https 防御</h3><p>超文本传输安全协议（ HTTPS ）是一种通过计算机网络进行安全通信的传输协议。HTTPS 经由 HTTP 进行通信，但利用 SSL/TLS 来加密数据包。 HTTPS 开发的主要目的，是提供对网站服务器的身份认证，保护交换数据的隐私与完整性。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180605-151139-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>还有一种情况是中间人攻击，看下图：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180605-151324-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>这种情况下要防御就需要引入证书</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180605-151341-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<ul>
+<li>证书无法伪造</li>
+<li>证书私钥不被泄露</li>
+<li>域名管理权不泄露</li>
+<li>CA 坚守原则</li>
+</ul>
+<blockquote>
+<p>免费证书 <a href="https://www.sslforfree.com" rel="external nofollow noopener noreferrer" target="_blank">www.sslforfree.com</a></p>
+</blockquote>
+<h4 id="5-2-1-https-部署"><a href="#5-2-1-https-部署" class="headerlink" title="5.2.1 https 部署"></a>5.2.1 https 部署</h4><pre class=" language-bash"><code class="language-bash">curl https://get.acme.sh <span class="token operator">|</span> sh
+/root/.acme.sh // 安装目录
+<span class="token function">cd</span> /root/
+./acme.sh --issue -d www.example.com --webroot /data/web/www.example.com/
+</code></pre>
+<p>然后配置 nginx</p>
+<pre class=" language-shell"><code class="language-shell">server{
+  listen 80;
+  listen 443 ssl http2;
+  server_name www.example.com;
+
+  ssl_certificate /root/.acme.sh/www.example.com/fullchain.cer;
+  ssl_certificate_key /root/.acme.sh/www.example.com/www.example.com.key;
+
+  location / {
+    root /data/web/www.example.com;
+  }
+}
+</code></pre>
+<h2 id="6-密码安全问题"><a href="#6-密码安全问题" class="headerlink" title="6. 密码安全问题"></a>6. 密码安全问题</h2><ul>
+<li>密码作用</li>
+<li>密码存储</li>
+<li>密码传输安全性</li>
+<li>密码的替代方案</li>
+<li>生物特征密码问题</li>
+</ul>
+<p><strong>密码 - 泄露渠道</strong></p>
+<ul>
+<li>数据库被偷</li>
+<li>服务器被入侵</li>
+<li>通讯被窃听</li>
+<li>内部人员泄露</li>
+<li>其他网站（撞库）</li>
+</ul>
+<h3 id="6-1-密码存储"><a href="#6-1-密码存储" class="headerlink" title="6.1 密码存储"></a>6.1 密码存储</h3><ul>
+<li>严禁明文存储(防泄露)</li>
+<li>单向变换(防泄露)</li>
+<li>变换复杂度要求(防猜解) - 变换次数越多越安全<ul>
+<li>加密成本几乎不变（生成密码时速度慢一些）</li>
+<li>彩虹表失效（数量太大，无法建立通用性）</li>
+<li>解密成本增大 N 倍</li>
+</ul>
+</li>
+<li>密码复杂度要求(防猜解)</li>
+<li>加盐(防猜解) - 帮助用户提高复杂度<ul>
+<li><code>md5(sha1(md5(ID+ab83kd+原始密码+81kdso+盐+1lso;$2)))</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="6-1-1-严禁明文存储"><a href="#6-1-1-严禁明文存储" class="headerlink" title="6.1.1 严禁明文存储"></a>6.1.1 严禁明文存储</h4><p>正常在数据库中是需要离线加密明文密码的，这里为了方便，我们在用户登录时做逻辑处理(加密、加盐)</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// user.js</span>
+<span class="token keyword">const</span> password <span class="token operator">=</span>  <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'./password'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">const</span> results <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">query</span><span class="token punctuation">(</span>
+  <span class="token template-string"><span class="token string">`select * from user where username = '</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>data<span class="token punctuation">.</span>username<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">'`</span></span>
+<span class="token punctuation">)</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span>results<span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">{</span>
+  <span class="token keyword">let</span> user <span class="token operator">=</span> results<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">//如果用户没有salt</span>
+  <span class="token comment" spellcheck="true">//需要升级</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span>user<span class="token punctuation">.</span>salt<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">var</span> salt <span class="token operator">=</span> password<span class="token punctuation">.</span><span class="token function">getSalt</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">var</span> newPassword <span class="token operator">=</span> password<span class="token punctuation">.</span><span class="token function">encryptPassword</span><span class="token punctuation">(</span>salt<span class="token punctuation">,</span> user<span class="token punctuation">.</span>password<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">await</span> <span class="token function">query</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`update user set password = '</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>newPassword<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">', salt = '</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>salt<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">' where id = </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>user<span class="token punctuation">.</span>id<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    user<span class="token punctuation">.</span>salt <span class="token operator">=</span> salt<span class="token punctuation">;</span>
+    user<span class="token punctuation">.</span>password <span class="token operator">=</span> newPassword<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">var</span> encryptPassword <span class="token operator">=</span> password<span class="token punctuation">.</span><span class="token function">encryptPassword</span><span class="token punctuation">(</span>user<span class="token punctuation">.</span>salt<span class="token punctuation">,</span> data<span class="token punctuation">.</span>password<span class="token punctuation">)</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span>encryptPassword <span class="token operator">!==</span> user<span class="token punctuation">.</span>password<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">'密码不正确'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// password.js</span>
+<span class="token keyword">var</span> password <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> md5 <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> crypto <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'crypto'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> md5Hash <span class="token operator">=</span> crypto<span class="token punctuation">.</span><span class="token function">createHash</span><span class="token punctuation">(</span><span class="token string">'md5'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  md5Hash<span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> md5Hash<span class="token punctuation">.</span><span class="token function">digest</span><span class="token punctuation">(</span><span class="token string">'hex'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+password<span class="token punctuation">.</span>getSalt <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token function">md5</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">999999</span> <span class="token operator">+</span> <span class="token string">''</span> <span class="token operator">+</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+password<span class="token punctuation">.</span>encryptPassword <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>salt<span class="token punctuation">,</span> password<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token function">md5</span><span class="token punctuation">(</span>salt <span class="token operator">+</span> <span class="token string">'af$!##@$14##svc*&amp;sf%'</span> <span class="token operator">+</span> password<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> password<span class="token punctuation">;</span>
+</code></pre>
+<h4 id="6-1-2-单向变换"><a href="#6-1-2-单向变换" class="headerlink" title="6.1.2 单向变换"></a>6.1.2 单向变换</h4><ul>
+<li>哈希算法<ul>
+<li>明文-密文 – 对应</li>
+<li>雪崩效应（明文有一点点不一样密文完全不一样）</li>
+<li>密文 - 明文 无法反推</li>
+<li>密文固定长度</li>
+<li>常见哈希算法：md5 sha1 sha256</li>
+</ul>
+</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180605-160201-2x-2.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>虽然没有办法反推出原密码，但是可以查表，网上有很多这种彩虹表的查询</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180605-160643-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>这种情况下可以组合加密来防止彩虹表的查询</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180605-161009-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<h3 id="6-2-密码传输安全性"><a href="#6-2-密码传输安全性" class="headerlink" title="6.2 密码传输安全性"></a>6.2 密码传输安全性</h3><ul>
+<li>https 传输</li>
+<li>频率限制</li>
+<li>前端加密意义有限</li>
+</ul>
+<p><strong>前端加密</strong></p>
+<pre class=" language-bash"><code class="language-bash">jspm <span class="token function">install</span> js-md5
+</code></pre>
+<h2 id="7-SQL-注入攻击"><a href="#7-SQL-注入攻击" class="headerlink" title="7. SQL 注入攻击"></a>7. SQL 注入攻击</h2><p><strong>关系型数据库</strong></p>
+<ul>
+<li>存放结构化数据</li>
+<li>可高效操作大量数据</li>
+<li>方便处理数据之间的关联关系</li>
+<li>常见：access/sqlite/mysql/mssql server</li>
+</ul>
+<p><strong>注入攻击危害</strong></p>
+<ul>
+<li>猜解密码</li>
+<li>获取数据</li>
+<li>删库删表</li>
+<li>拖库</li>
+</ul>
+<p><strong>sql 语句</strong></p>
+<pre class=" language-shell"><code class="language-shell">select * from user where id=1;
+
+insert into user(username,password) values('test','123');
+
+update user set password='1234' where id=3;
+
+delete from user where id=3;
+</code></pre>
+<h3 id="7-1-sql-注入攻击案例"><a href="#7-1-sql-注入攻击案例" class="headerlink" title="7.1 sql 注入攻击案例"></a>7.1 sql 注入攻击案例</h3><pre class=" language-shell"><code class="language-shell">select * from user where username = 'TooBug' and password = '1' or '1'='1'; # 否定前面语句
+
+select * from table where id="10" and mid(version(),1,1)=5 # 截取版本号第一位是否等于5，等于5前面语句生效，否则报错。
+
+select id,1,2,3 from table;
+
+select * from table union select 1,2,3 from table2; # 联合查询
+
+select * from table where mid(username,1,1)="t" # 查询username第一位等于't';
+</code></pre>
+<h3 id="7-2-sql-注入攻击防御"><a href="#7-2-sql-注入攻击防御" class="headerlink" title="7.2 sql 注入攻击防御"></a>7.2 sql 注入攻击防御</h3><ul>
+<li>关闭错误输出</li>
+<li>检查数据类型</li>
+<li>对数据进行转义</li>
+<li>使用参数化查询(抓包 charles，wireshark)</li>
+<li>使用 ORM(对象关系映射)- 增强安全性，开发效率</li>
+</ul>
+<h3 id="7-3-NoSQL-注入攻击和防御"><a href="#7-3-NoSQL-注入攻击和防御" class="headerlink" title="7.3 NoSQL 注入攻击和防御"></a>7.3 NoSQL 注入攻击和防御</h3><ul>
+<li>检查数据类型</li>
+<li>类型转换</li>
+<li>写完整条件</li>
+</ul>
+<h2 id="8-接入层上传问题"><a href="#8-接入层上传问题" class="headerlink" title="8. 接入层上传问题"></a>8. 接入层上传问题</h2><h3 id="8-1-上传攻击"><a href="#8-1-上传攻击" class="headerlink" title="8.1 上传攻击"></a>8.1 上传攻击</h3><ul>
+<li>上传文件</li>
+<li>再次访问上传的文件</li>
+<li>上传的文件被当成程序解析</li>
+</ul>
+<h3 id="8-2-防御"><a href="#8-2-防御" class="headerlink" title="8.2 防御"></a>8.2 防御</h3><ul>
+<li>限制上传后缀（比如 php 程序禁止上传 php 文件）</li>
+<li>文件类型检查<ul>
+<li>fileType</li>
+</ul>
+</li>
+<li>文件内容检查（开头特征）</li>
+</ul>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> fileBuffer <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">readFileSync</span><span class="token punctuation">(</span>file<span class="token punctuation">.</span>path<span class="token punctuation">)</span><span class="token punctuation">;</span>
+fileBuffer<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0x5b</span><span class="token punctuation">;</span>
+</code></pre>
+<ul>
+<li>程序输出（node 就是如此，但是因为要读到内存中，有读和写，性能受影响。折中办法：访问文件直接输出指令给到前端 nginx 服务器读取，性能损耗会小一些）</li>
+<li>权限控制 - 可写可执行互斥（原则）<ul>
+<li>上传文件可写不可执行</li>
+</ul>
+</li>
+<li>部署应用时用低权限用户，而不用 root 这种高权限用户</li>
+</ul>
+<h2 id="9-信息泄露和社会工程学"><a href="#9-信息泄露和社会工程学" class="headerlink" title="9. 信息泄露和社会工程学"></a>9. 信息泄露和社会工程学</h2><ul>
+<li>信息泄露<ul>
+<li>泄露系统敏感信息</li>
+<li>泄露用户敏感信息</li>
+<li>泄露用户密码</li>
+</ul>
+</li>
+<li>信息泄露途径<ul>
+<li>错误信息失控（mysql）</li>
+<li>sql 注入</li>
+<li>水平权限控制不当</li>
+<li>xss/csrf</li>
+</ul>
+</li>
+<li>社会工程学<ul>
+<li>你的身份由你掌握的资料确定</li>
+<li>别人掌握了你的资料</li>
+<li>别人伪装成你的身份</li>
+<li>利用你的身份干坏事</li>
+</ul>
+</li>
+</ul>
+<p><strong>案例:</strong></p>
+<ul>
+<li>电信诈骗</li>
+<li>伪装公检法</li>
+<li>QQ 视频借钱</li>
+<li>微信伪装好友</li>
+</ul>
+<h3 id="9-1-OAuth-思想"><a href="#9-1-OAuth-思想" class="headerlink" title="9.1 OAuth 思想"></a>9.1 OAuth 思想</h3><ul>
+<li>一切行为由用户授权</li>
+<li>授权行为不泄露敏感信息</li>
+<li>授权会过期</li>
+</ul>
+<h4 id="9-1-1-利用-OAuth-思想防止资料泄露"><a href="#9-1-1-利用-OAuth-思想防止资料泄露" class="headerlink" title="9.1.1 利用 OAuth 思想防止资料泄露"></a>9.1.1 利用 OAuth 思想防止资料泄露</h4><ul>
+<li>用户授权读取资料</li>
+<li>无授权的资料不可读取</li>
+<li>不允许批量获取数据</li>
+<li>数据接口可风控审计</li>
+</ul>
+<h2 id="10-其它安全问题"><a href="#10-其它安全问题" class="headerlink" title="10. 其它安全问题"></a>10. 其它安全问题</h2><ul>
+<li>拒绝服务攻击 DDOS</li>
+<li>重放攻击</li>
+</ul>
+<h3 id="10-1-拒绝服务攻击-DOS"><a href="#10-1-拒绝服务攻击-DOS" class="headerlink" title="10.1 拒绝服务攻击 DOS"></a>10.1 拒绝服务攻击 DOS</h3><p><strong>特征:</strong></p>
+<ul>
+<li>模拟正常用户</li>
+<li>大量占用服务器资源</li>
+<li>无法服务正常用户</li>
+</ul>
+<p><strong>类型:</strong></p>
+<ul>
+<li>TCP 半连接</li>
+<li>HTTP 连接</li>
+<li>DNS（域名解析服务器）</li>
+</ul>
+<h4 id="10-1-1-大规模分布式拒绝服务攻击-DDOS"><a href="#10-1-1-大规模分布式拒绝服务攻击-DDOS" class="headerlink" title="10.1.1 大规模分布式拒绝服务攻击 DDOS"></a>10.1.1 大规模分布式拒绝服务攻击 DDOS</h4><ul>
+<li>流量可达几十到上百 G</li>
+<li>分布式（肉鸡、代理）</li>
+<li>极难防御</li>
+</ul>
+<h4 id="10-1-2-DOS-攻击防御"><a href="#10-1-2-DOS-攻击防御" class="headerlink" title="10.1.2 DOS 攻击防御"></a>10.1.2 DOS 攻击防御</h4><ul>
+<li>防火墙</li>
+<li>交换机、路由器</li>
+<li>流量清洗</li>
+<li>高防 IP</li>
+</ul>
+<h4 id="10-1-3-DOS-攻击预防"><a href="#10-1-3-DOS-攻击预防" class="headerlink" title="10.1.3 DOS 攻击预防"></a>10.1.3 DOS 攻击预防</h4><ul>
+<li>避免重逻辑业务</li>
+<li>快速失败快速返回</li>
+<li>防雪崩机制</li>
+<li>有损服务</li>
+<li>CDN</li>
+</ul>
+<h3 id="10-2-重放攻击"><a href="#10-2-重放攻击" class="headerlink" title="10.2 重放攻击"></a>10.2 重放攻击</h3><p><strong>原理:</strong></p>
+<ul>
+<li>请求被窃听或记录</li>
+<li>再次发起相同的请求</li>
+<li>产生以外的结果</li>
+</ul>
+<p><strong>后果:</strong></p>
+<ul>
+<li>用户被多次消费</li>
+<li>用户登录态被盗取</li>
+<li>多次抽奖</li>
+</ul>
+<h4 id="10-2-1-防御"><a href="#10-2-1-防御" class="headerlink" title="10.2.1 防御"></a>10.2.1 防御</h4><ul>
+<li>加密（https）</li>
+<li>时间戳</li>
+<li>token(session 后端生成)</li>
+<li>nonce</li>
+<li>签名</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="cookies-和-session-关系"><a href="#cookies-和-session-关系" class="headerlink" title="cookies 和 session 关系"></a>cookies 和 session 关系</h3><p>session 是基于 cookies 的存储来实现的（常用）</p>
+<h3 id="cookies-特性"><a href="#cookies-特性" class="headerlink" title="cookies 特性"></a>cookies 特性</h3><p>容量小，跟随 html 发送，通过 http 头设置，通过 js 读取</p>
+<h3 id="cookies-属性"><a href="#cookies-属性" class="headerlink" title="cookies 属性"></a>cookies 属性</h3><ul>
+<li>域名，有域名不能跨域</li>
+<li>路径，同一域名 path 不一样 cookies 读取情况不一样</li>
+<li>有效期</li>
+<li>http-only，没办法通过 js 读取，通过 http 发送后台给后台读取</li>
+<li>same-site</li>
+</ul>
+<h3 id="删除一个-cookis-值？"><a href="#删除一个-cookis-值？" class="headerlink" title="删除一个 cookis 值？"></a>删除一个 cookis 值？</h3><p>设置一个过期时间为过去时间。</p>
+<h3 id="https-如何保证数据不被窃听的"><a href="#https-如何保证数据不被窃听的" class="headerlink" title="https 如何保证数据不被窃听的"></a>https 如何保证数据不被窃听的</h3><p>通过数据加密方式，在客户端和服务端进行通信之前来协商一个加密协议，通过加密协议来传输所有数据。</p>
+<h3 id="https-如何保证不被中间人攻击"><a href="#https-如何保证不被中间人攻击" class="headerlink" title="https 如何保证不被中间人攻击"></a>https 如何保证不被中间人攻击</h3><p>证书机制</p>
+<h3 id="部署-https-的步骤"><a href="#部署-https-的步骤" class="headerlink" title="部署 https 的步骤"></a>部署 https 的步骤</h3><ul>
+<li>确保全栈都可以部署到 https</li>
+<li>找 ca 生成证书</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-11-25T11:42:24.000Z" itemprop="dateUpdated">2017-11-25 19:42:24</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/前端安全/">前端安全</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/a76d942d/&title=《前后端漏洞分析与安全防御总结》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/a76d942d/&title=《前后端漏洞分析与安全防御总结》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/a76d942d/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《前后端漏洞分析与安全防御总结》 — Sixin的小站&url=http://coder.liusixin.cn/posts/a76d942d/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/a76d942d/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/336c09e/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">JS你所不知道的奇淫技巧</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/d7a134ad/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Nodejs编写静态博客命令行工具</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/a76d942d/&title=《前后端漏洞分析与安全防御总结》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/a76d942d/&title=《前后端漏洞分析与安全防御总结》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/a76d942d/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《前后端漏洞分析与安全防御总结》 — Sixin的小站&url=http://coder.liusixin.cn/posts/a76d942d/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/a76d942d/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABxElEQVR42u3aS44DIQwFwNz/0hlptlF3nm1AHalYRfnQRRYWPPN6xeP9Pz7f+RxXnyZzLhu4uLhj7vt2JFP36PffuVwqLi7uQe59obn68X2Bu5rn/vUXGy4u7sO41R1IvnhcXNzf5fY2MfkCcHFxn8atgvJPk2K35ayGi4s74FYD0x2vN+a7uLi4Re67OHrLqMajl0/HxcU9wk2mvq8k+WEm3yR9KXO4uLibudXWSBU02UI1SxguLu4Rbh58VOOV6iUwXFzck9zqpatJM3W0MFxc3CPcqKkZX8CatGyrT8HFxd3H7ZWSXpzaa7IW9lm4uLiLuL3+ZhJxJn/Exi4xLi7umNt75OSKRnUXdhmb4uLibuA2u7JxIcuvYuDi4j6ZOwlMk4NQbwZcXNyT3GoJy4POhNsLUHBxcXdz86NI3hytNloKoS0uLu5Bbi/inBSmZlCLi4t7kJuP+TGpuuyoJ4yLi7uUWy0o84ZrNTZt9opxcXHH3GrxWttuKRc4XFzcg9y8eOXRRt5oKRyQcHFxH8ad/2rBXgwXF/eR3OrGJQdFEQwuLu5Bbm+DUg1bq0ejUSyCi4s74PYC01Xfr8avuLi4m7l/FeAlCxbU+iAAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

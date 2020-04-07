@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/129b39a1/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/129b39a1/">
+    
+    
+    <title>web高性能动画及渲染原理 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="性能优化,CSS,动画,webkit">
+    <meta name="description" content="如何实现动画？  jQuery animation:setTimeout，top/left animatin，transition，transform javascript+canvas/webGL/SVG requestAnimationFrame GPU acceleration（硬件加速）  webkit 的渲染流程">
+<meta name="keywords" content="性能优化,CSS,动画,webkit">
+<meta property="og:type" content="article">
+<meta property="og:title" content="web高性能动画及渲染原理">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/129b39a1/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="如何实现动画？  jQuery animation:setTimeout，top/left animatin，transition，transform javascript+canvas/webGL/SVG requestAnimationFrame GPU acceleration（硬件加速）  webkit 的渲染流程">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064121-18de38a5271683bc.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064121-75bd2b44f4b3aa52.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064121-40acc62402530af5.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064121-a3a953300f886256.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064121-03cb2f4c3e294355.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064121-e2d1cf0d7649b954.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064121-5b56edf42ddf35e6.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064121-e881c603a80f25f1.png">
+<meta property="og:updated_time" content="2017-09-13T08:03:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="web高性能动画及渲染原理">
+<meta name="twitter:description" content="如何实现动画？  jQuery animation:setTimeout，top/left animatin，transition，transform javascript+canvas/webGL/SVG requestAnimationFrame GPU acceleration（硬件加速）  webkit 的渲染流程">
+<meta name="twitter:image" content="http://cdn-blog.liusixin.cn/9064121-18de38a5271683bc.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">web高性能动画及渲染原理</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">web高性能动画及渲染原理</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-09-13T08:03:18.000Z" itemprop="datePublished" class="page-time">
+  2017-09-13
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#webkit-的渲染流程"><span class="post-toc-number">1.</span> <span class="post-toc-text">webkit 的渲染流程</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#浏览器渲染小结"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">浏览器渲染小结</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#硬件加速（GPU-加速）"><span class="post-toc-number">2.</span> <span class="post-toc-text">硬件加速（GPU 加速）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Layer-模型"><span class="post-toc-number">3.</span> <span class="post-toc-text">Layer 模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Layer-创建标准"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">Layer 创建标准</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#为什么使用硬件加速快呢？"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">为什么使用硬件加速快呢？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#节省了哪些时间？"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">节省了哪些时间？</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#完美的-Animation"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">完美的 Animation</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Layout"><span class="post-toc-number">3.5.</span> <span class="post-toc-text">Layout</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Layout-小结"><span class="post-toc-number">3.6.</span> <span class="post-toc-text">Layout 小结</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#如何开发不会导致重拍"><span class="post-toc-number">4.</span> <span class="post-toc-text">如何开发不会导致重拍</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Paint"><span class="post-toc-number">5.</span> <span class="post-toc-text">Paint</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#触发-paint"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">触发 paint</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#paint-的代价"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">paint 的代价</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#减少不必的绘制"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">减少不必的绘制</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Paint-小结"><span class="post-toc-number">5.4.</span> <span class="post-toc-text">Paint 小结</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#composite-Layout"><span class="post-toc-number">5.5.</span> <span class="post-toc-text">composite Layout</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/css/web高性能动画及渲染原理" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">web高性能动画及渲染原理</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-09-13 16:03:18" datetime="2017-09-13T08:03:18.000Z" itemprop="datePublished">2017-09-13</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p><strong>如何实现动画？</strong></p>
+<ul>
+<li>jQuery animation:setTimeout，top/left</li>
+<li>animatin，transition，transform</li>
+<li>javascript+canvas/webGL/SVG</li>
+<li>requestAnimationFrame</li>
+<li>GPU acceleration（硬件加速）</li>
+</ul>
+<h2 id="webkit-的渲染流程"><a href="#webkit-的渲染流程" class="headerlink" title="webkit 的渲染流程"></a>webkit 的渲染流程</h2><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064121-18de38a5271683bc.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064121-75bd2b44f4b3aa52.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<h3 id="浏览器渲染小结"><a href="#浏览器渲染小结" class="headerlink" title="浏览器渲染小结"></a>浏览器渲染小结</h3><ul>
+<li>渲染三个阶段： Layout，Paint，Composite Layers</li>
+<li>修改不同 CSS 属性会触发不同阶段</li>
+<li>触发的阶段越前，渲染的代价越高</li>
+</ul>
+<h2 id="硬件加速（GPU-加速）"><a href="#硬件加速（GPU-加速）" class="headerlink" title="硬件加速（GPU 加速）"></a>硬件加速（GPU 加速）</h2><ul>
+<li>Texture，即 GPU 传输到 GPU 的一个 Bitmap</li>
+<li><p>GPU 能快速对 texture 进行偏移、缩放、旋转、修改透明度等操作<br><img src="http://cdn-blog.liusixin.cn/9064121-40acc62402530af5.png" alt=""></p>
+</li>
+<li><p>相同之处：两者都有总线和外界联系，有自己缓存体系，以及数字和逻辑运算单元。一句话，两者都为了完成计算任务而设计。</p>
+</li>
+<li>不同之处：CPU 主要负责操作系统和应用程序，GPU 主要负责跟显示相关的数据处理，GPU 的活 CPU 一般都可以干，但是效率低下</li>
+</ul>
+<h2 id="Layer-模型"><a href="#Layer-模型" class="headerlink" title="Layer 模型"></a>Layer 模型</h2><ul>
+<li>浏览器根据 CSS 属性为元素生成 Layers</li>
+<li>将 Layers 作为 texture 上传到 GPU</li>
+<li>当改变 Layer 的 transform,opacity 属性时，渲染会跳过 Layout，paint，直接通知 GPU 对 Layer 做变换。</li>
+</ul>
+<h3 id="Layer-创建标准"><a href="#Layer-创建标准" class="headerlink" title="Layer 创建标准"></a>Layer 创建标准</h3><ul>
+<li>拥有 3d transform 属性</li>
+<li>使用 animation，transition 实现 opacity，transform 的动画</li>
+<li>video</li>
+<li>canvas</li>
+<li>Flash</li>
+<li>使用 CSS filters 的元素</li>
+<li>z-index 大于某个相邻节点的 Layer 的元素</li>
+</ul>
+<h3 id="为什么使用硬件加速快呢？"><a href="#为什么使用硬件加速快呢？" class="headerlink" title="为什么使用硬件加速快呢？"></a>为什么使用硬件加速快呢？</h3><ul>
+<li>如果使用 jquery 或者 js 来做一个 top 移动 100px 的动画，每次都会重主线程发传到合成器线程</li>
+<li>但是，如果用 GPU transform 来做的话，主线程只会传一次到合成器线程，其余任务全部是在合成器线程，所以效率比较高。</li>
+</ul>
+<h3 id="节省了哪些时间？"><a href="#节省了哪些时间？" class="headerlink" title="节省了哪些时间？"></a>节省了哪些时间？</h3><ul>
+<li>CPU 进行 Layout 和 paint 的时间</li>
+<li>CPU 向 GPU 传输位图的时间</li>
+</ul>
+<h3 id="完美的-Animation"><a href="#完美的-Animation" class="headerlink" title="完美的 Animation"></a>完美的 Animation</h3><p>对眼睛来说：60FPS 更舒服更完美，约等于 16.7ms 内，我们准备好一帧的动画</p>
+<ul>
+<li>开始绘制的时间</li>
+<li>绘制一帧的时间<ol>
+<li><code>setTimeout(callback,1/60)</code> 依靠浏览器内置时钟更新频率，eg、IE8 及以前更新间隔为 15.6，<code>setTimeout</code> 16.7，它需要两个 15.6ms 触发。超过 14.5ms，所以会出现丢帧的现象<br>main thread 队列</li>
+<li><code>requestAnimationFrame</code> - 定义绘制每一帧的工作<code>requestAnimationFrame(callback)</code></li>
+</ol>
+</li>
+<li>自动调节频率 ，callback 工作太多无法再一帧内完成，会自动降低为 30fps，虽然频率降低但比丢帧好。</li>
+</ul>
+<h3 id="Layout"><a href="#Layout" class="headerlink" title="Layout"></a>Layout</h3><p><strong>触发 Layout</strong></p>
+<ul>
+<li>改变 widht,height 等和大小、位置相关的属性</li>
+<li>读取 size、positoin 相关的属性<br><img src="http://cdn-blog.liusixin.cn/9064121-a3a953300f886256.png" alt=""></li>
+</ul>
+<p><strong>尽量不触发 Layout，使用 transform 代替 top，left 的动画。</strong><br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064121-03cb2f4c3e294355.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure><br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064121-e2d1cf0d7649b954.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure></p>
+<p>但是，如果是这样</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064121-5b56edf42ddf35e6.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>我们可以这样改</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064121-e881c603a80f25f1.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>介绍一个库</p>
+<p><strong><a href="https://link.jianshu.com/?t=https%3A%2F%2Fgithub.com%2Fwilsonpage%2Ffastdom" rel="external nofollow noopener noreferrer" target="_blank">fastdom.js</a></strong></p>
+<p>在每一帧，先将读操作批量运行，在批量运行写操作</p>
+<h3 id="Layout-小结"><a href="#Layout-小结" class="headerlink" title="Layout 小结"></a>Layout 小结</h3><ul>
+<li>不但改变 css 可能导致 Layout，读取位置大小相关属性也会导致 Layout（滚动条也会导致 Layout）</li>
+<li>分离读写，减少 Layout</li>
+<li>面对解耦代码，可以使用 rAF 推迟的方法分离读写</li>
+</ul>
+<h2 id="如何开发不会导致重拍"><a href="#如何开发不会导致重拍" class="headerlink" title="如何开发不会导致重拍"></a>如何开发不会导致重拍</h2><ul>
+<li>样式表越简单，重拍和重汇越快</li>
+<li>重拍和重绘的 DOM 元素层级越高，成本就越高</li>
+<li>table 元素的重排和重绘成本，要高于 div 元素</li>
+<li>尽量不要把读操作和写操作，放在一个语句里</li>
+<li>统一改变样式</li>
+<li>缓存重排结果</li>
+<li>离线 DOM Fragment/clone</li>
+<li>虚拟 DOM React</li>
+<li>必要的时候 display:none 不可见元素不影响重排重绘。</li>
+<li>visibility 对重排影响不影响重绘</li>
+</ul>
+<h2 id="Paint"><a href="#Paint" class="headerlink" title="Paint"></a>Paint</h2><h3 id="触发-paint"><a href="#触发-paint" class="headerlink" title="触发 paint"></a>触发 paint</h3><ul>
+<li>当修改 border-radius,box-shadow,color 等展示相关属性，会触发 paint</li>
+</ul>
+<h3 id="paint-的代价"><a href="#paint-的代价" class="headerlink" title="paint 的代价"></a>paint 的代价</h3><ul>
+<li>continuous painting mode</li>
+<li>paint prefiler</li>
+<li>在经常 paint 的区域，要避免代价太高的 style（比如不要的 gif 图设置 display:none）</li>
+</ul>
+<h3 id="减少不必的绘制"><a href="#减少不必的绘制" class="headerlink" title="减少不必的绘制"></a>减少不必的绘制</h3><ul>
+<li>gif 图即使被其他 Layout 盖住不可见，也可能导致 paint，不需要时应将 gif 图的 display 属性设为 none。轮播图也一样 <a href="https://link.jianshu.com/?t=http%3A%2F%2Fjsbin.com%2Fdizak%2F3%2Fedit%3Fhtml%2Ccss%2Coutput" rel="external nofollow noopener noreferrer" target="_blank">http://jsbin.com/dizak/3/edit?html,css,output</a> (可以用调试工具去测试性能，z-index:0,也会重排重绘，应该直接设置 display:none)</li>
+<li>减少绘制区域，为引起大范围 Paint 的元素生成独立的 Layout 以减小 Paint 的范围</li>
+</ul>
+<h3 id="Paint-小结"><a href="#Paint-小结" class="headerlink" title="Paint 小结"></a>Paint 小结</h3><ul>
+<li>简化绘制的复杂度</li>
+<li>避免不必要的绘制</li>
+<li>减少绘制区域</li>
+</ul>
+<h3 id="composite-Layout"><a href="#composite-Layout" class="headerlink" title="composite Layout"></a>composite Layout</h3><ul>
+<li>GPU 也是有限度的，不要滥用 GPU 资源生成不必要的 Layout</li>
+<li>留意以外生成的 Layout</li>
+</ul>
+<blockquote>
+<p>国外一个关于高性能动画研究: <a href="https://link.jianshu.com/?t=http%3A%2F%2Fjankfree.org%2F" rel="external nofollow noopener noreferrer" target="_blank">https://link.jianshu.com/?t=http%3A%2F%2Fjankfree.org%2F</a></p>
+</blockquote>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-09-13T08:03:18.000Z" itemprop="dateUpdated">2017-09-13 16:03:18</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSS/">CSS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webkit/">webkit</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/动画/">动画</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能优化/">性能优化</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/129b39a1/&title=《web高性能动画及渲染原理》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/129b39a1/&title=《web高性能动画及渲染原理》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/129b39a1/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《web高性能动画及渲染原理》 — Sixin的小站&url=http://coder.liusixin.cn/posts/129b39a1/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/129b39a1/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/105e749d/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">webpack实践--多页面应用</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/ba1040d2/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">CSS 网页布局--圣杯布局、双飞翼布局</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/129b39a1/&title=《web高性能动画及渲染原理》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/129b39a1/&title=《web高性能动画及渲染原理》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/129b39a1/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《web高性能动画及渲染原理》 — Sixin的小站&url=http://coder.liusixin.cn/posts/129b39a1/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/129b39a1/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABwUlEQVR42u3aQYrDMAwF0N7/0h2YbYj5klw3hedVaIPztBGW5NcrXu//dX2+vnN98+6Xu302LFxc3DH3vVzrD98FkFDWYdyGhIuLe5Cbb7cOdcJdv4OLi/tMbpLU1oee3g64uLi/xV2XMeujDy4u7vO5SfGzN1V9vFbDxcUdcCcN013Ph/q7uLi446lE0jydtFDLX8fFxT3C3dX0TEYv1eRVOJHh4uJu5fbKnrzZUQ1v28ULXFzcATc5fOyqO+aDW1xc3JPcJLXl/1YPLklZhYuLe5KbR5O/U92h0HDBxcU9wq02OKrcQhu0GDwuLu6nufl2kzbopHzCxcU9yU3SSp7UkjZr3gppFj+4uLhjbv5qNXnl3PJlDlxc3C9xe62QPMgkdRYSGS4u7lZuIX3EAeT7lwPGxcU9zs0vT+QXLCZt2UL/BhcXdys3Tyi9QeneJIiLi3uG2xtv9K5czBsluLi4Z7j5ypPXrtFLPr7FxcX9BDe/BtEbx07SXPNiFi4u7ibuZEzS26FZq+Hi4j6MO/llfgzCxcV9Prf3sV7zBRcX91vcXrqpXt1oXrzAxcU9zp00TJODTnVAOy+ccHFxB9w/qZ7iMUXkuM8AAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

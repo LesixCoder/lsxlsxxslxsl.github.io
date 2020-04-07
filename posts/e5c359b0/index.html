@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/e5c359b0/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/e5c359b0/">
+    
+    
+    <title>如何开发一个响应式页面 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="CSS,响应式,移动端">
+    <meta name="description" content="本文主要介绍如何开发一个移动端响应式页面。  步骤 1 - 添加 viewport meta 标签在页头 head 标签内添加 viewport meta 标签是实现响应式页面的第一步，以便优化在移动设备上的展示效果，其推荐的设置为： &amp;lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&amp;gt;  步骤 2 - 使">
+<meta name="keywords" content="CSS,响应式,移动端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何开发一个响应式页面">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/e5c359b0/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="本文主要介绍如何开发一个移动端响应式页面。  步骤 1 - 添加 viewport meta 标签在页头 head 标签内添加 viewport meta 标签是实现响应式页面的第一步，以便优化在移动设备上的展示效果，其推荐的设置为： &amp;lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&amp;gt;  步骤 2 - 使">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-08-13T05:58:59.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何开发一个响应式页面">
+<meta name="twitter:description" content="本文主要介绍如何开发一个移动端响应式页面。  步骤 1 - 添加 viewport meta 标签在页头 head 标签内添加 viewport meta 标签是实现响应式页面的第一步，以便优化在移动设备上的展示效果，其推荐的设置为： &amp;lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&amp;gt;  步骤 2 - 使">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">如何开发一个响应式页面</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">如何开发一个响应式页面</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-08-13T05:58:59.000Z" itemprop="datePublished" class="page-time">
+  2017-08-13
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#步骤-1-添加-viewport-meta-标签"><span class="post-toc-number">1.</span> <span class="post-toc-text">步骤 1 - 添加 viewport meta 标签</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#步骤-2-使用-Media-Queries"><span class="post-toc-number">2.</span> <span class="post-toc-text">步骤 2 - 使用 Media Queries</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#方法-1，使用-link-标签，根据指定特性引入特定的外部样式文件"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">方法 1，使用 link 标签，根据指定特性引入特定的外部样式文件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#方法-2，直接在-style-标签或-样式文件内使用-media-规则"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">方法 2，直接在 style 标签或 样式文件内使用 @media 规则</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#步骤-3-使用-Viewport-单位及-rem"><span class="post-toc-number">3.</span> <span class="post-toc-text">步骤 3 - 使用 Viewport 单位及 rem</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#方法-1-仅使用-vw-作为-CSS-长度单位"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">方法 1 - 仅使用 vw 作为 CSS 长度单位</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#方法-2-vw-搭配-rem，寻找最优解"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">方法 2 - vw 搭配 rem，寻找最优解</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">4.</span> <span class="post-toc-text">总结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/响应式/如何开发一个响应式页面" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">如何开发一个响应式页面</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-08-13 13:58:59" datetime="2017-08-13T05:58:59.000Z" itemprop="datePublished">2017-08-13</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>本文主要介绍如何开发一个移动端响应式页面。</p>
+</blockquote>
+<h2 id="步骤-1-添加-viewport-meta-标签"><a href="#步骤-1-添加-viewport-meta-标签" class="headerlink" title="步骤 1 - 添加 viewport meta 标签"></a>步骤 1 - 添加 viewport meta 标签</h2><p>在页头 head 标签内添加 viewport meta 标签是实现响应式页面的第一步，以便优化在移动设备上的展示效果，其推荐的设置为：</p>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>viewport<span class="token punctuation">"</span></span> <span class="token attr-name">content</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>width<span class="token punctuation">=</span>device-width, initial-scale<span class="token punctuation">=</span>1<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+</code></pre>
+<h2 id="步骤-2-使用-Media-Queries"><a href="#步骤-2-使用-Media-Queries" class="headerlink" title="步骤 2 - 使用 Media Queries"></a>步骤 2 - 使用 Media Queries</h2><p>Media Queries 是为指定特性的浏览器视窗应用指定样式的手段，不同的样式代码，相当于为不同的设备应用了不同的 CSS 样式。</p>
+<p><strong>参数</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">属性</th>
+<th style="text-align:left">介绍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<p>min-width | 当视窗宽度大于或等于指定值时，@media 规则下的样式将被应用<br>max-width | 当视窗宽度小于或等于指定值时，@media 规则下的样式将被应用<br>min-height | 当视窗高度大于或等于指定值时，@media 规则下的样式将被应用<br>max-height | 当视窗高度小于或等于指定值时，@media 规则下的样式将被应用<br>orientation=portrait | 当视窗高度大于或等于宽度时，@media 规则下的样式将被应用<br>orientation=landscape | 当视窗宽度大于高度时，@media 规则下的样式将被应用…</p>
+<p><strong>用法</strong></p>
+<h3 id="方法-1，使用-link-标签，根据指定特性引入特定的外部样式文件"><a href="#方法-1，使用-link-标签，根据指定特性引入特定的外部样式文件" class="headerlink" title="方法 1，使用 link 标签，根据指定特性引入特定的外部样式文件"></a>方法 1，使用 link 标签，根据指定特性引入特定的外部样式文件</h3><pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>stylesheet<span class="token punctuation">"</span></span> <span class="token attr-name">media</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>(max-width: 640px)<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>max-640px.css<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+</code></pre>
+<h3 id="方法-2，直接在-style-标签或-样式文件内使用-media-规则"><a href="#方法-2，直接在-style-标签或-样式文件内使用-media-规则" class="headerlink" title="方法 2，直接在 style 标签或 样式文件内使用 @media 规则"></a>方法 2，直接在 style 标签或 样式文件内使用 @media 规则</h3><pre class=" language-css"><code class="language-css"><span class="token atrule"><span class="token rule">@media</span> <span class="token punctuation">(</span><span class="token property">max-width</span><span class="token punctuation">:</span> 640px<span class="token punctuation">)</span></span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">/*当视窗宽度小于或等于 640px 时，这里的样式将生效*/</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><strong>样式断点</strong></p>
+<p>Media Queries 所使用的查询参数的临界值又可称为「样式断点」。</p>
+<p>依据目标设备的分辨率，制定一套合适的样式断点，并为不同的断点定制必要的 CSS 样式。 移动端优先的页面，可使用 min-width 查询参数从小到大来定义断点。常见的样式断点：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">属性</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<p>mobile | 移动设备断点，视窗宽度 ≤ 768 px<br>tablet | 平板电脑设备断点，视窗宽度 ≥ 769 px<br>desktop | 桌面电脑断点，视窗宽度 ≥ 1024 px<br>widescreen | 宽屏电脑断点，视窗宽度 ≥ 1216 px<br>fullhd | 高清宽屏电脑断点，视窗宽度 ≥ 1408 px…</p>
+<p><strong>如果针对 tablet 及以上的设备定制样式，我们就可以这样写了：</strong></p>
+<pre class=" language-css"><code class="language-css"><span class="token atrule"><span class="token rule">@media</span> <span class="token punctuation">(</span><span class="token property">min-width</span><span class="token punctuation">:</span> 769px<span class="token punctuation">)</span></span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">/* tablet 及以上的设备，页面背景色设置为红色 */</span>
+  <span class="token selector">body </span><span class="token punctuation">{</span>
+    <span class="token property">background-color</span><span class="token punctuation">:</span> red<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="步骤-3-使用-Viewport-单位及-rem"><a href="#步骤-3-使用-Viewport-单位及-rem" class="headerlink" title="步骤 3 - 使用 Viewport 单位及 rem"></a>步骤 3 - 使用 Viewport 单位及 rem</h2><p>Media Queries 只解决了「为不同特性的浏览器视窗使用不同的样式代码」的问题，而 Viewport 单位及 rem 的应用，则是为了解决第二个问题：让页面元素的尺寸能够依据浏览器视窗尺寸变化而平滑变化。</p>
+<h3 id="方法-1-仅使用-vw-作为-CSS-长度单位"><a href="#方法-1-仅使用-vw-作为-CSS-长度单位" class="headerlink" title="方法 1 - 仅使用 vw 作为 CSS 长度单位"></a>方法 1 - 仅使用 vw 作为 CSS 长度单位</h3><p>在仅使用 vw 单位作为唯一 CSS 单位时，我们需遵守：</p>
+<ul>
+<li>利用 Sass 函数将设计稿元素尺寸的像素单位转换为 vw 单位</li>
+</ul>
+<pre class=" language-css"><code class="language-css">// iPhone <span class="token number">6</span>尺寸作为设计稿基准
+$<span class="token property">vw_base</span><span class="token punctuation">:</span> <span class="token number">375</span><span class="token punctuation">;</span>
+<span class="token atrule"><span class="token rule">@function</span> <span class="token function">vw</span><span class="token punctuation">(</span>$px<span class="token punctuation">)</span></span> <span class="token punctuation">{</span>
+    <span class="token atrule"><span class="token rule">@return</span> <span class="token punctuation">(</span>$px / $vm_base<span class="token punctuation">)</span> * 100vw<span class="token punctuation">;</span></span>
+<span class="token punctuation">}</span>
+</code></pre>
+<ul>
+<li>无论是文本字号大小还是布局高宽、间距、留白等都使用 vw 作为 CSS 单位</li>
+</ul>
+<pre class=" language-scss"><code class="language-scss"><span class="token selector">.mod_nav </span><span class="token punctuation">{</span>
+    <span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token hexcode">#fff</span><span class="token punctuation">;</span>
+    <span class="token selector"><span class="token parent important">&amp;</span>_list </span><span class="token punctuation">{</span>
+        <span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span>
+        <span class="token property">padding</span><span class="token punctuation">:</span> <span class="token function">vw</span><span class="token punctuation">(</span><span class="token number">15</span><span class="token punctuation">)</span> <span class="token function">vw</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span> <span class="token function">vw</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 内间距</span>
+        <span class="token selector"><span class="token parent important">&amp;</span>_item </span><span class="token punctuation">{</span>
+            <span class="token property">flex</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">;</span>
+            <span class="token property">text-align</span><span class="token punctuation">:</span> center<span class="token punctuation">;</span>
+            <span class="token property">font-size</span><span class="token punctuation">:</span> <span class="token function">vw</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 字体大小</span>
+            <span class="token selector"><span class="token parent important">&amp;</span>_logo </span><span class="token punctuation">{</span>
+                <span class="token property">display</span><span class="token punctuation">:</span> block<span class="token punctuation">;</span>
+                <span class="token property">margin</span><span class="token punctuation">:</span> <span class="token number">0</span> auto<span class="token punctuation">;</span>
+                <span class="token property">width</span><span class="token punctuation">:</span> <span class="token function">vw</span><span class="token punctuation">(</span><span class="token number">40</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 宽度</span>
+                <span class="token property">height</span><span class="token punctuation">:</span> <span class="token function">vw</span><span class="token punctuation">(</span><span class="token number">40</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 高度</span>
+                <span class="token selector">img </span><span class="token punctuation">{</span>
+                    <span class="token property">display</span><span class="token punctuation">:</span> block<span class="token punctuation">;</span>
+                    <span class="token property">margin</span><span class="token punctuation">:</span> <span class="token number">0</span> auto<span class="token punctuation">;</span>
+                    <span class="token property">max-width</span><span class="token punctuation">:</span> <span class="token number">100%</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
+            <span class="token selector"><span class="token parent important">&amp;</span>_name </span><span class="token punctuation">{</span>
+                <span class="token property">margin-top</span><span class="token punctuation">:</span> <span class="token function">vw</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<ul>
+<li>1 物理像素线（也就是普通屏幕下 1px ，高清屏幕下 0.5px 的情况）采用 transform 属性 scale 实现</li>
+</ul>
+<pre class=" language-scss"><code class="language-scss"><span class="token selector">.mod_grid </span><span class="token punctuation">{</span>
+    <span class="token property">position</span><span class="token punctuation">:</span> relative<span class="token punctuation">;</span>
+    <span class="token selector"><span class="token parent important">&amp;</span>::after </span><span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 实现1物理像素的下边框线</span>
+        <span class="token property">content</span><span class="token punctuation">:</span> <span class="token string">''</span><span class="token punctuation">;</span>
+        <span class="token property">position</span><span class="token punctuation">:</span> absolute<span class="token punctuation">;</span>
+        <span class="token property">z-index</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">;</span>
+        <span class="token property">pointer-events</span><span class="token punctuation">:</span> none<span class="token punctuation">;</span>
+        <span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token hexcode">#ddd</span><span class="token punctuation">;</span>
+        <span class="token property">height</span><span class="token punctuation">:</span> <span class="token number">1</span>px<span class="token punctuation">;</span>
+        <span class="token property">left</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token property">right</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token property">top</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token atrule"><span class="token rule">@media</span> only screen <span class="token operator">and</span> <span class="token punctuation">(</span><span class="token property">-webkit-min-device-pixel-ratio</span><span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">)</span></span> <span class="token punctuation">{</span>
+            <span class="token property">-webkit-transform</span><span class="token punctuation">:</span> <span class="token function">scaleY</span><span class="token punctuation">(</span><span class="token number">0.5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token property">-webkit-transform-origin</span><span class="token punctuation">:</span> <span class="token number">50%</span> <span class="token number">0%</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token number">...</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<ul>
+<li>对于需要保持高宽比的图，应改用 padding-top 实现</li>
+</ul>
+<pre class=" language-scss"><code class="language-scss"><span class="token selector">.mod_banner </span><span class="token punctuation">{</span>
+    <span class="token property">position</span><span class="token punctuation">:</span> relative<span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 使用padding-top 实现宽高比为 100:750 的图片区域</span>
+    <span class="token property">padding-top</span><span class="token punctuation">:</span> <span class="token function">percentage</span><span class="token punctuation">(</span><span class="token number">100</span>/<span class="token number">750</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token property">height</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token property">overflow</span><span class="token punctuation">:</span> hidden<span class="token punctuation">;</span>
+    <span class="token selector">img </span><span class="token punctuation">{</span>
+        <span class="token property">width</span><span class="token punctuation">:</span> <span class="token number">100%</span><span class="token punctuation">;</span>
+        <span class="token property">height</span><span class="token punctuation">:</span> auto<span class="token punctuation">;</span>
+        <span class="token property">position</span><span class="token punctuation">:</span> absolute<span class="token punctuation">;</span>
+        <span class="token property">left</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token property">top</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>由此，我们不需要增加其他任何额外的脚本代码就能够轻易实现一个常见布局的响应式页面。</p>
+<h3 id="方法-2-vw-搭配-rem，寻找最优解"><a href="#方法-2-vw-搭配-rem，寻找最优解" class="headerlink" title="方法 2 - vw 搭配 rem，寻找最优解"></a>方法 2 - vw 搭配 rem，寻找最优解</h3><p>方法 1 实现的响应式页面虽然看起来适配得很好，但是你会发现由于它是利用 Viewport 单位实现的布局，依赖于视窗大小而自动缩放，无论视窗过大还是过小，它也随着视窗过大或者过小，失去了最大最小宽度的限制，有时候不一定是我们所期待的展示效果。试想一下一个 750px 宽的设计稿在 1920px 的大屏显示器上的糟糕样子。</p>
+<p>我们可以结合 rem 单位来实现页面的布局。rem 弹性布局的核心在于根据视窗大小变化动态改变根元素的字体大小，那么我们可以通过以下步骤来进行优化：</p>
+<ol>
+<li>给根元素的字体大小设置随着视窗变化而变化的 vw 单位，这样就可以实现动态改变其大小</li>
+<li>其他元素的文本字号大小、布局高宽、间距、留白都使用 rem 单位</li>
+<li>限制根元素字体大小的最大最小值，配合 body 加上最大宽度和最小宽度，实现布局宽度的最大最小限制…</li>
+</ol>
+<p>核心代码实现如下：</p>
+<pre class=" language-scss"><code class="language-scss"><span class="token comment" spellcheck="true">// rem 单位换算：定为 75px 只是方便运算，750px-75px、640-64px、1080px-108px，如此类推</span>
+<span class="token property"><span class="token variable">$vw_fontsize</span></span><span class="token punctuation">:</span> <span class="token number">75</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// iPhone 6尺寸的根元素大小基准值</span>
+<span class="token keyword">@function</span> <span class="token function">rem</span><span class="token punctuation">(</span><span class="token variable">$px</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+     <span class="token keyword">@return</span> <span class="token punctuation">(</span><span class="token variable">$px</span> <span class="token operator">/</span> <span class="token variable">$vw_fontsize</span> <span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">1</span>rem<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">// 根元素大小使用 vw 单位</span>
+<span class="token property"><span class="token variable">$vw_design</span></span><span class="token punctuation">:</span> <span class="token number">750</span><span class="token punctuation">;</span>
+<span class="token selector">html </span><span class="token punctuation">{</span>
+    <span class="token property">font-size</span><span class="token punctuation">:</span> <span class="token punctuation">(</span><span class="token variable">$vw_fontsize</span> <span class="token operator">/</span> <span class="token punctuation">(</span><span class="token variable">$vw_design</span> <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">100</span>vw<span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 同时，通过Media Queries 限制根元素最大最小值</span>
+    <span class="token atrule"><span class="token rule">@media</span> screen <span class="token operator">and</span> <span class="token punctuation">(</span><span class="token property">max-width</span><span class="token punctuation">:</span> <span class="token number">320</span>px<span class="token punctuation">)</span></span> <span class="token punctuation">{</span>
+        <span class="token property">font-size</span><span class="token punctuation">:</span> <span class="token number">64</span>px<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token atrule"><span class="token rule">@media</span> screen <span class="token operator">and</span> <span class="token punctuation">(</span><span class="token property">min-width</span><span class="token punctuation">:</span> <span class="token number">540</span>px<span class="token punctuation">)</span></span> <span class="token punctuation">{</span>
+        <span class="token property">font-size</span><span class="token punctuation">:</span> <span class="token number">108</span>px<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">// body 也增加最大最小宽度限制，避免默认100%宽度的 block 元素跟随 body 而过大过小</span>
+<span class="token selector">body </span><span class="token punctuation">{</span>
+    <span class="token property">max-width</span><span class="token punctuation">:</span> <span class="token number">540</span>px<span class="token punctuation">;</span>
+    <span class="token property">min-width</span><span class="token punctuation">:</span> <span class="token number">320</span>px<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在实际工作过程中，考虑到设计以及开发成本，视觉设计师是不大可能为每种不同分辨率的设备分别设计不同的稿子的，拿移动端页面来说，通常会以 iPhone 6 的分辨率（宽为 750 px）作为基准分辨率来出设计稿。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-08-13T05:58:59.000Z" itemprop="dateUpdated">2017-08-13 13:58:59</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSS/">CSS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/响应式/">响应式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动端/">移动端</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/e5c359b0/&title=《如何开发一个响应式页面》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/e5c359b0/&title=《如何开发一个响应式页面》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/e5c359b0/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《如何开发一个响应式页面》 — Sixin的小站&url=http://coder.liusixin.cn/posts/e5c359b0/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/e5c359b0/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/75614776/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Nginx的反向代理与负载均衡</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/1d3e321c/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">造轮子系列：封装一个简化版的jQuery</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/e5c359b0/&title=《如何开发一个响应式页面》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/e5c359b0/&title=《如何开发一个响应式页面》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/e5c359b0/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《如何开发一个响应式页面》 — Sixin的小站&url=http://coder.liusixin.cn/posts/e5c359b0/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/e5c359b0/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAAByklEQVR42u3aQY7EIAxE0dz/0pkDRGF+2WBFrc+qpU7IY2PhguvC436M57/8+be3tg25cuW2ufdyPJ95++Qat14GMciVK3eeuy40pOis5yFLRXPKlSv381xSvEjJkytX7m9wScPDFylXrtxvcknzQz5GiEO9mly5chtcnlKe+30k35UrV26Je4djXcjSYhR/Xa5cuSPcNAxdNzz92dCTcuXKHeGSmINsVtIDVxKnvs4gV67cQS6PLdLyxKOWVpYjV67cNrcfZNyNER/BypUrd4TLNzdkM5T+Jo0T6tXkypU7wk0nJVuZTiMU3BaRK1fuAS6/+pAuIG2iUCGTK1fuMW56dBpMmjY2/HhGrly5h7kpqHPZgkcq/9RduXLljnBr5YkgrsZAzY9cuXIPc9NWJw07eJnbcI9Mrly5bS4vSTwEqd0ECZofuXLlHuam2xryVqfkBTVVrly5W7m7rlLxxdSObeTKlTvJTeOJdGvSumZRmlOuXLm7uPxIo3YsWotWg0NWuXLlHuOmISmPP9IyF/RqcuXK/TA3pdeCVLly5X6Zm4ahMWgtlCtX7iCXb1B2haG8xZIrV+48tx9u1q52kQaple/KlSu3wv0DmPVSwW/YzFwAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

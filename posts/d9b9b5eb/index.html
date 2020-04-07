@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/d9b9b5eb/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/d9b9b5eb/">
+    
+    
+    <title>JavaScript忍者秘籍--函数操作 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="javascript">
+    <meta name="description" content="总结《JavaScript 忍者秘籍》中函数相关的运用  匿名函数匿名函数的介绍不用多说，通常，匿名函数的使用情况是：创建一个供以后使用的函数。 简单的举个例子如下： window.onload = function() {   alert(&apos;hello&apos;); }; var templateObj = {   shout: function() {     alert(&apos;作为方法的匿名函数&apos;);">
+<meta name="keywords" content="javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript忍者秘籍--函数操作">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/d9b9b5eb/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="总结《JavaScript 忍者秘籍》中函数相关的运用  匿名函数匿名函数的介绍不用多说，通常，匿名函数的使用情况是：创建一个供以后使用的函数。 简单的举个例子如下： window.onload = function() {   alert(&apos;hello&apos;); }; var templateObj = {   shout: function() {     alert(&apos;作为方法的匿名函数&apos;);">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-07-25T07:13:29.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript忍者秘籍--函数操作">
+<meta name="twitter:description" content="总结《JavaScript 忍者秘籍》中函数相关的运用  匿名函数匿名函数的介绍不用多说，通常，匿名函数的使用情况是：创建一个供以后使用的函数。 简单的举个例子如下： window.onload = function() {   alert(&apos;hello&apos;); }; var templateObj = {   shout: function() {     alert(&apos;作为方法的匿名函数&apos;);">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">JavaScript忍者秘籍--函数操作</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">JavaScript忍者秘籍--函数操作</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-07-25T07:13:29.000Z" itemprop="datePublished" class="page-time">
+  2017-07-25
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#匿名函数"><span class="post-toc-number">1.</span> <span class="post-toc-text">匿名函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#递归"><span class="post-toc-number">2.</span> <span class="post-toc-text">递归</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#普通命名函数的递归"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">普通命名函数的递归</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#方法中的递归"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">方法中的递归</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#引用丢失的问题"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">引用丢失的问题</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#内联命名函数"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">内联命名函数</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#将函数视为对象"><span class="post-toc-number">3.</span> <span class="post-toc-text">将函数视为对象</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#函数存储"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">函数存储</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#自记忆函数"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">自记忆函数</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#伪造数组方法"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">伪造数组方法</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#可变函数的参数列表"><span class="post-toc-number">4.</span> <span class="post-toc-text">可变函数的参数列表</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用apply-支持可变参数"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">使用apply()支持可变参数</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#函数重载"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">函数重载</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#利用参数个数进行函数的重载"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">利用参数个数进行函数的重载</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/javascript/JavaScript忍者秘籍-函数操作" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">JavaScript忍者秘籍--函数操作</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-07-25 15:13:29" datetime="2017-07-25T07:13:29.000Z" itemprop="datePublished">2017-07-25</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>总结《JavaScript 忍者秘籍》中函数相关的运用</p>
+</blockquote>
+<h2 id="匿名函数"><a href="#匿名函数" class="headerlink" title="匿名函数"></a>匿名函数</h2><p>匿名函数的介绍不用多说，通常，匿名函数的使用情况是：创建一个供以后使用的函数。</p>
+<p>简单的举个例子如下：</p>
+<pre class=" language-js"><code class="language-js">window<span class="token punctuation">.</span>onload <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'hello'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> templateObj <span class="token operator">=</span> <span class="token punctuation">{</span>
+  shout<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'作为方法的匿名函数'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+templateObj<span class="token punctuation">.</span><span class="token function">shout</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'这也是一个匿名函数'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<h2 id="递归"><a href="#递归" class="headerlink" title="递归"></a>递归</h2><p>就是函数自调用，或者调用另外一个函数，但是函数调用树的某一处又重新调用了自己，就产生了递归</p>
+<h3 id="普通命名函数的递归"><a href="#普通命名函数的递归" class="headerlink" title="普通命名函数的递归"></a>普通命名函数的递归</h3><p>拿普通命名函数的递归最好的举例就是用最简单的递归需求：检测回文。</p>
+<p>回文的定义：一个字符串，不管从哪一个方向读，结果一样。检测的工作有很多，我们可以创建一个函数，用待检测的回文字符逆序生成出一个字符，然后检测二者是否相同，如果相同，则为回文字符。</p>
+<p>但是这种方法需要分配并创建新的字符，还有一种更简洁的方法：</p>
+<ul>
+<li>单个和零个字符都是回文</li>
+<li>如果字符串的第一个字符和最后一个字符相同，并且除了两个字符以外，别的字符也满足该要求，那么我们就可以检测出来了这个是回文了</li>
+</ul>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">isPalindrome</span><span class="token punctuation">(</span>txt<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>txt<span class="token punctuation">.</span>length <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>txt<span class="token punctuation">.</span><span class="token function">charAt</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">!=</span> txt<span class="token punctuation">.</span><span class="token function">charAt</span><span class="token punctuation">(</span>txt<span class="token punctuation">.</span>length <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token function">isPalindrome</span><span class="token punctuation">(</span>txt<span class="token punctuation">.</span><span class="token function">substr</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> txt<span class="token punctuation">.</span>length <span class="token operator">-</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="方法中的递归"><a href="#方法中的递归" class="headerlink" title="方法中的递归"></a>方法中的递归</h3><p>所谓的方法，自然离不开对象</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> fn <span class="token operator">=</span> <span class="token punctuation">{</span>
+  chirp<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> n <span class="token operator">></span> <span class="token number">1</span> <span class="token operator">?</span> fn<span class="token punctuation">.</span><span class="token function">chirp</span><span class="token punctuation">(</span>n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">'-chirp'</span> <span class="token punctuation">:</span> <span class="token string">'chirp'</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>fn<span class="token punctuation">.</span><span class="token function">chirp</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//chirp-chirp-chirp</span>
+</code></pre>
+<p>在上述代码中，我们通过对象 fn.chirp 方法的递归调用了自己。但是，因为我们在函数上用了非直接引用，也就是 fn 对象的 chirp 属性，所以才能够实现递归，这也就引出来一个问题：<strong>引用丢失</strong></p>
+<h3 id="引用丢失的问题"><a href="#引用丢失的问题" class="headerlink" title="引用丢失的问题"></a>引用丢失的问题</h3><p>上面的示例代码，依赖于一个进行递归调用的对象属性引用。与函数的实际名称不同，因为这种引用可能是暂时的。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> fn <span class="token operator">=</span> <span class="token punctuation">{</span>
+  chirp<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> n <span class="token operator">></span> <span class="token number">1</span> <span class="token operator">?</span> fn<span class="token punctuation">.</span><span class="token function">chirp</span><span class="token punctuation">(</span>n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">'-chirp'</span> <span class="token punctuation">:</span> <span class="token string">'chirp'</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> samurai <span class="token operator">=</span> <span class="token punctuation">{</span>
+  chirp<span class="token punctuation">:</span> fn<span class="token punctuation">.</span>chirp
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+fn <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">try</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>samurai<span class="token punctuation">.</span><span class="token function">chirp</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span> <span class="token operator">===</span> <span class="token string">'chirp-chirp-chirp'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token function">alert</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// false</span>
+</code></pre>
+<p>如上，执行结果会弹出 false，因为这时候 samurai.chirp 引用的同样是空对象，这就是引用丢失问题。</p>
+<p>通过完善之前对匿名函数的粗略定义，我们可以修复解决这个问题。在匿名函数中，我们不在使用显式的 fn 引用。这里我们使用 this。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> fn <span class="token operator">=</span> <span class="token punctuation">{</span>
+  chirp<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> n <span class="token operator">></span> <span class="token number">1</span> <span class="token operator">?</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">chirp</span><span class="token punctuation">(</span>n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">'-chirp'</span> <span class="token punctuation">:</span> <span class="token string">'chirp'</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>当函数作为方法被调用的时候，函数的上下文指的是该方法的对象。</p>
+<p>使用 this 调用，可以让我们的匿名函数更加的强大且灵活。</p>
+<h3 id="内联命名函数"><a href="#内联命名函数" class="headerlink" title="内联命名函数"></a>内联命名函数</h3><p>上面我们解决了作为函数方法为递归时候的一个完美操作。其实这样写也还是有问题的，问题在于给对象定义方法的时候，方法名称是写死的，如果属性名称不一样，也一样会丢失引用。</p>
+<p>这里我们采用另一种解决方案，给匿名函数起名</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> fn <span class="token operator">=</span> <span class="token punctuation">{</span>
+  chirp<span class="token punctuation">:</span> <span class="token keyword">function</span> <span class="token function">signal</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> n <span class="token operator">></span> <span class="token number">1</span> <span class="token operator">?</span> <span class="token function">signal</span><span class="token punctuation">(</span>n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">'-chirp'</span> <span class="token punctuation">:</span> <span class="token string">'chirp'</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> samurai <span class="token operator">=</span> <span class="token punctuation">{</span>
+  chirps<span class="token punctuation">:</span> fn<span class="token punctuation">.</span>chirp
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+fn <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">try</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>samurai<span class="token punctuation">.</span><span class="token function">chirps</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span> <span class="token operator">===</span> <span class="token string">'chirp-chirp-chirp'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token function">alert</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>所以如上的解决办法，就完美解决了我们之前说到所有问题。内联函数还有一个很重要的一点，就是尽管可以给内联函数进行命名，但是这些名称只能在自身函数内部才可见。</p>
+<h2 id="将函数视为对象"><a href="#将函数视为对象" class="headerlink" title="将函数视为对象"></a>将函数视为对象</h2><p>JavaScript 中的函数和其他语言中的函数有所不同，JavaScript 赋予了函数很多的特性，其中最重要的特性之一就是函数作为第一类型对象。</p>
+<p>所以，我们可以给函数添加属性，甚至可以添加方法。</p>
+<h3 id="函数存储"><a href="#函数存储" class="headerlink" title="函数存储"></a>函数存储</h3><p>有时候，我们可能需要存储一组相关但又独立的函数，事件回调管理是最为明显的例子。向这个集合添加函数时候，我们得知道哪些函数在集合中存在，否则不添加。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> store <span class="token operator">=</span> <span class="token punctuation">{</span>
+  nextId<span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+  cache<span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+  add<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>fn<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>fn<span class="token punctuation">.</span>id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      fn<span class="token punctuation">.</span>id <span class="token operator">=</span> store<span class="token punctuation">.</span>nextId<span class="token operator">++</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span> <span class="token operator">!</span><span class="token operator">!</span><span class="token punctuation">(</span>store<span class="token punctuation">.</span>cache<span class="token punctuation">[</span>fn<span class="token punctuation">.</span>id<span class="token punctuation">]</span> <span class="token operator">=</span> fn<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">function</span> <span class="token function">fn</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>store<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>fn<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// true</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>store<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>fn<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// undefined</span>
+</code></pre>
+<h3 id="自记忆函数"><a href="#自记忆函数" class="headerlink" title="自记忆函数"></a>自记忆函数</h3><p>缓存记忆是构造函数的过程，这种函数能够记住先前计算的结果。通过避免重复的计算，极大地提高性能。</p>
+<p><strong>缓存记忆昂贵的计算结果</strong></p>
+<p>作为一个简单的例子，这里我来判断一个数字是否为素数。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">isPrime</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>isPrime<span class="token punctuation">.</span>answers<span class="token punctuation">)</span> isPrime<span class="token punctuation">.</span>answers <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>isPrime<span class="token punctuation">.</span>answers<span class="token punctuation">[</span>value<span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> isPrime<span class="token punctuation">.</span>answers<span class="token punctuation">[</span>value<span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">var</span> prime <span class="token operator">=</span> value <span class="token operator">!=</span> <span class="token number">1</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//1 不是素数</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> value<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>value <span class="token operator">%</span> <span class="token number">2</span> <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      prime <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+      <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> <span class="token punctuation">(</span>isPrime<span class="token punctuation">.</span>answers<span class="token punctuation">[</span>value<span class="token punctuation">]</span> <span class="token operator">=</span> prime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">isPrime</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// true</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>isPrime<span class="token punctuation">.</span>answers<span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// true</span>
+</code></pre>
+<p>可以通过下面的<code>isPrime.answers[value]</code>判断出缓存是否成功。</p>
+<p>缓存记忆有两个主要的优点：</p>
+<ul>
+<li>在函数调用获取之前计算结果的时候，最终用户享有性能优势</li>
+<li>发生在幕后，完全无缝，最终用户和开发者都无需任何特殊的操作或者为此做任何初始化工作。</li>
+</ul>
+<p>当然，也会有缺点：</p>
+<ul>
+<li>为了提高性能，任何类型的缓存肯定会牺牲内存</li>
+<li>纯粹主义者可能认为缓存这个问题不应该与业务逻辑放到一起。一个函数或者方法只应该做一件事。</li>
+<li>很难测试和测量一个算法的性能。（比如我们这个“简单”的例子）</li>
+</ul>
+<p><strong>缓存 DOM 记忆</strong></p>
+<p>通过元素标签名来获取 DOM 元素是一个非常常见的操作。但是性能可能不是特别好。所以从上面的缓存记忆我们可以进行如下的操作：</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">getElements</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>getElements<span class="token punctuation">.</span>cache<span class="token punctuation">)</span> getElements<span class="token punctuation">.</span>cache <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token punctuation">(</span>getElements<span class="token punctuation">.</span>cache<span class="token punctuation">[</span>name<span class="token punctuation">]</span> <span class="token operator">=</span>
+    getElements<span class="token punctuation">.</span>cache<span class="token punctuation">[</span>name<span class="token punctuation">]</span> <span class="token operator">||</span> document<span class="token punctuation">.</span><span class="token function">getElementsByTagName</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>上面的代码很简单，而且这个简单的缓存的代码产生了 5 倍以上的性能提升。</p>
+<p>我们可以将状态和缓存信息存储在一个封装的独立位置上，不仅在代码组织上有好处，而且外部存储或缓存对象无需污染作用域，就可以获取性能的提升。</p>
+<h3 id="伪造数组方法"><a href="#伪造数组方法" class="headerlink" title="伪造数组方法"></a>伪造数组方法</h3><p>有时候我们想创建一个包含一组数据的对象。如果只是集合，则只需要创建一个数组即可。但是在某些情况下，除了集合本身，可能会有更多的状体需要保存。</p>
+<p>一种选择是，每次创建对象新版本的时候都创建一个新数组，然后将元数据作为属性或者方法添加到这个新数组上。但是这个操作太常规了。</p>
+<p>欣赏如下骚操作：</p>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>first<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>second<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script language-javascript">
+    <span class="token keyword">var</span> elems <span class="token operator">=</span> <span class="token punctuation">{</span>
+      length<span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+      add<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>elem<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        Array<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>push<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> elem<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      gather<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    elems<span class="token punctuation">.</span><span class="token function">gather</span><span class="token punctuation">(</span><span class="token string">'first'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>elems<span class="token punctuation">.</span>length<span class="token punctuation">,</span> elems<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>nodeType<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    elems<span class="token punctuation">.</span><span class="token function">gather</span><span class="token punctuation">(</span><span class="token string">'second'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>elems<span class="token punctuation">.</span>length<span class="token punctuation">,</span> elems<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>nodeType<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span>
+</code></pre>
+<p>通常，<code>Array.prototype.push()</code>是通过其函数上下文操作其自身数组的。这里我们通过 call 方法通过自己的对象代理了函数的上下文。push 的方法会增加 length 的值（会认为他就是数组的 length 属性），然后给对象添加一个数字属性，并将其引用到传入的元素上。</p>
+<h2 id="可变函数的参数列表"><a href="#可变函数的参数列表" class="headerlink" title="可变函数的参数列表"></a>可变函数的参数列表</h2><p>JavaScript 灵活且强大的特性之一是函数可以接受任意数量的参数。虽然 JavaScript 没有函数的重载，但是参数列表的灵活性是获取其他语言类似重载功能的关键所在</p>
+<h3 id="使用apply-支持可变参数"><a href="#使用apply-支持可变参数" class="headerlink" title="使用apply()支持可变参数"></a>使用<code>apply()</code>支持可变参数</h3><p>需求：查找数组中的最大值、最小值</p>
+<p>一开始，我认为 Math 中提供的<code>min()</code>,<code>max()</code>可以满足，但是貌似他并不能够找到数组中的最大值最小值，难道：<code>Math.min(arr[0],arr[1],arr[3]...)??</code></p>
+<p>别闹了，来看看怎么做</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">smallest</span><span class="token punctuation">(</span>arr<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> Math<span class="token punctuation">.</span>min<span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span>Math<span class="token punctuation">,</span> arr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">largest</span><span class="token punctuation">(</span>arr<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> Math<span class="token punctuation">.</span>max<span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span>Math<span class="token punctuation">,</span> arr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">smallest</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 0</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">largest</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 4</span>
+</code></pre>
+<h3 id="函数重载"><a href="#函数重载" class="headerlink" title="函数重载"></a>函数重载</h3><p>函数的隐式传递，arguments，也正是因为这个 arguments 的存在，才让函数有能力处理不同数量的参数。即使我们只定义固定数量的形参，通过 arguments 参数我们还是可以访问到实际传给函数的所有的参数。</p>
+<p><strong>检测并遍历参数</strong></p>
+<p>方法的重载通常是通过在同名的方法里声明不同的实例来达到目的。但是在 javascript 中并非如此，在 javaScript 中，我们重载函数的时候只有一个实现。只不过这个实现内部是通过函数实际传入的参数的特性和个数来达到相应目的的。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">merge</span><span class="token punctuation">(</span>root<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> arguments<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> key <span class="token keyword">in</span> arguments<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      root<span class="token punctuation">[</span>key<span class="token punctuation">]</span> <span class="token operator">=</span> arguments<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>key<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> root<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> merged <span class="token operator">=</span> <span class="token function">merge</span><span class="token punctuation">(</span>
+  <span class="token punctuation">{</span>
+    name<span class="token punctuation">:</span> <span class="token string">'Liusixin'</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    age<span class="token punctuation">:</span> <span class="token number">26</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    city<span class="token punctuation">:</span> <span class="token string">'Beijing'</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>merged<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>通过如上代码，我们将传递给函数的对象都合并到一个对象中。在 javascript 中，没有强制函数声明多少个参数就得传入多少个参数。函数是否可以成功处理这些参数，完全取决于函数本身的定义。</p>
+<p>注意，我们要做的事情是想让第二个或者第 n 个参数上的属性合并到第一个对象中，所以这个遍历是从 1 开始的。</p>
+<h3 id="利用参数个数进行函数的重载"><a href="#利用参数个数进行函数的重载" class="headerlink" title="利用参数个数进行函数的重载"></a>利用参数个数进行函数的重载</h3><p>基于函数的参数，有很多种办法进行函数的重载。一种通用的方法是，根据传入参数的类型执行不同的操作。另一种办法是，可以通过某些特定参数是否存在来进行判断。还有一种是通过传入参数个数来进行判断。</p>
+<p>假如对象上有一个方法，根据传入参数的个数来执行不同的操作，冗长且呆呆的函数应该张这样：</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> fn <span class="token operator">=</span> <span class="token punctuation">{</span>
+  whatever<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">switch</span> <span class="token punctuation">(</span>arguments<span class="token punctuation">.</span>length<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">case</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">:</span>
+        <span class="token comment" spellcheck="true">//do something</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+      <span class="token keyword">case</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">:</span>
+        <span class="token comment" spellcheck="true">//do something</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+      <span class="token keyword">case</span><span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">:</span>
+        <span class="token comment" spellcheck="true">//do something</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+      <span class="token keyword">case</span><span class="token punctuation">:</span> <span class="token number">3</span><span class="token punctuation">:</span>
+        <span class="token comment" spellcheck="true">//do something</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>这种方式，看起来非常的呆呆的。所以我们换一种方式来说下。</p>
+<p>如果按照如下思路，添加重载的方法会怎样呢。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> fn <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token function">addMethod</span><span class="token punctuation">(</span>fn<span class="token punctuation">,</span> <span class="token string">'whatever'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">/*do something*/</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">addMethod</span><span class="token punctuation">(</span>fn<span class="token punctuation">,</span> <span class="token string">'whatever'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">/*do something*/</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">addMethod</span><span class="token punctuation">(</span>fn<span class="token punctuation">,</span> <span class="token string">'whatever'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">/*do something*/</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>这里我们使用同样的名称（whatever）将方法添加到该对象上，只不过每个重载的函数是单独的。注意每一个重载的函数参数是不同的。通过这种方式，我们真正为每一个重载都创建了一个独立的匿名函数。漂亮且简洁。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">addMethod</span><span class="token punctuation">(</span>object<span class="token punctuation">,</span> name<span class="token punctuation">,</span> fn<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> old <span class="token operator">=</span> object<span class="token punctuation">[</span>name<span class="token punctuation">]</span><span class="token punctuation">;</span>
+  object<span class="token punctuation">[</span>name<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>fn<span class="token punctuation">.</span>length <span class="token operator">===</span> arguments<span class="token punctuation">.</span>length<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> fn<span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> arguments<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> old <span class="token operator">==</span> <span class="token string">'function'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> old<span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> arguments<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>首先我们保存原有的函数，针对传参个数做处理，避免不匹配。然后创建一个新的匿名函数，如果该匿名函数的形参和实参个数匹配，就调用这个函数，否则调用原来的函数。</p>
+<p>这里的<code>fn.length</code>是返回函数定义时候定义的形参个数。</p>
+<p><code>adMethod</code>第一次调用会创建个新的匿名函数进行调用的时候将会调用这个 fn 函数。此时 fn 是一个新的对象，第二次调用<code>addMethod</code>的时候，会将之前的同名函数缓存到变量<code>old</code>中，然后将新创建的匿名函数作为方法。新方法首先检查传入的个数是否为 1，如果是则调用新传入的 fn，如果不是，则调用旧的。重新调用该函数的时候将在此检查参数个数是否为 0。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">addMethod</span><span class="token punctuation">(</span>object<span class="token punctuation">,</span> name<span class="token punctuation">,</span> fn<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> old <span class="token operator">=</span> object<span class="token punctuation">[</span>name<span class="token punctuation">]</span><span class="token punctuation">;</span>
+  object<span class="token punctuation">[</span>name<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>fn<span class="token punctuation">.</span>length <span class="token operator">===</span> arguments<span class="token punctuation">.</span>length<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> fn<span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> arguments<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> old <span class="token operator">==</span> <span class="token string">'function'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> old<span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> arguments<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">var</span> fn <span class="token operator">=</span> <span class="token punctuation">{</span>
+  values<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'a'</span><span class="token punctuation">,</span> <span class="token string">'b'</span><span class="token punctuation">,</span> <span class="token string">'c'</span><span class="token punctuation">,</span> <span class="token string">'d'</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token function">addMethod</span><span class="token punctuation">(</span>fn<span class="token punctuation">,</span> <span class="token string">'find'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>values<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">addMethod</span><span class="token punctuation">(</span>fn<span class="token punctuation">,</span> <span class="token string">'find'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> ret <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token keyword">this</span><span class="token punctuation">.</span>values<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>values<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span> <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      ret<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>values<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> ret<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">addMethod</span><span class="token punctuation">(</span>fn<span class="token punctuation">,</span> <span class="token string">'find'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>first<span class="token punctuation">,</span> last<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> ret <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token keyword">this</span><span class="token punctuation">.</span>values<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>values<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> first <span class="token operator">+</span> <span class="token string">' '</span> <span class="token operator">+</span> last<span class="token punctuation">)</span> ret<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>values<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> ret<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>fn<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>fn<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token string">'a'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>fn<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token string">'a'</span><span class="token punctuation">,</span> <span class="token string">'c'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>然后使用如上的技巧的时候需要注意下面几点：</p>
+<p>重载是适用于不同数量的参数，不区分类型、参数名称或者其他东西<br>这样的重载方法会有一些函数调用的开销。我们要考虑在高性能时的情况。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-07-25T07:13:29.000Z" itemprop="dateUpdated">2017-07-25 15:13:29</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/d9b9b5eb/&title=《JavaScript忍者秘籍--函数操作》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/d9b9b5eb/&title=《JavaScript忍者秘籍--函数操作》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/d9b9b5eb/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JavaScript忍者秘籍--函数操作》 — Sixin的小站&url=http://coder.liusixin.cn/posts/d9b9b5eb/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/d9b9b5eb/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/b56bb73b/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">JavaScript数据结构与算法总结</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/ea9682c7/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Generator函数 -&gt; async 函数</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/d9b9b5eb/&title=《JavaScript忍者秘籍--函数操作》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/d9b9b5eb/&title=《JavaScript忍者秘籍--函数操作》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/d9b9b5eb/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JavaScript忍者秘籍--函数操作》 — Sixin的小站&url=http://coder.liusixin.cn/posts/d9b9b5eb/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/d9b9b5eb/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABzklEQVR42u3aS26EMBAFQO5/abKNhMbzuo0NicqrESKmnEWrPz6OeJ2X9fv5p9/X9697HisWLi7uNPccrus74ydjULL/l6Pi4uJu5I4DTU4Zfz7f/+NzXFzcV3KjcBPvgIuL+5+4eYE0fhMXF/fN3KT4SUqaajdjYa2Gi4s7wc27lOt+L+nv4uLitrhncVU/n5RGha/j4uJu4eYBpZpwVIufwpu4uLgPcXuhbaZ0KVzdwMXFXcytXpnK2x/V8UkhI8PFxV3MTQYh1c+Xi5neCBYXF3cx964ha7VVmvwXm4kOLi7uBDc5Te+T4ye9sQ0uLu6z3HxMcnOHZpzu4OLibuH2gld+gDzM5cEUFxd3DzdKL4bJSrXxkQ9gvqRHuLi4y7j56LR6tSJPgwrXOHBxcTdyqwOV/FpV8leFsS4uLu5D3DwwVYuZPBmK2qa4uLiLub0CJimKZhqsUQ6Fi4t7K7d3lWpm7Fodq+Di4u7nVtsTdxVFeZhrHgYXF3eaWw1eyabJMfJ0ChcX9ylub+B623S3Wqvh4uK+jNsLUvONVFxc3L/C7RVOM2USLi7uTm6eoOSlTnLlIg+XuLi4O7kzg8/e1au8QJrq7+Li4na4P0yx4jFYI9yKAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

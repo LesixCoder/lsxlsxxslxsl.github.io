@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/105e749d/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/105e749d/">
+    
+    
+    <title>webpack实践--多页面应用 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="性能优化,webpack">
+    <meta name="description" content="要实现多页面应用 web 我们需要注意几点，首先我们要明白多页应用：  多入口 entry 多页面 html 每个页面不同的 chunk 每个页面不同的参数  实现多页面有两种方式  多配置(webpack3.1.0) parallel-webpack   单配置  多配置  优点 可以使用 parallel-webpack 来提高打包速度 配置更加独立，灵活   缺点 不能多页面之间共享代码(不">
+<meta name="keywords" content="性能优化,webpack">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webpack实践--多页面应用">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/105e749d/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="要实现多页面应用 web 我们需要注意几点，首先我们要明白多页应用：  多入口 entry 多页面 html 每个页面不同的 chunk 每个页面不同的参数  实现多页面有两种方式  多配置(webpack3.1.0) parallel-webpack   单配置  多配置  优点 可以使用 parallel-webpack 来提高打包速度 配置更加独立，灵活   缺点 不能多页面之间共享代码(不">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180519-173532-2x-2.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180519-175517-2x-2.png">
+<meta property="og:updated_time" content="2017-09-18T09:40:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="webpack实践--多页面应用">
+<meta name="twitter:description" content="要实现多页面应用 web 我们需要注意几点，首先我们要明白多页应用：  多入口 entry 多页面 html 每个页面不同的 chunk 每个页面不同的参数  实现多页面有两种方式  多配置(webpack3.1.0) parallel-webpack   单配置  多配置  优点 可以使用 parallel-webpack 来提高打包速度 配置更加独立，灵活   缺点 不能多页面之间共享代码(不">
+<meta name="twitter:image" content="http://cdn-blog.liusixin.cn/WX20180519-173532-2x-2.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">webpack实践--多页面应用</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">webpack实践--多页面应用</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-09-17T12:10:26.000Z" itemprop="datePublished" class="page-time">
+  2017-09-17
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+
+<article id="post-前端/webpack/webpack实践-多页面应用" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">webpack实践--多页面应用</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-09-17 20:10:26" datetime="2017-09-17T12:10:26.000Z" itemprop="datePublished">2017-09-17</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>要实现多页面应用 web 我们需要注意几点，首先我们要明白多页应用：</p>
+<ul>
+<li>多入口 entry</li>
+<li>多页面 html</li>
+<li>每个页面不同的 chunk</li>
+<li>每个页面不同的参数</li>
+</ul>
+<p><strong>实现多页面有两种方式</strong></p>
+<ul>
+<li>多配置(webpack3.1.0)<ul>
+<li>parallel-webpack</li>
+</ul>
+</li>
+<li>单配置</li>
+</ul>
+<p><strong>多配置</strong></p>
+<ul>
+<li>优点<ul>
+<li>可以使用 parallel-webpack 来提高打包速度</li>
+<li>配置更加独立，灵活</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li>不能多页面之间共享代码(不能提取公用代码)</li>
+</ul>
+</li>
+</ul>
+<p><strong>单配置</strong></p>
+<ul>
+<li>优点<ul>
+<li>共享各个 entry 之间的公用代码</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li>打包速度比较慢</li>
+<li>输出的内容比较复杂</li>
+</ul>
+</li>
+</ul>
+<p><strong>多页面多配置</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// parallel-webpack并行处理</span>
+
+parallel<span class="token operator">-</span>webpack
+parallel<span class="token operator">-</span>webpack <span class="token operator">--</span>watch
+parallel<span class="token operator">-</span>webpack <span class="token operator">--</span>config
+</code></pre>
+<p><strong>以下面项目结构为例</strong></p>
+<pre><code>├── src
+│   ├── components
+│   │   └── module.js
+│   ├── css
+│   │   ├── a.css
+│   │   ├── b.css
+│   │   └── c.css
+│   ├── pages
+│   │   ├── a.js
+│   │   ├── b.js
+│   │   └── c.js
+│   └── index.html
+├── webpack.config.js
+├── package.json
+└── README.md
+</code></pre><p><strong>基本配置</strong></p>
+<p>同时每个页面都引入了 react 公共模块</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// webpack.config.js</span>
+
+<span class="token keyword">const</span> merge <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'webpack-merge'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> webpack <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'webpack'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> HtmlWebpackPlugin <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'html-webpack-plugin'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> CleanWebpack <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'clean-webpack-plugin'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> path <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'path'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">const</span> baseConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+  entry<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    react<span class="token punctuation">:</span> <span class="token string">'react'</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+
+  output<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    path<span class="token punctuation">:</span> path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>__dirname<span class="token punctuation">,</span> <span class="token string">'dist'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    filename<span class="token punctuation">:</span> <span class="token string">'js/[name].[chunkhash].js'</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+
+  plugins<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+    <span class="token keyword">new</span> <span class="token class-name">CleanWebpack</span><span class="token punctuation">(</span>path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>__dirname<span class="token punctuation">,</span> <span class="token string">'dist'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+
+    <span class="token keyword">new</span> <span class="token class-name">webpack<span class="token punctuation">.</span>optimize<span class="token punctuation">.</span>CommonsChunkPlugin</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      name <span class="token punctuation">:</span> <span class="token string">'react'</span><span class="token punctuation">,</span>
+      minChunks<span class="token punctuation">:</span> <span class="token number">Infinity</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>我们把多页面配置抽离出来封装</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// webpack.config.js</span>
+
+<span class="token keyword">const</span> generatePage <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">{</span>
+  title <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">,</span>
+  entry <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">,</span>
+  template <span class="token operator">=</span> <span class="token string">'./src/index.html'</span><span class="token punctuation">,</span>
+  name <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">,</span>
+  chunks <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token punctuation">{</span>
+    entry<span class="token punctuation">,</span>
+    plugins<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+      <span class="token keyword">new</span> <span class="token class-name">HtmlWebpackPlugin</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        chunks<span class="token punctuation">,</span>
+        template<span class="token punctuation">,</span>
+        filename<span class="token punctuation">:</span> name <span class="token operator">+</span> <span class="token string">'.html'</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">const</span> pages <span class="token operator">=</span> <span class="token punctuation">[</span>
+  <span class="token function">generatePage</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    title<span class="token punctuation">:</span> <span class="token string">'page a'</span><span class="token punctuation">,</span>
+    entry<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+      a<span class="token punctuation">:</span> <span class="token string">'./src/pages/a'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    name<span class="token punctuation">:</span> <span class="token string">'a'</span><span class="token punctuation">,</span>
+    chunks<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'react'</span><span class="token punctuation">,</span> <span class="token string">'a'</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+
+  <span class="token function">generatePage</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    title<span class="token punctuation">:</span> <span class="token string">'page b'</span><span class="token punctuation">,</span>
+    entry<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+      b<span class="token punctuation">:</span> <span class="token string">'./src/pages/b'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    name<span class="token punctuation">:</span> <span class="token string">'b'</span><span class="token punctuation">,</span>
+    chunks<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'react'</span><span class="token punctuation">,</span> <span class="token string">'b'</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+
+  <span class="token function">generatePage</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    title<span class="token punctuation">:</span> <span class="token string">'page c'</span><span class="token punctuation">,</span>
+    entry<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+      c<span class="token punctuation">:</span> <span class="token string">'./src/pages/c'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    name<span class="token punctuation">:</span> <span class="token string">'c'</span><span class="token punctuation">,</span>
+    chunks<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'react'</span><span class="token punctuation">,</span> <span class="token string">'c'</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">]</span>
+
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> pages<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>page <span class="token operator">=</span><span class="token operator">></span> <span class="token function">merge</span><span class="token punctuation">(</span>baseConfig<span class="token punctuation">,</span> page<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p>同时再抽离 css 模块</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// webpack.config.js</span>
+
+<span class="token keyword">const</span> ExtractTextWebpack <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'extract-text-webpack-plugin'</span><span class="token punctuation">)</span>
+
+<span class="token punctuation">{</span>
+  module<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    rules<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+      <span class="token punctuation">{</span>
+        text<span class="token punctuation">:</span> <span class="token regex">/\.css$/</span><span class="token punctuation">,</span>
+        use<span class="token punctuation">:</span> ExtractTextWebpack<span class="token punctuation">.</span><span class="token function">extract</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          fallback<span class="token punctuation">:</span> <span class="token string">'style-loader'</span><span class="token punctuation">,</span>
+          use<span class="token punctuation">:</span> <span class="token string">'css-loader'</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+
+  plugins<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+    <span class="token keyword">new</span> <span class="token class-name">ExtractTextWebpack</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      filename<span class="token punctuation">:</span> <span class="token string">'css/[name].[hash].css'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>打包之后可以看到 dist 目录下，css，js，html 都已经划分好，但是会发现 react 模块被生成多次<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180519-173532-2x-2.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure><br>这里可以使用 parallel-webpack 并行打包提升打包速度。如果是在全局安装的，可以直接调用 parallel-webpack 进行打包，如果是局部安装，我们需要在 node_modules 里找到 parallel-webpack 调用</p>
+<pre class=" language-bash"><code class="language-bash">node_modules/parallel-webpack/bin/run.js
+</code></pre>
+<p><strong>多页面单配置</strong></p>
+<p>我们只需要在多配置基础上稍作修改</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// webpack.config.js</span>
+
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> pages<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>page <span class="token operator">=</span><span class="token operator">></span> <span class="token function">merge</span><span class="token punctuation">(</span>baseConfig<span class="token punctuation">,</span> page<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">// 改为</span>
+
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token function">merge</span><span class="token punctuation">(</span><span class="token punctuation">[</span>baseConfig<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span>pages<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p>这样我们就把所有配置都 merge 到一个配置里做打包<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180519-175517-2x-2.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure><br>从打包结果可以很清晰的看到，react 模块只打了一个包，但是在 html 中我们发现 title 属性并没有  传过去。HtmlWebpackPlugin 默认使用 ejs 模板语法传参,我们修改下 html</p>
+<pre class=" language-html"><code class="language-html">// inex.html
+
+<span class="token doctype">&lt;!DOCTYPE html></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span> <span class="token attr-name">lang</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>en<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">charset</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>UTF-8<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">></span></span>&lt;%= htmlWebpackPlugin.options.title %><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span>
+</code></pre>
+<p>这样参数就可以传过去了。以上就是 webpack 多页应用的配置</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-09-18T09:40:26.000Z" itemprop="dateUpdated">2017-09-18 17:40:26</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webpack/">webpack</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能优化/">性能优化</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/105e749d/&title=《webpack实践--多页面应用》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/105e749d/&title=《webpack实践--多页面应用》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/105e749d/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《webpack实践--多页面应用》 — Sixin的小站&url=http://coder.liusixin.cn/posts/105e749d/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/105e749d/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/4b06823/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">web开发bug&amp;小技巧整理</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/129b39a1/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">web高性能动画及渲染原理</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/105e749d/&title=《webpack实践--多页面应用》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/105e749d/&title=《webpack实践--多页面应用》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/105e749d/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《webpack实践--多页面应用》 — Sixin的小站&url=http://coder.liusixin.cn/posts/105e749d/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/105e749d/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABwElEQVR42u3aO3LDMAwFQN//0k6bxvQDQDKazLJKoVArFxj8Xq/4vJfn9zOfnv905+vEwcXFHXNzyhqUvD65/8uduLi4F7nrQJM/k3xq735cXNwnc9eBpvphuLi4/4/76Yak7MHFxX0+N295lMuVoFg6Uqvh4uIOuHmX8tzfR/q7uLi4Le67eNbJR3VkUn47Li7uFW4eUPJypQqtvhcXF/cmt7dgkQxQeylUs1bDxcUdc/OBaN7a6IXCckaGi4t7jJsTewOS5CPLoxpcXNyL3HV6sbc50hvY4OLi3uROlqhOjEvL4xZcXNyt3F7pUg1ehQ7N+ufAxcW9wq3uOcwTlMl/4eLiPoebr2fl4SlPhsqBDBcX9wo3SX12jVrzBQ5cXNzT3GrY6vVaqmHuS38XFxf3IrfX6JwsVZSLH1xc3IvcSeszb7luyMJwcXEPc9/FM2lz9MYquLi497nV9kQ1NZlvhTQ/BhcXd8zNg06+JJGMQ/JAiYuL+1fcaqDJU5xqmCvUari4uI/hVgcneSCLyiFcXNwHc3e1S8otVFxc3IvcXoKStDOq45lttRouLu6A2xt8Vq9IQuGkZMLFxd3E/QHV9cNCakyOOAAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

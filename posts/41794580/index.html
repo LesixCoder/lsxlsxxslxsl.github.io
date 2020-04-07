@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/41794580/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/41794580/">
+    
+    
+    <title>JavaScript高程笔记 （21-25章） | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="javascript,编程笔记,javascript高级程序设计">
+    <meta name="description" content="第 21 章 - Ajax 与 Comet 参考：也可以查看阮一峰 AJAX 学习  Asynchronous Javascript and XML(Ajax),这一技术能够能够向服务器请求额外的数据而不用刷新页面，能够带来更好的用户体验，熟练地使用 XHR 对象是 Web 开发人员必须掌握的一项技能。 学习目标  使用XMLHttpRequest 使用XMLHttpRequest相应的事件 跨域">
+<meta name="keywords" content="javascript,编程笔记,javascript高级程序设计">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript高程笔记 （21-25章）">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/41794580/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="第 21 章 - Ajax 与 Comet 参考：也可以查看阮一峰 AJAX 学习  Asynchronous Javascript and XML(Ajax),这一技术能够能够向服务器请求额外的数据而不用刷新页面，能够带来更好的用户体验，熟练地使用 XHR 对象是 Web 开发人员必须掌握的一项技能。 学习目标  使用XMLHttpRequest 使用XMLHttpRequest相应的事件 跨域">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-04-23T09:43:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript高程笔记 （21-25章）">
+<meta name="twitter:description" content="第 21 章 - Ajax 与 Comet 参考：也可以查看阮一峰 AJAX 学习  Asynchronous Javascript and XML(Ajax),这一技术能够能够向服务器请求额外的数据而不用刷新页面，能够带来更好的用户体验，熟练地使用 XHR 对象是 Web 开发人员必须掌握的一项技能。 学习目标  使用XMLHttpRequest 使用XMLHttpRequest相应的事件 跨域">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">JavaScript高程笔记 （21-25章）</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">JavaScript高程笔记 （21-25章）</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-04-23T09:43:24.000Z" itemprop="datePublished" class="page-time">
+  2017-04-23
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Javascript高级程序设计系列/">Javascript高级程序设计系列</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#第-21-章-Ajax-与-Comet"><span class="post-toc-number">1.</span> <span class="post-toc-text">第 21 章 - Ajax 与 Comet</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#21-1-XMLHttpRequest-对象"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">21.1 XMLHttpRequest 对象</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#21-1-1-XHR-的用法"><span class="post-toc-number">1.1.1.</span> <span class="post-toc-text">21.1.1 XHR 的用法</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#21-1-2-http-头部信息"><span class="post-toc-number">1.1.2.</span> <span class="post-toc-text">21.1.2 http 头部信息</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#21-1-3-GET-请求"><span class="post-toc-number">1.1.3.</span> <span class="post-toc-text">21.1.3 GET 请求</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#21-1-4-POST-请求"><span class="post-toc-number">1.1.4.</span> <span class="post-toc-text">21.1.4 POST 请求</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#21-2-XMLHttpRequest-2-级"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">21.2 XMLHttpRequest 2 级</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#21-2-1-FormData"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">21.2.1 FormData</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#21-2-2-超时设置"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">21.2.2 超时设置</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#21-3-进度事件"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">21.3 进度事件</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#21-3-1-load-事件"><span class="post-toc-number">1.3.1.</span> <span class="post-toc-text">21.3.1 load 事件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#21-3-2-progress-事件"><span class="post-toc-number">1.3.2.</span> <span class="post-toc-text">21.3.2 progress 事件</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#21-4-跨域资源共享"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">21.4 跨域资源共享</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#21-4-1-IE-对-CORS-的实现"><span class="post-toc-number">1.4.1.</span> <span class="post-toc-text">21.4.1 IE 对 CORS 的实现</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#21-4-2-其他浏览器对-CORS-的实现"><span class="post-toc-number">1.4.2.</span> <span class="post-toc-text">21.4.2 其他浏览器对 CORS 的实现</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#21-4-3-Preflighted-Request"><span class="post-toc-number">1.4.3.</span> <span class="post-toc-text">21.4.3 Preflighted Request</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#21-4-4-带凭据的请求"><span class="post-toc-number">1.4.4.</span> <span class="post-toc-text">21.4.4 带凭据的请求</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#21-4-5-跨浏览器的-CORS"><span class="post-toc-number">1.4.5.</span> <span class="post-toc-text">21.4.5 跨浏览器的 CORS</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#21-5-其他跨域技术"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">21.5 其他跨域技术</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#21-5-1-图像-ping"><span class="post-toc-number">1.5.1.</span> <span class="post-toc-text">21.5.1 图像 ping</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#21-5-2-JSONP"><span class="post-toc-number">1.5.2.</span> <span class="post-toc-text">21.5.2 JSONP</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#第-22-章-高级技巧"><span class="post-toc-number">2.</span> <span class="post-toc-text">第 22 章 - 高级技巧</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#22-1-高级函数"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">22.1 高级函数</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#22-1-1-安全的类型检测"><span class="post-toc-number">2.1.1.</span> <span class="post-toc-text">22.1.1 安全的类型检测</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#22-1-2-作用域安全的构造函数"><span class="post-toc-number">2.1.2.</span> <span class="post-toc-text">22.1.2 作用域安全的构造函数</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#22-1-3-惰性载入函数"><span class="post-toc-number">2.1.3.</span> <span class="post-toc-text">22.1.3 惰性载入函数</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#22-1-4-函数绑定"><span class="post-toc-number">2.1.4.</span> <span class="post-toc-text">22.1.4 函数绑定</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#22-1-5-函数柯里化"><span class="post-toc-number">2.1.5.</span> <span class="post-toc-text">22.1.5 函数柯里化</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#22-2-防止篡改对象"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">22.2 防止篡改对象</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#第-23-章-离线应用与客户端存储"><span class="post-toc-number">3.</span> <span class="post-toc-text">第 23 章 - 离线应用与客户端存储</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#23-3-数据存储"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">23.3 数据存储</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Cookie"><span class="post-toc-number">3.1.1.</span> <span class="post-toc-text">Cookie</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#第-25-章-新兴的-API"><span class="post-toc-number">4.</span> <span class="post-toc-text">第 25 章 - 新兴的 API</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#25-4-File-API"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">25.4 File API</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#25-4-1-FileReader-类型"><span class="post-toc-number">4.1.1.</span> <span class="post-toc-text">25.4.1 FileReader 类型</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#25-4-2-读取部分内容"><span class="post-toc-number">4.1.2.</span> <span class="post-toc-text">25.4.2 读取部分内容</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#25-4-3-对象-URL"><span class="post-toc-number">4.1.3.</span> <span class="post-toc-text">25.4.3 对象 URL</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#25-4-4-读取拖放的文件"><span class="post-toc-number">4.1.4.</span> <span class="post-toc-text">25.4.4 读取拖放的文件</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#25-6-Web-Workers"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">25.6 Web Workers</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/Javascript高级程序设计/JavaScript高程笔记-（21-25章）" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">JavaScript高程笔记 （21-25章）</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-04-23 17:43:24" datetime="2017-04-23T09:43:24.000Z" itemprop="datePublished">2017-04-23</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Javascript高级程序设计系列/">Javascript高级程序设计系列</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="第-21-章-Ajax-与-Comet"><a href="#第-21-章-Ajax-与-Comet" class="headerlink" title="第 21 章 - Ajax 与 Comet"></a>第 21 章 - Ajax 与 Comet</h1><blockquote>
+<p>参考：<a href="http://javascript.ruanyifeng.com/bom/ajax.html" rel="external nofollow noopener noreferrer" target="_blank">也可以查看阮一峰 AJAX 学习</a></p>
+</blockquote>
+<p>Asynchronous Javascript and XML(Ajax),这一技术能够能够向服务器请求额外的数据而不用刷新页面，能够带来更好的用户体验，熟练地使用 XHR 对象是 Web 开发人员必须掌握的一项技能。</p>
+<p><strong>学习目标</strong></p>
+<ul>
+<li>使用<code>XMLHttpRequest</code></li>
+<li>使用<code>XMLHttpRequest</code>相应的事件</li>
+<li>跨域 Ajax 通信的限制</li>
+</ul>
+<h2 id="21-1-XMLHttpRequest-对象"><a href="#21-1-XMLHttpRequest-对象" class="headerlink" title="21.1 XMLHttpRequest 对象"></a>21.1 XMLHttpRequest 对象</h2><blockquote>
+<p><code>XMLHttpRequest</code>对象是使用 Ajax 技术最重要的一个点，最早支持该 api 的浏览器是 IE5，在该浏览器中通过 MSXML 中的一个<code>ActiveX</code>对象实现的，所以在 IE 中也可能会遇到三个不同版本的 XHR 对象，分别是 MSXML2.XMLHttp、MSXML2.XMLHttp.3.0、MSXML2.XMLHttp.6.0。需要兼容的话可以使用下面这个函数。</p>
+</blockquote>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">//  适用于ie7之前的版本</span>
+
+<span class="token keyword">function</span> <span class="token function">createXHR</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> arguments<span class="token punctuation">.</span>callee<span class="token punctuation">.</span>activeXString <span class="token operator">!=</span> <span class="token string">'string'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> versions <span class="token operator">=</span> <span class="token punctuation">[</span>
+      <span class="token string">'MSXML2.XMLHttp'</span><span class="token punctuation">,</span>
+      <span class="token string">'MSXML2.XMLhttp.3.0'</span><span class="token punctuation">,</span>
+      <span class="token string">'MSXML2.XMLhttp.6.0'</span>
+    <span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> len <span class="token operator">=</span> versions<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i <span class="token operator">&lt;</span> len<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        <span class="token keyword">new</span> <span class="token class-name">ActiveXObject</span><span class="token punctuation">(</span>versions<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        arguments<span class="token punctuation">.</span>callee<span class="token punctuation">.</span>activeXString <span class="token operator">=</span> versions<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">e</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 跳过</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">ActiveXObject</span><span class="token punctuation">(</span>arguments<span class="token punctuation">.</span>callee<span class="token punctuation">.</span>activeXString<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><strong>当然如果我们只想支持 ie7 以及更高版本的浏览器只需要像下面这样使用构造函数</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> xhr <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">XMLHttpRequest</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p><strong>如果必须支持 ie7 以下的版本，稍微改造下前面的 createXHR 函数即可</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">createXHR</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> XMLHttpRequest <span class="token operator">!=</span> <span class="token string">'undefined'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">XMLHttpRequest</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> arguments<span class="token punctuation">.</span>callee<span class="token punctuation">.</span>activeXString <span class="token operator">!=</span> <span class="token string">'string'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'进了arguments.callee.activeXString'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">var</span> versions <span class="token operator">=</span> <span class="token punctuation">[</span>
+      <span class="token string">'MSXML2.XMLHttp'</span><span class="token punctuation">,</span>
+      <span class="token string">'MSXML2.XMLhttp.3.0'</span><span class="token punctuation">,</span>
+      <span class="token string">'MSXML2.XMLhttp.6.0'</span>
+    <span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> len <span class="token operator">=</span> versions<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i <span class="token operator">&lt;</span> len<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 为什么这里不将实例返回也可以得到XHR对象</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>versions<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">new</span> <span class="token class-name">ActiveXObject</span><span class="token punctuation">(</span>versions<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        arguments<span class="token punctuation">.</span>callee<span class="token punctuation">.</span>activeXString <span class="token operator">=</span> versions<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">e</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 跳过</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'ActiveXObject'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">ActiveXObject</span><span class="token punctuation">(</span>arguments<span class="token punctuation">.</span>callee<span class="token punctuation">.</span>activeXString<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">'No XHR object available'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="21-1-1-XHR-的用法"><a href="#21-1-1-XHR-的用法" class="headerlink" title="21.1.1 XHR 的用法"></a>21.1.1 XHR 的用法</h3><blockquote>
+<p>上面了解了如何用兼容的方式获取一个 xhr 对象，现在开始学习如何使用，一般大致上可以分为以下三步。</p>
+</blockquote>
+<ul>
+<li>通过<code>onreadystatechange</code>监听请求状态</li>
+<li><code>xhr.open(method, url, true or false)</code></li>
+<li><code>xhr.send()</code></li>
+</ul>
+<p><code>xhr.open(method, url, true or false)</code>的三个参数分别是请求的类型(get、post 等)，请求的 url，以及请求是否设置为异步。</p>
+<p><strong>示例</strong></p>
+<pre class=" language-js"><code class="language-js">xhr<span class="token punctuation">.</span><span class="token function">open</span><span class="token punctuation">(</span><span class="token string">'get'</span><span class="token punctuation">,</span> <span class="token string">'example.php'</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p><strong>特别说明</strong></p>
+<ul>
+<li>url 可以是相对路径也可以是绝对路径</li>
+<li>调用 open 方法后并不会立即发送一个请求到服务器，只是启动一个请求以备发送。</li>
+<li>真正发送请求是从<code>xhr.send()</code>开始</li>
+</ul>
+<pre class=" language-js"><code class="language-js">xhr<span class="token punctuation">.</span><span class="token function">open</span><span class="token punctuation">(</span><span class="token string">'get'</span><span class="token punctuation">,</span> <span class="token string">'example.php'</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+xhr<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>send 方法接收一个参数，即作为请求主体发送的数据，如果不需要发送数据必须传入<code>null</code>,此时请求才真正地被分派至服务器。</p>
+<p>当发送的请求接收到响应的时候会自动填充 xhr 对象的相关属性，现在对相关属性介绍如下。</p>
+<ul>
+<li><code>responseText</code>(作为响应主体被返回的文本)</li>
+<li><code>status</code> (响应的 http 状态)</li>
+<li><code>statusText</code>(http 状态说明)</li>
+</ul>
+<p>接收到响应的时候先判断<code>status</code>属性，以判断响应是否完成，一般将 http 状态为 200(304 表示请求的资源没有更改，可以走浏览器缓存)时作为成功的标志。</p>
+<p>所以可以如下写法检查请求的状态</p>
+<pre class=" language-js"><code class="language-js">xhr<span class="token punctuation">.</span><span class="token function">open</span><span class="token punctuation">(</span><span class="token string">'get'</span><span class="token punctuation">,</span> <span class="token string">'example.php'</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+xhr<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>xhr<span class="token punctuation">.</span>status <span class="token operator">>=</span> <span class="token number">200</span> <span class="token operator">&amp;&amp;</span> xhr<span class="token punctuation">.</span>status <span class="token operator">&lt;</span> <span class="token number">300</span><span class="token punctuation">)</span> <span class="token operator">||</span> xhr<span class="token punctuation">.</span>status <span class="token operator">===</span> <span class="token number">304</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// 成功</span>
+  <span class="token function">alert</span><span class="token punctuation">(</span>xhr<span class="token punctuation">.</span>responseText<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+  <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'request was unsuccessful'</span> <span class="token operator">+</span> xhr<span class="token punctuation">.</span>status<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>像上面那样发送的是同步请求，大多数情况下我们发送的还是异步请求以不阻塞 js 继续执行，这个时候可以监测 xhr 对象的<code>readyState</code>属性,该属性表示请求/响应过程属于哪一个阶段。总共有以下几个阶段</p>
+<ul>
+<li><code>0</code> : 未初始化，还没有调用 open()方法</li>
+<li><code>1</code> : 启动，已经吊用 open()方法但是还没有调用 send()方法</li>
+<li><code>2</code> : 发送，已经调用 send()方法，但是尚未接收到响应</li>
+<li><code>3</code> : 接收，已经接收到部分数据</li>
+<li><code>4</code> : 完成，已经接收到全部数据，而且已经可以在客户端使用了。</li>
+</ul>
+<p>通常<code>readyState</code>由一个值切换到另一个值都会触发<code>onreadystatechange</code>事件，通常我们只对为 4 的情况感兴趣，因为只有这个时候响应的数据是完整的。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">let</span> xhr <span class="token operator">=</span> <span class="token function">createXHR</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+xhr<span class="token punctuation">.</span>onreadystatechange <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>xhr<span class="token punctuation">.</span>readyState <span class="token operator">===</span> <span class="token number">4</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>xhr<span class="token punctuation">.</span>status <span class="token operator">>=</span> <span class="token number">200</span> <span class="token operator">&amp;&amp;</span> xhr<span class="token punctuation">.</span>status <span class="token operator">&lt;</span> <span class="token number">300</span><span class="token punctuation">)</span> <span class="token operator">||</span> xhr<span class="token punctuation">.</span>status <span class="token operator">===</span> <span class="token number">304</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">// 成功</span>
+      <span class="token function">alert</span><span class="token punctuation">(</span>xhr<span class="token punctuation">.</span>responseText<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">// 失败</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+xhr<span class="token punctuation">.</span><span class="token function">open</span><span class="token punctuation">(</span><span class="token string">'get'</span><span class="token punctuation">,</span> <span class="token string">'example.php'</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+xhr<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p><strong>另外既然可以发送请求，我们也可以终止请求，调用<code>xhr.abort()</code> 法方法，xhr 对象将会停止触发事件，此时也应该对 xhr 对象解除引用操作</strong></p>
+<h3 id="21-1-2-http-头部信息"><a href="#21-1-2-http-头部信息" class="headerlink" title="21.1.2 http 头部信息"></a>21.1.2 http 头部信息</h3><blockquote>
+<p>每个 http 的请求和响应都会带有响应的头部信息，xhr 对象提供了操作这两种头部(请求头部和响应头部)信息的方法。</p>
+</blockquote>
+<ul>
+<li><code>Accept</code> : 浏览器能够处理的内容类型</li>
+<li><code>Accept-charset</code> : 浏览器能够显示的字符集</li>
+<li><code>Accept-Encoding</code> : 浏览器能够处理的压缩编码</li>
+<li><code>Accept-Language</code> : 浏览器当前设置的语言</li>
+<li><code>Connection</code> : 浏览器与服务器之间的连接类型</li>
+<li><code>Cookie</code> : 当前页面设置的任何 cookie</li>
+<li><code>Host</code> : 发出的请求所在的域</li>
+<li><code>Referer</code> : 发出请求的页面 URI (特别注意：这个单词正确拼写应该是 referrer,但是 HTTP 规范把单词拼错了，也只能将错就错了)</li>
+</ul>
+<p><strong>可以使用<code>xhr.setRequestHeader</code>来设置自定义的请求头部信息</strong></p>
+<p>该方法接收两个参数，即头部字段的名称和头部字段的值。</p>
+<p><strong>如果要成功的发送请求头部信息，必须在调用 open 方法之后并且调用 send 方法之前调用<code>setRequesHeader</code>方法</strong>，比如</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> xhr <span class="token operator">=</span> <span class="token function">createXHR</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+xhr<span class="token punctuation">.</span>onreadystatechange <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>xhr<span class="token punctuation">.</span>readyState <span class="token operator">===</span> <span class="token number">4</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>xhr<span class="token punctuation">.</span>status <span class="token operator">>=</span> <span class="token number">200</span> <span class="token operator">&amp;&amp;</span> xhr<span class="token punctuation">.</span>status <span class="token operator">&lt;</span> <span class="token number">300</span><span class="token punctuation">)</span> <span class="token operator">||</span> xhr<span class="token punctuation">.</span>status <span class="token operator">===</span> <span class="token number">304</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>xhr<span class="token punctuation">.</span>responseText<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+xhr<span class="token punctuation">.</span><span class="token function">open</span><span class="token punctuation">(</span><span class="token string">'get'</span><span class="token punctuation">,</span> <span class="token string">'example'</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+xhr<span class="token punctuation">.</span><span class="token function">setRequestHeader</span><span class="token punctuation">(</span><span class="token string">'name'</span><span class="token punctuation">,</span> <span class="token string">'liusixin'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+xhr<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>服务端在接收到这种自定义的头部信息之后，可以执行响应的后续操作，建议不要修改浏览器默认的头部相关字段。</p>
+<p>我们也可以调用<code>xhr.getResponseHeader()</code>，并传入一个头部字段的名称即可获取响应的头部信息，而调用<code>xhr.getAllResponseHeaders()</code>则可以获取包含所有头部信息的长字符串。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> myHeader <span class="token operator">=</span> xhr<span class="token punctuation">.</span><span class="token function">getResponseHeader</span><span class="token punctuation">(</span><span class="token string">'myHeader'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> allHeaders <span class="token operator">=</span> xhr<span class="token punctuation">.</span><span class="token function">getAllResponseHeaders</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>当然了客户端在发起请求的时候可以自定义请求头部信息，服务端同样可以返回客户端一些自定义的头部信息。</p>
+<h3 id="21-1-3-GET-请求"><a href="#21-1-3-GET-请求" class="headerlink" title="21.1.3 GET 请求"></a>21.1.3 GET 请求</h3><blockquote>
+<p>GET 是最常见的请求类型，最常用于向服务器查询某些信息，将查询字符串跟在 url 的后面，以便将信息发送给服务器。，对于 XHR 而言传入 open 方法的 url 后的查询字符串，必须经过正确的编码（即名和值都必须使用<code>encodeURIComponent()</code>进行处理）才行。</p>
+</blockquote>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">addURLParam</span><span class="token punctuation">(</span>url<span class="token punctuation">,</span> name<span class="token punctuation">,</span> value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  url <span class="token operator">+</span><span class="token operator">=</span> url<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span><span class="token string">'?'</span><span class="token punctuation">)</span> <span class="token operator">===</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token operator">?</span> <span class="token string">'?'</span> <span class="token punctuation">:</span> <span class="token string">'&amp;'</span><span class="token punctuation">;</span>
+  url <span class="token operator">+</span><span class="token operator">=</span> <span class="token function">encodeURIComponent</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">'='</span> <span class="token operator">+</span> <span class="token function">encodeURIComponent</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> url<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="21-1-4-POST-请求"><a href="#21-1-4-POST-请求" class="headerlink" title="21.1.4 POST 请求"></a>21.1.4 POST 请求</h3><blockquote>
+<p>使用频率仅次于 get 的是 post 请求，通常用于向服务器发送应该被保存的数据，post 请求应该将数据作为请求的主体提交而 get 请求传统上不是如此，post 请求可以包含非常多的数据而且格式不限。</p>
+</blockquote>
+<p><strong>默认情况下，服务器对 post 请求和提交的 web 表单请求并不会一视同仁，因此服务器必须有程序来读取发送过来的原始数据，并且解析出有用的部分，不过我们可以用 xhr 来模仿表单提交</strong></p>
+<p>模仿表单提交一般有以下两点</p>
+<ul>
+<li>将请求头的<code>Content-type</code>设置为<code>application/x-www-form-urlencoded</code>,也就是表单提交的类型</li>
+<li>其次以合适的格式创建一个字符串，post 格式与查询字符串的格式相同</li>
+</ul>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">submitData</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> xhr <span class="token operator">=</span> <span class="token function">createXHR</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  xhr<span class="token punctuation">.</span>onreadystatechange <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>xhr<span class="token punctuation">.</span>readyState <span class="token operator">===</span> <span class="token number">4</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>xhr<span class="token punctuation">.</span>status <span class="token operator">>=</span> <span class="token number">200</span> <span class="token operator">&amp;&amp;</span> xhr<span class="token punctuation">.</span>status <span class="token operator">&lt;</span> <span class="token number">300</span><span class="token punctuation">)</span> <span class="token operator">||</span> xhr<span class="token punctuation">.</span>status <span class="token operator">===</span> <span class="token number">304</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">alert</span><span class="token punctuation">(</span>xhr<span class="token punctuation">.</span>responseText<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'err'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  xhr<span class="token punctuation">.</span><span class="token function">open</span><span class="token punctuation">(</span><span class="token string">'post'</span><span class="token punctuation">,</span> <span class="token string">'example.php'</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  xhr<span class="token punctuation">.</span><span class="token function">setRequestHeader</span><span class="token punctuation">(</span><span class="token string">'Content-type'</span><span class="token punctuation">,</span> <span class="token string">'application/x-www-form-urlencoded'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 着重点</span>
+  <span class="token keyword">var</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'user-info'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  xhr<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token function">serialize</span><span class="token punctuation">(</span>form<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 着重点</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><strong>与 GET 请求相比 POST 请求消耗的资源会更多一些，从性能角度看，发送相同的数据，GET 请求的速度可以达到 POST 请求的 2 倍</strong></p>
+<h2 id="21-2-XMLHttpRequest-2-级"><a href="#21-2-XMLHttpRequest-2-级" class="headerlink" title="21.2 XMLHttpRequest 2 级"></a>21.2 XMLHttpRequest 2 级</h2><h3 id="21-2-1-FormData"><a href="#21-2-1-FormData" class="headerlink" title="21.2.1 FormData"></a>21.2.1 FormData</h3><blockquote>
+<p>现代 Web 应用中频繁使用的一项功能就是表单序列化，<code>XMLHttpRequest 2</code>为此定义了<code>FormData</code>类型，<code>FormData</code>为序列化表单和创建与表单格式相同的数据(用于通过 XHR 传输)提供了便利。</p>
+</blockquote>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> data <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FormData</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+data<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">'name'</span><span class="token punctuation">,</span> <span class="token string">'liusixin'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>其接收两个参数，数据的健和值，当然也可以直接像 FormData 传入表单</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> xhr <span class="token operator">=</span> <span class="token function">createXHR</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+xhr<span class="token punctuation">.</span>onreadystatechange <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>xhr<span class="token punctuation">.</span>readyState <span class="token operator">===</span> <span class="token number">4</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>xhr<span class="token punctuation">.</span>status <span class="token operator">>=</span> <span class="token number">200</span> <span class="token operator">&amp;&amp;</span> xhr<span class="token punctuation">.</span>status <span class="token operator">&lt;</span> <span class="token number">300</span><span class="token punctuation">)</span> <span class="token operator">||</span> xhr<span class="token punctuation">.</span>status <span class="token operator">===</span> <span class="token number">304</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">alert</span><span class="token punctuation">(</span>xhr<span class="token punctuation">.</span>responseText<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'err'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+xhr<span class="token punctuation">.</span><span class="token function">open</span><span class="token punctuation">(</span><span class="token string">'post'</span><span class="token punctuation">,</span> <span class="token string">'example.php'</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'user-info'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+xhr<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">FormData</span><span class="token punctuation">(</span>form<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 着重点</span>
+</code></pre>
+<p><strong>对比上面一个例子我们可以发现，使用 FormData 来传输数据的时候，可以省去设置头部 Content-type，也不必自己序列化表单，可谓方便多了</strong></p>
+<h3 id="21-2-2-超时设置"><a href="#21-2-2-超时设置" class="headerlink" title="21.2.2 超时设置"></a>21.2.2 超时设置</h3><p><strong><code>overrideMimeType()</code>方法</strong></p>
+<blockquote>
+<p>该方法用于重写 XHR 响应的 MIME 类型，因为返回响应的类型决定了 XHR 对象如何处理它，所以提供一种能够重写服务端返回的 MIME 类型是很有用的。<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Basics_of_HTTP/MIME_types" rel="external nofollow noopener noreferrer" target="_blank">MIME MDN</a></p>
+</blockquote>
+<p>举个例子：服务器返回的 MIME 类型是<code>text/plain</code>,但是数据中实际包含的是 XML，那么 XHR 根据 MIME 的类型，即使数据是 XML。<code>responseXML</code>属性中仍然是 null，通过调用<code>overrideMimeType</code>方法，可以保证把响应当作 XML 而非穿文本来处理。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> xhr <span class="token operator">=</span> <span class="token function">createXHR</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+xhr<span class="token punctuation">.</span><span class="token function">open</span><span class="token punctuation">(</span><span class="token string">'get'</span><span class="token punctuation">,</span> <span class="token string">'text.php'</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+xhr<span class="token punctuation">.</span><span class="token function">overrideMimeType</span><span class="token punctuation">(</span><span class="token string">'text/xml'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+xhr<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p><strong>注意该方法必须要在 send 方法之前调用，才能保证重写响应的 MIME 类型</strong></p>
+<h2 id="21-3-进度事件"><a href="#21-3-进度事件" class="headerlink" title="21.3 进度事件"></a>21.3 进度事件</h2><blockquote>
+<p>Progress Events 定义了客户端与服务器通信有关的事件。</p>
+</blockquote>
+<ul>
+<li><code>loadStart</code> ： 在接收到响应数据的第一个自己触发</li>
+<li><code>progress</code> ：在接收响应期间持续不断的触发</li>
+<li><code>error</code> ： 在请求发生错误时触发</li>
+<li><code>abort</code> ： 在因为调用 abort()方法而终止连接时触发</li>
+<li><code>load</code> ： 在接收到完整的数据时触发</li>
+<li><code>loadend</code> ： 在通信完成或者触发 error、abort 或 load 事件后触发</li>
+</ul>
+<p><strong>着重看<code>load</code>和<code>progress</code>事件</strong></p>
+<h3 id="21-3-1-load-事件"><a href="#21-3-1-load-事件" class="headerlink" title="21.3.1 load 事件"></a>21.3.1 load 事件</h3><blockquote>
+<p>load 事件的初衷在于简化异步交互的模型，用以替代<code>readystatechange</code>事件，响应接收完毕将会触发 load 事件，因此也就没有必要检查<code>readyState</code>属性。并且 load 事件处理程序会受到一个 event 对象，target 属性就是指向 xhr 对象的实例，也就可以访问到其所有的属性和方法。</p>
+</blockquote>
+<p>遗憾的是并不是所有的浏览器都实现了适当的事件对象，所以兼容写法还是如下</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> xhr <span class="token operator">=</span> <span class="token function">createXHR</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+xhr<span class="token punctuation">.</span>onload <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>xhr<span class="token punctuation">.</span>status <span class="token operator">>=</span> <span class="token number">200</span> <span class="token operator">&amp;&amp;</span> xhr<span class="token punctuation">.</span>status <span class="token operator">&lt;</span> <span class="token number">300</span><span class="token punctuation">)</span> <span class="token operator">||</span> xhr<span class="token punctuation">.</span>status <span class="token operator">===</span> <span class="token number">304</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">alert</span><span class="token punctuation">(</span>xhr<span class="token punctuation">.</span>responseText<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'Request was unsuccessful'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<h3 id="21-3-2-progress-事件"><a href="#21-3-2-progress-事件" class="headerlink" title="21.3.2 progress 事件"></a>21.3.2 progress 事件</h3><blockquote>
+<p>该事件会在浏览器接收数据期间周期性的触发。而<code>onprogress</code>的事件处理程序会接收到一个 event 对象，其 target 属性是 XHR 对象，但是包含三个而外的属性</p>
+</blockquote>
+<ul>
+<li><code>lengthComputable</code> (表示进度信息是否可用)</li>
+<li><code>position</code> (表示已经接收的字节数)</li>
+<li><code>totalSize</code> (表示根据<code>Content-Length</code>响应头部确定的预期的字节数)</li>
+</ul>
+<blockquote>
+<p>这些属性兼容性问题比较大，谨慎使用</p>
+</blockquote>
+<h2 id="21-4-跨域资源共享"><a href="#21-4-跨域资源共享" class="headerlink" title="21.4 跨域资源共享"></a>21.4 跨域资源共享</h2><h3 id="21-4-1-IE-对-CORS-的实现"><a href="#21-4-1-IE-对-CORS-的实现" class="headerlink" title="21.4.1 IE 对 CORS 的实现"></a>21.4.1 IE 对 CORS 的实现</h3><h3 id="21-4-2-其他浏览器对-CORS-的实现"><a href="#21-4-2-其他浏览器对-CORS-的实现" class="headerlink" title="21.4.2 其他浏览器对 CORS 的实现"></a>21.4.2 其他浏览器对 CORS 的实现</h3><h3 id="21-4-3-Preflighted-Request"><a href="#21-4-3-Preflighted-Request" class="headerlink" title="21.4.3 Preflighted Request"></a>21.4.3 Preflighted Request</h3><h3 id="21-4-4-带凭据的请求"><a href="#21-4-4-带凭据的请求" class="headerlink" title="21.4.4 带凭据的请求"></a>21.4.4 带凭据的请求</h3><h3 id="21-4-5-跨浏览器的-CORS"><a href="#21-4-5-跨浏览器的-CORS" class="headerlink" title="21.4.5 跨浏览器的 CORS"></a>21.4.5 跨浏览器的 CORS</h3><blockquote>
+<p>上面内容可以参考 阮一峰的<a href="http://www.ruanyifeng.com/blog/2016/04/cors.html" rel="external nofollow noopener noreferrer" target="_blank">跨域资源共享 CORS 详解</a></p>
+</blockquote>
+<h2 id="21-5-其他跨域技术"><a href="#21-5-其他跨域技术" class="headerlink" title="21.5 其他跨域技术"></a>21.5 其他跨域技术</h2><blockquote>
+<p>在 CORS 技术出现之前，解决跨域问题，一般是利用 DOM 中能够执行跨域请求的功能，在不依赖 XHR 对象的情况下也能发送某种请求。</p>
+</blockquote>
+<h3 id="21-5-1-图像-ping"><a href="#21-5-1-图像-ping" class="headerlink" title="21.5.1 图像 ping"></a>21.5.1 图像 ping</h3><blockquote>
+<p>网页中无论从哪个网页中加载图片都不用担心跨域的问题，通过动态的创建图像，使用它们的<code>onload</code>和<code>onerror</code>事件处理程序来确定是否接收到了响应。</p>
+</blockquote>
+<p><strong>图像 ping 是与服务器进行简单、单向的跨域通信的一种方式，请求的数据通过查询字符串形式发送给服务器，而响应可以是任意内容，但通常是像素图或 204 响应，通过图像 ping 浏览器得到不任何数据，但可以通过 onload 和 onerror 事件知晓请求是何时接收到的。</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> img <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Image</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+img<span class="token punctuation">.</span>onload <span class="token operator">=</span> img<span class="token punctuation">.</span>onerror <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'DONE'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+img<span class="token punctuation">.</span>src <span class="token operator">=</span> <span class="token string">'www.baidu.com'</span><span class="token punctuation">;</span>
+</code></pre>
+<h3 id="21-5-2-JSONP"><a href="#21-5-2-JSONP" class="headerlink" title="21.5.2 JSONP"></a>21.5.2 JSONP</h3><blockquote>
+<p>JSONP(JSON with padding),由两部分组成：回调函数和数据，回调函数是当响应到来的时应该在页面中调用的函数，回调函数的名字一般是在请求中指定的。而数据就是传入回调函数中的 json 数据。</p>
+</blockquote>
+<p><strong>通过动态地创建<code>&lt;script&gt;</code>标签，将其 src 属性指向一个跨域的 url，其实这里的 script 标签和 img 标签类似，都有能力不受限制的跨域加载资源，因为 JSONP 是有效的 JavaScript 代码，所以在请求完成之后，即在 JSONP 响应加载到页面以后，就会立即执行。</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">handleResponse</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">var</span> script <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'script'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+script<span class="token punctuation">.</span>src <span class="token operator">=</span> <span class="token string">'http://example.php?callback=handleReponse'</span><span class="token punctuation">;</span>
+document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>script<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<h1 id="第-22-章-高级技巧"><a href="#第-22-章-高级技巧" class="headerlink" title="第 22 章 - 高级技巧"></a>第 22 章 - 高级技巧</h1><p><strong>学习目标</strong></p>
+<ul>
+<li>使用高级函数</li>
+<li>防篡改对象</li>
+<li>Yielding Timers</li>
+</ul>
+<h2 id="22-1-高级函数"><a href="#22-1-高级函数" class="headerlink" title="22.1 高级函数"></a>22.1 高级函数</h2><h3 id="22-1-1-安全的类型检测"><a href="#22-1-1-安全的类型检测" class="headerlink" title="22.1.1 安全的类型检测"></a>22.1.1 安全的类型检测</h3><blockquote>
+<p>JavaScript 内置的类型检测并不是完全可靠，发生错误的情况不再少数，</p>
+</blockquote>
+<ul>
+<li>例如<code>typeof</code>操作符噢，由于它有一些无法预知的行为，经常会导致检测数据类型时得不到靠谱的结果。Safari 在对正则表达式应用 typeof 操作符时会返回 function,因此很难判断一个值是否是函数</li>
+<li><code>instanceof</code> 操作符存在全局作用域的情况下，也是问题多多。</li>
+</ul>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">let</span> isArray <span class="token operator">=</span> value <span class="token keyword">instanceof</span> <span class="token class-name">Array</span><span class="token punctuation">;</span>
+</code></pre>
+<p>以上代码要 true,value 必须是一个数组，而且还必须与 Array 构造函数在同一个全局的作用域中（比如 value 是一个页面中的 iframe 定义的，就会返回 false）</p>
+<blockquote>
+<p>解决以上问题的方案是调用<code>Object</code>的<code>toString</code>方法，都会返回一个<code>[object NativeConstructorName]</code>格式的字符串，每个类在内部都有一个<code>[[class]]</code>属性，这个属性中就指定了上述字符串中构造函数的名。</p>
+</blockquote>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">let</span> isArray <span class="token operator">=</span> value <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> Object<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>toString<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token operator">===</span> <span class="token string">'[object Array]'</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">let</span> isFunction <span class="token operator">=</span> value <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> Object<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>toString<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token operator">===</span> <span class="token string">'[object Function]'</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">let</span> isRegExp <span class="token operator">=</span> value <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> Object<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>toString<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token operator">===</span> <span class="token string">'[object RegExp]'</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<h3 id="22-1-2-作用域安全的构造函数"><a href="#22-1-2-作用域安全的构造函数" class="headerlink" title="22.1.2 作用域安全的构造函数"></a>22.1.2 作用域安全的构造函数</h3><blockquote>
+<p>构造函数其实就是一个用 new 操作符调用的函数，当使用 new 调用的时候，构造函数内用到的 this 会指向新创建的对象实例。</p>
+</blockquote>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">Person</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> age<span class="token punctuation">,</span> job<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>age <span class="token operator">=</span> age<span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>job <span class="token operator">=</span> job<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">let</span> p <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Person</span><span class="token punctuation">(</span><span class="token string">'liusixin'</span><span class="token punctuation">,</span> <span class="token number">26</span><span class="token punctuation">,</span> <span class="token string">'fe'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p><strong>当使用 new 操作符调用时会创建一个新的 Person 对象，但是问题就是出现在没有使用 new 的时候，由于 this 是在运行时绑定的，所以直接调用 Person 会映射到全局的 window 对象</strong></p>
+<p>作用域安全的构造函数在进行任何更改之前，首先确认 this 对象是正确类型的实例，如果不是，那么会创建新的实例并返回。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">Person</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span><span class="token keyword">this</span> <span class="token keyword">instanceof</span> <span class="token class-name">Person</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Person</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">let</span> p1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Person</span><span class="token punctuation">(</span><span class="token string">'liusixin'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">let</span> p2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Person</span><span class="token punctuation">(</span><span class="token string">'hahaha'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p><strong>以上代码实现了不管是否使用 new 操作符去调用 Person 函数都会生成一个新的 Person 实例</strong></p>
+<p>但是以上模式也有缺陷，比如在使用构造函数的窃取模式来实现继承并且不用原型链，那么这个继承可能会遭到破坏。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">A</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span><span class="token keyword">this</span> <span class="token keyword">instanceof</span> <span class="token class-name">A</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">A</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>showName <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">B</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> age<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  A<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>age <span class="token operator">=</span> age<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">let</span> b1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">B</span><span class="token punctuation">(</span><span class="token string">'liusixin'</span><span class="token punctuation">,</span> <span class="token number">26</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+b1<span class="token punctuation">.</span>name<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// undefined</span>
+</code></pre>
+<p>在这段代码中 A 函数的构造函数是安全的，然而 B 函数却不是，新创建一个 B 函数的实例后，应该通过 A.call 来继承 A 的 name 属性，但是由于 A 函数的作用域是安全的，this 并不是 A 函数的实例，所以会创建一个新的 A 对象，B 中的 this 并没有得到增长，同时 A.call(name)返回的值也没有用到，所以 b1 中就不会有 name 属性。</p>
+<p>但是构造函数窃取模式使用原型链或者寄生组合模式就可以解决这个问题。举个例子。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">A</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span><span class="token keyword">this</span> <span class="token keyword">instanceof</span> <span class="token class-name">A</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">A</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>showInfo <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">B</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> age<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  A<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>age <span class="token operator">=</span> age<span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>showAge <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>age<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+B<span class="token punctuation">.</span>prototype <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">A</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">let</span> b2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">B</span><span class="token punctuation">(</span><span class="token string">'liusixin'</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+b2<span class="token punctuation">.</span>name<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// liusixin</span>
+</code></pre>
+<h3 id="22-1-3-惰性载入函数"><a href="#22-1-3-惰性载入函数" class="headerlink" title="22.1.3 惰性载入函数"></a>22.1.3 惰性载入函数</h3><h3 id="22-1-4-函数绑定"><a href="#22-1-4-函数绑定" class="headerlink" title="22.1.4 函数绑定"></a>22.1.4 函数绑定</h3><h3 id="22-1-5-函数柯里化"><a href="#22-1-5-函数柯里化" class="headerlink" title="22.1.5 函数柯里化"></a>22.1.5 函数柯里化</h3><h2 id="22-2-防止篡改对象"><a href="#22-2-防止篡改对象" class="headerlink" title="22.2 防止篡改对象"></a>22.2 防止篡改对象</h2><h1 id="第-23-章-离线应用与客户端存储"><a href="#第-23-章-离线应用与客户端存储" class="headerlink" title="第 23 章 - 离线应用与客户端存储"></a>第 23 章 - 离线应用与客户端存储</h1><p><strong>学习目标</strong></p>
+<ul>
+<li>进行离线检测</li>
+<li>使用离线缓存</li>
+<li>在浏览器中保存数据</li>
+</ul>
+<h2 id="23-3-数据存储"><a href="#23-3-数据存储" class="headerlink" title="23.3 数据存储"></a>23.3 数据存储</h2><blockquote>
+<p>随着 Web 应用程序的出现，也产生了对于能够直接在客户端上存储用户信息能力的要求。属于某个特定用户的信息应该存在该用户的机器上，无论是登录信息还是偏好设置或者其他数据。</p>
+</blockquote>
+<blockquote>
+<p>解决该问题的第一个方案是以 cookie 的形式出现的，cookie 只是在客户端存储数据的其中一种选项。</p>
+</blockquote>
+<h3 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h3><blockquote>
+<p>HTTP Cookie 通常叫做 cookie，最初是在客户端用于存储会话信息的。该标准要求服务器对任意的 http 请求发送 Set-Cookie HTTP 头作为响应的一部分，其中包含会话信息，例如这种服务器响应的头可能如下。</p>
+</blockquote>
+<p><strong>cookie 以名值对存在，并且名称和值都必须是 URL 编码的，浏览器会存储这样的会话信息，并在这之后，通过为每个请求添加 Cookie HTTP 头将信息发送回服务器。</strong></p>
+<h1 id="第-25-章-新兴的-API"><a href="#第-25-章-新兴的-API" class="headerlink" title="第 25 章 - 新兴的 API"></a>第 25 章 - 新兴的 API</h1><p><strong>学习目标</strong></p>
+<ul>
+<li>创建平滑的动画</li>
+<li>操作文件</li>
+<li>使用 Web Workers 在后台执行 JavaScript</li>
+</ul>
+<h2 id="25-4-File-API"><a href="#25-4-File-API" class="headerlink" title="25.4 File API"></a>25.4 File API</h2><blockquote>
+<p>不能直接访问用户计算机中的文件，一直都是 web 应用开发中的一大障碍，2000 年以前，处理文件唯一的方式就是在表单中加入字段，仅此而已，File API 的宗旨是为 Web 开发人员开提供一种安全的的方式，以便在客户端访问用户计算机中的文件，并更好地对这些文件进行操作。</p>
+</blockquote>
+<p>File API 在表单的文件字段的基础上又添加了一些直接访问文件信息的接口，HTML5 中在 DOM 中为文件输入元素添加了一个 files 集合，在通过文件输入字段选择了一或多个文件时，files 集合中将包含一组 File 对象，每个 File 对象对应一个文件，每个 File 对象下面都有下列的只读属性。</p>
+<ul>
+<li><code>name</code>: 本地文件系统中的文件名</li>
+<li><code>size</code>: 文件的字节大小</li>
+<li><code>type</code>: 字符串，文件的 MIME 类型</li>
+<li><code>lastModifiedDate</code>: 字符串，文件上一次被修改的时间（只有 Chrome 实现了这个属性）</li>
+</ul>
+<p><strong>文件信息获取示例</strong></p>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>file<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>files<span class="token punctuation">"</span></span> <span class="token attr-name">multiple</span><span class="token punctuation">></span></span>
+</code></pre>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">let</span> $files <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.files'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+$files<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span>
+  <span class="token string">'change'</span><span class="token punctuation">,</span>
+  e <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> target<span class="token punctuation">,</span> files<span class="token punctuation">;</span>
+
+    e <span class="token operator">=</span> e <span class="token operator">||</span> event<span class="token punctuation">;</span>
+    target <span class="token operator">=</span> e<span class="token punctuation">.</span>target <span class="token operator">||</span> e<span class="token punctuation">.</span>srcElement<span class="token punctuation">;</span>
+    files <span class="token operator">=</span> target<span class="token punctuation">.</span>files<span class="token punctuation">;</span>
+
+    Array<span class="token punctuation">.</span><span class="token keyword">from</span><span class="token punctuation">(</span>files<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span>file<span class="token punctuation">,</span> i<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+      console<span class="token punctuation">.</span><span class="token function">table</span><span class="token punctuation">(</span>file<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token boolean">false</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<h3 id="25-4-1-FileReader-类型"><a href="#25-4-1-FileReader-类型" class="headerlink" title="25.4.1 FileReader 类型"></a>25.4.1 FileReader 类型</h3><blockquote>
+<p>FileReader 类型实现的是一种异步文件读取机制，可以把 FileReader 想象成 XMLHttpRequest，区别只是它读取的是文件系统，而不是远程服务器。问了读取文件中的数据，FileReader 提供了以下几个方法。</p>
+</blockquote>
+<ul>
+<li><code>readAsText(file, encoding)</code>： 以纯文本形式读取文件，将读取到的文本保存在 result 属性中</li>
+<li><code>readAsDataURL(file)</code>: 读取文件并将文件以数据 URI 的形式保存在 result 属性中。</li>
+<li><code>readAsBinaryString(file)</code>: 读取文件并将一个字符串保存在 result 属性中，字符串中的每个字符表示一个字节。</li>
+<li><code>readArrayBuffer(file)</code>: 读取文件并将一个包含文件内容的 ArrayBuffer 保存在 result 属性中。</li>
+</ul>
+<p><strong>由于读取文件的过程是异步的，因为 FileReader 也提供了几个事件，其中最有用的三个事件是<code>progress</code>，<code>error</code>，<code>load</code>，分别表示是否又读取了数据，是否发生错误以及是否已经读完了整个文件</strong></p>
+<p>每隔 50ms 左右，就会触发一次<code>progress</code>事件，通过事件对象可以获得与 XHR 的 progress 事件相同的信息。<code>lengthComputed</code>,<code>loaded</code>,<code>total</code>,另外尽管可能没有包含全部数据但是每次 progress 事件中都可以通过 FileReader 的 result 属性读取到文件内容。</p>
+<p>由于种种原因无法读取文件，就会触发 error 事件，触发 error 事件时，相关的信息将会保存到 FileReader 的 error 属性中，这个属性中将保存一个对象，该对象只有一个属性 code，即错误码，这个错误码是</p>
+<ul>
+<li><code>1</code>：表示未找到文件</li>
+<li><code>2</code>：表示安全性错误</li>
+<li><code>3</code>：表示读取中断</li>
+<li><code>4</code>：表示文件不可读</li>
+<li><code>5</code>：表示编码错误</li>
+</ul>
+<p>件成功加载后会触发 load 事件，如果发生了 error 事件就不会触发 load 事件。</p>
+<h3 id="25-4-2-读取部分内容"><a href="#25-4-2-读取部分内容" class="headerlink" title="25.4.2 读取部分内容"></a>25.4.2 读取部分内容</h3><blockquote>
+<p>有时候，我们只想读取文件的一部分内容而不是全部内容，为此，File 对象还支持一个 slice 方法，这个方法在 Firefox 中叫 mozSlice，在 chrome 中叫做 webkitSlice，其接受两个参数，起始字节，以及要读取的字节数。这个方法返回一个 Blob 的实例，Blob 是 File 类型的父类型。下面是一个兼容的方法</p>
+</blockquote>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">blobSlice</span><span class="token punctuation">(</span>blob<span class="token punctuation">,</span> startByte<span class="token punctuation">,</span> length<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>blob<span class="token punctuation">.</span>slice<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> blob<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span>startByte<span class="token punctuation">,</span> length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>blob<span class="token punctuation">.</span>webkitSlice<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> blob<span class="token punctuation">.</span><span class="token function">webkitSlice</span><span class="token punctuation">(</span>startByte<span class="token punctuation">,</span> length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>blob<span class="token punctuation">.</span>mozSlice<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> blob<span class="token punctuation">.</span><span class="token function">mozSlice</span><span class="token punctuation">(</span>startByte<span class="token punctuation">,</span> length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="25-4-3-对象-URL"><a href="#25-4-3-对象-URL" class="headerlink" title="25.4.3 对象 URL"></a>25.4.3 对象 URL</h3><h3 id="25-4-4-读取拖放的文件"><a href="#25-4-4-读取拖放的文件" class="headerlink" title="25.4.4 读取拖放的文件"></a>25.4.4 读取拖放的文件</h3><blockquote>
+<p>围绕文件信息，结合使用的 HTML5 API 和文件 API，可以做出很赞的东西来。与拖放一张图片或者一个链接类似，从桌面上把文件拖放到浏览器中也会触发 drop 事件，而且可以在 event.dataTransfer.files 中读取到被放置的文件，当然此时他是一个 File 对象，与通过文件输入字段取得的 File 对象一样</p>
+</blockquote>
+<h2 id="25-6-Web-Workers"><a href="#25-6-Web-Workers" class="headerlink" title="25.6 Web Workers"></a>25.6 Web Workers</h2><blockquote>
+<p>随着 Web 应用复杂性的与日俱增，越来越复杂的计算在所难免，长时间运行的 JavaScript 进行会导致浏览器冻结用户界面，让人感觉屏幕“冻结”了，Web Workers 规范通过让 JavaScript 在后台运行解决了这个问题，浏览器实现 Web Worker 的方式有很多种，可以使用线程，后台进程或者运行在其他处理器上的进程，等等。怎么实现细节其实没有那么重要，重要的是开发人员现在可以放心地运行 JavaScript 而不必担心影响用户体验了。</p>
+</blockquote>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-04-23T09:43:24.000Z" itemprop="dateUpdated">2017-04-23 17:43:24</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript高级程序设计/">javascript高级程序设计</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程笔记/">编程笔记</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/41794580/&title=《JavaScript高程笔记 （21-25章）》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/41794580/&title=《JavaScript高程笔记 （21-25章）》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/41794580/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JavaScript高程笔记 （21-25章）》 — Sixin的小站&url=http://coder.liusixin.cn/posts/41794580/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/41794580/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/22b27e40/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">前端 css样式初始化</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/afdba259/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">JavaScript高程笔记 （15 - 20章）</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/41794580/&title=《JavaScript高程笔记 （21-25章）》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/41794580/&title=《JavaScript高程笔记 （21-25章）》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/41794580/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JavaScript高程笔记 （21-25章）》 — Sixin的小站&url=http://coder.liusixin.cn/posts/41794580/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/41794580/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABxklEQVR42u3aQW7DMAwEwPz/0+61QGB5KUqqUYxPQeDI4xwIcanPJ76uX9f393ef7371ff/iCxcXt829htf4nvxlxq+RGHBxcc9zx4Vm/OBknbwIPthwcXFfyR1D89VwcXH/HzcpUnlpw8XFfSc3aW+SRybEQ70aLi5ug5unlPs+b8l3cXFxp7hX8arGH3Ol7fbpuLi4R7h5Qck3H8nWJN++4OLinufmiybj0ryE5XFq4X/FxcVdxO2POlaFpIUtDi4u7hFuJ8rsH+oq/1m4uLibuUnp6RzFqG5iHgY2uLi4R7hzB606MWhnbIOLi3uS24k58qYojzyieAUXF3cztz9e7Rzeyn+Fi4t7hpuXrU7kkbAiCS4u7hFudcgxNxRZdVQUFxf3Ddx8Q9PquoIVokKGi4u7gTs3oa02M/nA9aFXw8XFPcKtbk2q4encKKU8RMHFxW1z5w5aVV87j1Q+qx6Ai4u7K5F4oFTbm077VH4ZXFzcNrc6Xs3vSY5uJAc7cHFx/4qbF5pl49JOr4aLi/sybr71yYPRQruFi4v7Su7auKQcoeLi4h7kVsPNfthabZ9wcXFPcufCzerSebDSCWFxcXHb3B+D6NhXQnIA1AAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

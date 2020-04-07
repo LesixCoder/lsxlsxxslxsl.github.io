@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/a0b65e8c/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/a0b65e8c/">
+    
+    
+    <title>Docker 常用命令及实践 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Docker,微服务">
+    <meta name="description" content="Docker 虚拟机常用命令1. 先更新软件包yum -y update  2. 安装 Docker 虚拟机yum install -y docker  3. 运行、重启、关闭 Docker 虚拟机service docker start service docker start service docker stop  4. 搜索镜像docker search 镜像名称  5. 下载镜像dock">
+<meta name="keywords" content="Docker,微服务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker 常用命令及实践">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/a0b65e8c/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="Docker 虚拟机常用命令1. 先更新软件包yum -y update  2. 安装 Docker 虚拟机yum install -y docker  3. 运行、重启、关闭 Docker 虚拟机service docker start service docker start service docker stop  4. 搜索镜像docker search 镜像名称  5. 下载镜像dock">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-05-24T11:30:13.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker 常用命令及实践">
+<meta name="twitter:description" content="Docker 虚拟机常用命令1. 先更新软件包yum -y update  2. 安装 Docker 虚拟机yum install -y docker  3. 运行、重启、关闭 Docker 虚拟机service docker start service docker start service docker stop  4. 搜索镜像docker search 镜像名称  5. 下载镜像dock">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Docker 常用命令及实践</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Docker 常用命令及实践</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-05-24T11:30:13.000Z" itemprop="datePublished" class="page-time">
+  2018-05-24
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/运维/">运维</a></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Docker-虚拟机常用命令"><span class="post-toc-number">1.</span> <span class="post-toc-text">Docker 虚拟机常用命令</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-先更新软件包"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">1. 先更新软件包</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-安装-Docker-虚拟机"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">2. 安装 Docker 虚拟机</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-运行、重启、关闭-Docker-虚拟机"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">3. 运行、重启、关闭 Docker 虚拟机</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-搜索镜像"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">4. 搜索镜像</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-下载镜像"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">5. 下载镜像</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6-查看镜像"><span class="post-toc-number">1.6.</span> <span class="post-toc-text">6. 查看镜像</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7-删除镜像"><span class="post-toc-number">1.7.</span> <span class="post-toc-text">7. 删除镜像</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#8-运行容器"><span class="post-toc-number">1.8.</span> <span class="post-toc-text">8. 运行容器</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#9-查看容器列表"><span class="post-toc-number">1.9.</span> <span class="post-toc-text">9. 查看容器列表</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#10-停止、挂起、恢复容器"><span class="post-toc-number">1.10.</span> <span class="post-toc-text">10. 停止、挂起、恢复容器</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#11-查看容器信息"><span class="post-toc-number">1.11.</span> <span class="post-toc-text">11. 查看容器信息</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#12-删除容器"><span class="post-toc-number">1.12.</span> <span class="post-toc-text">12. 删除容器</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#13-数据卷管理"><span class="post-toc-number">1.13.</span> <span class="post-toc-text">13. 数据卷管理</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#14-网络管理"><span class="post-toc-number">1.14.</span> <span class="post-toc-text">14. 网络管理</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#15-避免-VM-虚拟机挂起恢复之后，Docker-虚拟机断网"><span class="post-toc-number">1.15.</span> <span class="post-toc-text">15. 避免 VM 虚拟机挂起恢复之后，Docker 虚拟机断网</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#安装-PXC-集群，负载均衡，双机热备"><span class="post-toc-number">2.</span> <span class="post-toc-text">安装 PXC 集群，负载均衡，双机热备</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-安装-PXC-镜像"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">1. 安装 PXC 镜像</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-为-PXC-镜像改名"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">2. 为 PXC 镜像改名</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-创建-net1-网段"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">3. 创建 net1 网段</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-创建-5-个数据卷"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">4. 创建 5 个数据卷</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-创建备份数据卷（用于热备份数据）"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">5. 创建备份数据卷（用于热备份数据）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6-创建-5-节点的-PXC-集群"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">6. 创建 5 节点的 PXC 集群</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7-安装-Haproxy-镜像"><span class="post-toc-number">2.7.</span> <span class="post-toc-text">7. 安装 Haproxy 镜像</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#8-宿主机上编写-Haproxy-配置文件"><span class="post-toc-number">2.8.</span> <span class="post-toc-text">8. 宿主机上编写 Haproxy 配置文件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#9-创建两个-Haproxy-容器"><span class="post-toc-number">2.9.</span> <span class="post-toc-text">9. 创建两个 Haproxy 容器</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#10-Haproxy-容器内安装-Keepalived，设置虚拟-IP"><span class="post-toc-number">2.10.</span> <span class="post-toc-text">10. Haproxy 容器内安装 Keepalived，设置虚拟 IP</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#11-宿主机安装-Keepalived，实现双击热备"><span class="post-toc-number">2.11.</span> <span class="post-toc-text">11. 宿主机安装 Keepalived，实现双击热备</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#12-热备份数据"><span class="post-toc-number">2.12.</span> <span class="post-toc-text">12. 热备份数据</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#13-冷还原数据"><span class="post-toc-number">2.13.</span> <span class="post-toc-text">13. 冷还原数据</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#安装-Redis，配置-RedisCluster-集群"><span class="post-toc-number">3.</span> <span class="post-toc-text">安装 Redis，配置 RedisCluster 集群</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-安装-Redis-镜像"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">1. 安装 Redis 镜像</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-创建-net2-网段"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">2. 创建 net2 网段</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-创建-6-节点-Redis-容器"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">3. 创建 6 节点 Redis 容器</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-启动-6-节点-Redis-服务器"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">4. 启动 6 节点 Redis 服务器</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-创建-Cluster-集群"><span class="post-toc-number">3.5.</span> <span class="post-toc-text">5. 创建 Cluster 集群</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#打包部署后端项目"><span class="post-toc-number">4.</span> <span class="post-toc-text">打包部署后端项目</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-进入人人开源后端项目，执行打包（修改配置文件，更改端口，打包三次生成三个-JAR-文件）"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">1. 进入人人开源后端项目，执行打包（修改配置文件，更改端口，打包三次生成三个 JAR 文件）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-安装-Java-镜像"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">2. 安装 Java 镜像</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-创建-3-节点-Java-容器"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">3. 创建 3 节点 Java 容器</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-安装-Nginx-镜像"><span class="post-toc-number">4.4.</span> <span class="post-toc-text">4. 安装 Nginx 镜像</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-创建-Nginx-容器，配置负载均衡"><span class="post-toc-number">4.5.</span> <span class="post-toc-text">5. 创建 Nginx 容器，配置负载均衡</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6-在-Nginx-容器安装-Keepalived"><span class="post-toc-number">4.6.</span> <span class="post-toc-text">6. 在 Nginx 容器安装 Keepalived</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#打包部署前端项目"><span class="post-toc-number">5.</span> <span class="post-toc-text">打包部署前端项目</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-在前端项目路径下执行打包指令"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">1. 在前端项目路径下执行打包指令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-build-目录的文件拷贝到宿主机的-home-fn1-renren-vue、-home-fn2-renren-vue、-home-fn3-renren-vue-的目录下面"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">2. build 目录的文件拷贝到宿主机的/home/fn1/renren-vue、/home/fn2/renren-vue、/home/fn3/renren-vue 的目录下面</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-创建-3-节点的-Nginx，部署前端项目"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">3. 创建 3 节点的 Nginx，部署前端项目</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-配置负载均衡"><span class="post-toc-number">5.4.</span> <span class="post-toc-text">4. 配置负载均衡</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-配置双机热备"><span class="post-toc-number">5.5.</span> <span class="post-toc-text">5. 配置双机热备</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/微服务/Docker-常用命令及实践" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Docker 常用命令及实践</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-05-24 19:30:13" datetime="2018-05-24T11:30:13.000Z" itemprop="datePublished">2018-05-24</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/运维/">运维</a></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="Docker-虚拟机常用命令"><a href="#Docker-虚拟机常用命令" class="headerlink" title="Docker 虚拟机常用命令"></a>Docker 虚拟机常用命令</h2><h3 id="1-先更新软件包"><a href="#1-先更新软件包" class="headerlink" title="1. 先更新软件包"></a>1. 先更新软件包</h3><pre class=" language-shell"><code class="language-shell">yum -y update
+</code></pre>
+<h3 id="2-安装-Docker-虚拟机"><a href="#2-安装-Docker-虚拟机" class="headerlink" title="2. 安装 Docker 虚拟机"></a>2. 安装 Docker 虚拟机</h3><pre class=" language-shell"><code class="language-shell">yum install -y docker
+</code></pre>
+<h3 id="3-运行、重启、关闭-Docker-虚拟机"><a href="#3-运行、重启、关闭-Docker-虚拟机" class="headerlink" title="3. 运行、重启、关闭 Docker 虚拟机"></a>3. 运行、重启、关闭 Docker 虚拟机</h3><pre class=" language-shell"><code class="language-shell">service docker start
+service docker start
+service docker stop
+</code></pre>
+<h3 id="4-搜索镜像"><a href="#4-搜索镜像" class="headerlink" title="4. 搜索镜像"></a>4. 搜索镜像</h3><pre class=" language-shell"><code class="language-shell">docker search 镜像名称
+</code></pre>
+<h3 id="5-下载镜像"><a href="#5-下载镜像" class="headerlink" title="5. 下载镜像"></a>5. 下载镜像</h3><pre class=" language-shell"><code class="language-shell">docker pull 镜像名称
+</code></pre>
+<h3 id="6-查看镜像"><a href="#6-查看镜像" class="headerlink" title="6. 查看镜像"></a>6. 查看镜像</h3><pre class=" language-shell"><code class="language-shell">docker images
+</code></pre>
+<h3 id="7-删除镜像"><a href="#7-删除镜像" class="headerlink" title="7. 删除镜像"></a>7. 删除镜像</h3><pre class=" language-shell"><code class="language-shell">docker rmi 镜像名称
+</code></pre>
+<h3 id="8-运行容器"><a href="#8-运行容器" class="headerlink" title="8. 运行容器"></a>8. 运行容器</h3><pre class=" language-shell"><code class="language-shell">docker run 启动参数  镜像名称
+</code></pre>
+<h3 id="9-查看容器列表"><a href="#9-查看容器列表" class="headerlink" title="9. 查看容器列表"></a>9. 查看容器列表</h3><pre class=" language-shell"><code class="language-shell">docker ps -a
+</code></pre>
+<h3 id="10-停止、挂起、恢复容器"><a href="#10-停止、挂起、恢复容器" class="headerlink" title="10. 停止、挂起、恢复容器"></a>10. 停止、挂起、恢复容器</h3><pre class=" language-shell"><code class="language-shell">docker stop 容器ID
+docker pause 容器ID
+docker unpase 容器ID
+</code></pre>
+<h3 id="11-查看容器信息"><a href="#11-查看容器信息" class="headerlink" title="11. 查看容器信息"></a>11. 查看容器信息</h3><pre class=" language-shell"><code class="language-shell">docker inspect 容器ID
+</code></pre>
+<h3 id="12-删除容器"><a href="#12-删除容器" class="headerlink" title="12. 删除容器"></a>12. 删除容器</h3><pre class=" language-shell"><code class="language-shell">docker rm 容器ID
+</code></pre>
+<h3 id="13-数据卷管理"><a href="#13-数据卷管理" class="headerlink" title="13. 数据卷管理"></a>13. 数据卷管理</h3><pre class=" language-shell"><code class="language-shell">docker volume create 数据卷名称  #创建数据卷
+docker volume rm 数据卷名称  #删除数据卷
+docker volume inspect 数据卷名称  #查看数据卷
+</code></pre>
+<h3 id="14-网络管理"><a href="#14-网络管理" class="headerlink" title="14. 网络管理"></a>14. 网络管理</h3><pre class=" language-shell"><code class="language-shell">docker network ls 查看网络信息
+docker network create --subnet=网段 网络名称
+docker network rm 网络名称
+</code></pre>
+<h3 id="15-避免-VM-虚拟机挂起恢复之后，Docker-虚拟机断网"><a href="#15-避免-VM-虚拟机挂起恢复之后，Docker-虚拟机断网" class="headerlink" title="15. 避免 VM 虚拟机挂起恢复之后，Docker 虚拟机断网"></a>15. 避免 VM 虚拟机挂起恢复之后，Docker 虚拟机断网</h3><pre class=" language-shell"><code class="language-shell">vi /etc/sysctl.conf
+</code></pre>
+<p>文件中添加<code>net.ipv4.ip_forward=1</code>这个配置</p>
+<pre class=" language-shell"><code class="language-shell">#重启网络服务
+systemctl  restart network
+</code></pre>
+<h2 id="安装-PXC-集群，负载均衡，双机热备"><a href="#安装-PXC-集群，负载均衡，双机热备" class="headerlink" title="安装 PXC 集群，负载均衡，双机热备"></a>安装 PXC 集群，负载均衡，双机热备</h2><h3 id="1-安装-PXC-镜像"><a href="#1-安装-PXC-镜像" class="headerlink" title="1. 安装 PXC 镜像"></a>1. 安装 PXC 镜像</h3><pre class=" language-shell"><code class="language-shell">docker pull percona/percona-xtradb-cluster
+</code></pre>
+<h3 id="2-为-PXC-镜像改名"><a href="#2-为-PXC-镜像改名" class="headerlink" title="2. 为 PXC 镜像改名"></a>2. 为 PXC 镜像改名</h3><pre class=" language-shell"><code class="language-shell">docker tag percona/percona-xtradb-cluster pxc
+</code></pre>
+<h3 id="3-创建-net1-网段"><a href="#3-创建-net1-网段" class="headerlink" title="3. 创建 net1 网段"></a>3. 创建 net1 网段</h3><pre class=" language-shell"><code class="language-shell">docker network create --subnet=172.18.0.0/16 net1
+</code></pre>
+<h3 id="4-创建-5-个数据卷"><a href="#4-创建-5-个数据卷" class="headerlink" title="4. 创建 5 个数据卷"></a>4. 创建 5 个数据卷</h3><pre class=" language-shell"><code class="language-shell">docker volume create --name v1
+docker volume create --name v2
+docker volume create --name v3
+docker volume create --name v4
+docker volume create --name v5
+</code></pre>
+<h3 id="5-创建备份数据卷（用于热备份数据）"><a href="#5-创建备份数据卷（用于热备份数据）" class="headerlink" title="5. 创建备份数据卷（用于热备份数据）"></a>5. 创建备份数据卷（用于热备份数据）</h3><pre class=" language-shell"><code class="language-shell">docker volume create --name backup
+</code></pre>
+<h3 id="6-创建-5-节点的-PXC-集群"><a href="#6-创建-5-节点的-PXC-集群" class="headerlink" title="6. 创建 5 节点的 PXC 集群"></a>6. 创建 5 节点的 PXC 集群</h3><p>注意，每个 MySQL 容器创建之后，因为要执行 PXC 的初始化和加入集群等工作，耐心等待 1 分钟左右再用客户端连接 MySQL。另外，必须第 1 个 MySQL 节点启动成功，用 MySQL 客户端能连接上之后，再去创建其他 MySQL 节点。</p>
+<pre class=" language-shell"><code class="language-shell">#创建第1个MySQL节点
+docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=abc123456 -e CLUSTER_NAME=PXC -e XTRABACKUP_PASSWORD=abc123456 -v v1:/var/lib/mysql -v backup:/data --privileged --name=node1 --net=net1 --ip 172.18.0.2 pxc
+#创建第2个MySQL节点
+docker run -d -p 3307:3306 -e MYSQL_ROOT_PASSWORD=abc123456 -e CLUSTER_NAME=PXC -e XTRABACKUP_PASSWORD=abc123456 -e CLUSTER_JOIN=node1 -v v2:/var/lib/mysql -v backup:/data --privileged --name=node2 --net=net1 --ip 172.18.0.3 pxc
+#创建第3个MySQL节点
+docker run -d -p 3308:3306 -e MYSQL_ROOT_PASSWORD=abc123456 -e CLUSTER_NAME=PXC -e XTRABACKUP_PASSWORD=abc123456 -e CLUSTER_JOIN=node1 -v v3:/var/lib/mysql --privileged --name=node3 --net=net1 --ip 172.18.0.4 pxc
+#创建第4个MySQL节点
+docker run -d -p 3309:3306 -e MYSQL_ROOT_PASSWORD=abc123456 -e CLUSTER_NAME=PXC -e XTRABACKUP_PASSWORD=abc123456 -e CLUSTER_JOIN=node1 -v v4:/var/lib/mysql --privileged --name=node4 --net=net1 --ip 172.18.0.5 pxc
+#创建第5个MySQL节点
+docker run -d -p 3310:3306 -e MYSQL_ROOT_PASSWORD=abc123456 -e CLUSTER_NAME=PXC -e XTRABACKUP_PASSWORD=abc123456 -e CLUSTER_JOIN=node1 -v v5:/var/lib/mysql -v backup:/data --privileged --name=node5 --net=net1 --ip 172.18.0.6 pxc
+</code></pre>
+<h3 id="7-安装-Haproxy-镜像"><a href="#7-安装-Haproxy-镜像" class="headerlink" title="7. 安装 Haproxy 镜像"></a>7. 安装 Haproxy 镜像</h3><pre class=" language-shell"><code class="language-shell">docker pull haproxy
+</code></pre>
+<h3 id="8-宿主机上编写-Haproxy-配置文件"><a href="#8-宿主机上编写-Haproxy-配置文件" class="headerlink" title="8. 宿主机上编写 Haproxy 配置文件"></a>8. 宿主机上编写 Haproxy 配置文件</h3><pre class=" language-shell"><code class="language-shell">vi /home/soft/haproxy.cfg
+</code></pre>
+<p><strong>配置文件如下：</strong></p>
+<pre class=" language-properties"><code class="language-properties">global
+<span class="token comment" spellcheck="true">   #工作目录</span>
+<span class="token attr-name">   chroot</span> <span class="token attr-value">/usr/local/etc/haproxy</span>
+<span class="token comment" spellcheck="true">   #日志文件，使用rsyslog服务中local5日志设备（/var/log/local5），等级info</span>
+<span class="token attr-name">   log</span> <span class="token attr-value">127.0.0.1 local5 info</span>
+<span class="token comment" spellcheck="true">   #守护进程运行</span>
+   daemon
+
+defaults
+<span class="token attr-name">   log</span> <span class="token attr-value">   global</span>
+<span class="token attr-name">   mode</span> <span class="token attr-value">   http</span>
+<span class="token comment" spellcheck="true">   #日志格式</span>
+<span class="token attr-name">   option</span> <span class="token attr-value">   httplog</span>
+<span class="token comment" spellcheck="true">   #日志中不记录负载均衡的心跳检测记录</span>
+<span class="token attr-name">   option</span> <span class="token attr-value">   dontlognull</span>
+<span class="token comment" spellcheck="true">   #连接超时（毫秒）</span>
+<span class="token attr-name">   timeout</span> <span class="token attr-value">connect 5000</span>
+<span class="token comment" spellcheck="true">   #客户端超时（毫秒）</span>
+<span class="token attr-name">   timeout</span> <span class="token attr-value">client  50000</span>
+<span class="token comment" spellcheck="true">   #服务器超时（毫秒）</span>
+<span class="token attr-name">   timeout</span> <span class="token attr-value">server  50000</span>
+
+<span class="token comment" spellcheck="true">#监控界面</span>
+<span class="token attr-name">listen</span> <span class="token attr-value"> admin_stats</span>
+<span class="token comment" spellcheck="true">   #监控界面的访问的IP和端口</span>
+<span class="token attr-name">   bind</span> <span class="token attr-value"> 0.0.0.0:8888</span>
+<span class="token comment" spellcheck="true">   #访问协议</span>
+<span class="token attr-name">   mode</span> <span class="token attr-value">       http</span>
+<span class="token comment" spellcheck="true">   #URI相对地址</span>
+<span class="token attr-name">   stats</span> <span class="token attr-value">uri   /dbs</span>
+<span class="token comment" spellcheck="true">   #统计报告格式</span>
+<span class="token attr-name">   stats</span> <span class="token attr-value">realm     Global\ statistics</span>
+<span class="token comment" spellcheck="true">   #登陆帐户信息</span>
+<span class="token attr-name">   stats</span> <span class="token attr-value">auth  admin:abc123456</span>
+<span class="token comment" spellcheck="true">#数据库负载均衡</span>
+<span class="token attr-name">listen</span> <span class="token attr-value"> proxy-mysql</span>
+<span class="token comment" spellcheck="true">   #访问的IP和端口</span>
+<span class="token attr-name">   bind</span> <span class="token attr-value"> 0.0.0.0:3306</span>
+<span class="token comment" spellcheck="true">   #网络协议</span>
+<span class="token attr-name">   mode</span> <span class="token attr-value"> tcp</span>
+<span class="token comment" spellcheck="true">   #负载均衡算法（轮询算法）</span>
+<span class="token comment" spellcheck="true">   #轮询算法：roundrobin</span>
+<span class="token comment" spellcheck="true">   #权重算法：static-rr</span>
+<span class="token comment" spellcheck="true">   #最少连接算法：leastconn</span>
+<span class="token comment" spellcheck="true">   #请求源IP算法：source</span>
+<span class="token attr-name">   balance</span> <span class="token attr-value"> roundrobin</span>
+<span class="token comment" spellcheck="true">   #日志格式</span>
+<span class="token attr-name">   option</span> <span class="token attr-value"> tcplog</span>
+<span class="token comment" spellcheck="true">   #在MySQL中创建一个没有权限的haproxy用户，密码为空。Haproxy使用这个账户对MySQL数据库心跳检测</span>
+<span class="token attr-name">   option</span> <span class="token attr-value"> mysql-check user haproxy</span>
+<span class="token attr-name">   server</span> <span class="token attr-value"> MySQL_1 172.18.0.2:3306 check weight 1 maxconn 2000</span>
+<span class="token attr-name">   server</span> <span class="token attr-value"> MySQL_2 172.18.0.3:3306 check weight 1 maxconn 2000</span>
+<span class="token attr-name">   server</span> <span class="token attr-value"> MySQL_3 172.18.0.4:3306 check weight 1 maxconn 2000</span>
+<span class="token attr-name">   server</span> <span class="token attr-value"> MySQL_4 172.18.0.5:3306 check weight 1 maxconn 2000</span>
+<span class="token attr-name">   server</span> <span class="token attr-value"> MySQL_5 172.18.0.6:3306 check weight 1 maxconn 2000</span>
+<span class="token comment" spellcheck="true">   #使用keepalive检测死链</span>
+<span class="token attr-name">   option</span> <span class="token attr-value"> tcpka</span>
+</code></pre>
+<h3 id="9-创建两个-Haproxy-容器"><a href="#9-创建两个-Haproxy-容器" class="headerlink" title="9. 创建两个 Haproxy 容器"></a>9. 创建两个 Haproxy 容器</h3><pre class=" language-shell"><code class="language-shell">#创建第1个Haproxy负载均衡服务器
+docker run -it -d -p 4001:8888 -p 4002:3306 -v /home/soft/haproxy:/usr/local/etc/haproxy --name h1 --privileged --net=net1 --ip 172.18.0.7 haproxy
+#进入h1容器，启动Haproxy
+docker exec -it h1 bash
+haproxy -f /usr/local/etc/haproxy/haproxy.cfg
+#创建第2个Haproxy负载均衡服务器
+docker run -it -d -p 4003:8888 -p 4004:3306 -v /home/soft/haproxy:/usr/local/etc/haproxy --name h2 --privileged --net=net1 --ip 172.18.0.8 haproxy
+#进入h2容器，启动Haproxy
+docker exec -it h2 bash
+haproxy -f /usr/local/etc/haproxy/haproxy.cfg
+</code></pre>
+<h3 id="10-Haproxy-容器内安装-Keepalived，设置虚拟-IP"><a href="#10-Haproxy-容器内安装-Keepalived，设置虚拟-IP" class="headerlink" title="10. Haproxy 容器内安装 Keepalived，设置虚拟 IP"></a>10. Haproxy 容器内安装 Keepalived，设置虚拟 IP</h3><pre class=" language-shell"><code class="language-shell">#进入h1容器
+docker exec -it h1 bash
+#更新软件包
+apt-get update
+#安装VIM
+apt-get install vim
+#安装Keepalived
+apt-get install keepalived
+#编辑Keepalived配置文件（参考下方配置文件）
+vim /etc/keepalived/keepalived.conf
+#启动Keepalived
+service keepalived start
+#宿主机执行ping命令
+ping 172.18.0.201
+</code></pre>
+<p><strong>配置文件内容如下：</strong></p>
+<pre><code>vrrp_instance  VI_1 {
+    state  MASTER
+    interface  eth0
+    virtual_router_id  51
+    priority  100
+    advert_int  1
+    authentication {
+        auth_type  PASS
+        auth_pass  123456
+    }
+    virtual_ipaddress {
+        172.18.0.201
+    }
+}
+</code></pre><pre class=" language-shell"><code class="language-shell">#进入h2容器
+docker exec -it h2 bash
+#更新软件包
+apt-get update
+#安装VIM
+apt-get install vim
+#安装Keepalived
+apt-get install keepalived
+#编辑Keepalived配置文件
+vim /etc/keepalived/keepalived.conf
+#启动Keepalived
+service keepalived start
+#宿主机执行ping命令
+ping 172.18.0.201
+</code></pre>
+<p><strong>配置文件内容如下：</strong></p>
+<pre class=" language-shell"><code class="language-shell">vrrp_instance  VI_1 {
+    state  MASTER
+    interface  eth0
+    virtual_router_id  51
+    priority  100
+    advert_int  1
+    authentication {
+        auth_type  PASS
+        auth_pass  123456
+    }
+    virtual_ipaddress {
+        172.18.0.201
+    }
+}
+</code></pre>
+<h3 id="11-宿主机安装-Keepalived，实现双击热备"><a href="#11-宿主机安装-Keepalived，实现双击热备" class="headerlink" title="11. 宿主机安装 Keepalived，实现双击热备"></a>11. 宿主机安装 Keepalived，实现双击热备</h3><pre class=" language-shell"><code class="language-shell">#宿主机执行安装Keepalived
+yum -y install keepalived
+#修改Keepalived配置文件
+vi /etc/keepalived/keepalived.conf
+#启动Keepalived
+service keepalived start
+</code></pre>
+<p><strong>Keepalived 配置文件如下：</strong></p>
+<pre class=" language-shell"><code class="language-shell">vrrp_instance VI_1 {
+    state MASTER
+    interface ens33
+    virtual_router_id 51
+    priority 100
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    virtual_ipaddress {
+           192.168.99.150
+    }
+}
+
+virtual_server 192.168.99.150 8888 {
+    delay_loop 3
+    lb_algo rr
+    lb_kind NAT
+    persistence_timeout 50
+    protocol TCP
+
+    real_server 172.18.0.201 8888 {
+        weight 1
+    }
+}
+
+virtual_server 192.168.99.150 3306 {
+    delay_loop 3
+    lb_algo rr
+    lb_kind NAT
+    persistence_timeout 50
+    protocol TCP
+
+    real_server 172.18.0.201 3306 {
+        weight 1
+    }
+}
+</code></pre>
+<h3 id="12-热备份数据"><a href="#12-热备份数据" class="headerlink" title="12. 热备份数据"></a>12. 热备份数据</h3><pre class=" language-shell"><code class="language-shell">#进入node1容器
+docker exec -it node1 bash
+#更新软件包
+apt-get update
+#安装热备工具
+apt-get install percona-xtrabackup-24
+#全量热备
+innobackupex --user=root --password=abc123456 /data/backup/full
+</code></pre>
+<h3 id="13-冷还原数据"><a href="#13-冷还原数据" class="headerlink" title="13. 冷还原数据"></a>13. 冷还原数据</h3><p>停止其余 4 个节点，并删除节点</p>
+<pre class=" language-shell"><code class="language-shell">docker stop node2
+docker stop node3
+docker stop node4
+docker stop node5
+docker rm node2
+docker rm node3
+docker rm node4
+docker rm node5
+</code></pre>
+<p>node1 容器中删除 MySQL 的数据</p>
+<pre class=" language-shell"><code class="language-shell">#删除数据
+rm -rf /var/lib/mysql/*
+#清空事务
+innobackupex --user=root --password=abc123456 --apply-back /data/backup/full/2018-04-15_05-09-07/
+#还原数据
+innobackupex --user=root --password=abc123456 --copy-back  /data/backup/full/2018-04-15_05-09-07/
+</code></pre>
+<p>重新创建其余 4 个节点，组件 PXC 集群</p>
+<h2 id="安装-Redis，配置-RedisCluster-集群"><a href="#安装-Redis，配置-RedisCluster-集群" class="headerlink" title="安装 Redis，配置 RedisCluster 集群"></a>安装 Redis，配置 RedisCluster 集群</h2><h3 id="1-安装-Redis-镜像"><a href="#1-安装-Redis-镜像" class="headerlink" title="1. 安装 Redis 镜像"></a>1. 安装 Redis 镜像</h3><pre class=" language-shell"><code class="language-shell">docker pull yyyyttttwwww/redis
+</code></pre>
+<h3 id="2-创建-net2-网段"><a href="#2-创建-net2-网段" class="headerlink" title="2. 创建 net2 网段"></a>2. 创建 net2 网段</h3><pre class=" language-shell"><code class="language-shell">docker network create --subnet=172.19.0.0/16 net2
+</code></pre>
+<h3 id="3-创建-6-节点-Redis-容器"><a href="#3-创建-6-节点-Redis-容器" class="headerlink" title="3. 创建 6 节点 Redis 容器"></a>3. 创建 6 节点 Redis 容器</h3><pre class=" language-shell"><code class="language-shell">docker run -it -d --name r1 -p 5001:6379 --net=net2 --ip 172.19.0.2 redis bash
+docker run -it -d --name r2 -p 5002:6379 --net=net2 --ip 172.19.0.3 redis bash
+docker run -it -d --name r3 -p 5003:6379 --net=net2 --ip 172.19.0.4 redis bash
+docker run -it -d --name r4 -p 5004:6379 --net=net2 --ip 172.19.0.5 redis bash
+docker run -it -d --name r5 -p 5005:6379 --net=net2 --ip 172.19.0.6 redis bash
+</code></pre>
+<h3 id="4-启动-6-节点-Redis-服务器"><a href="#4-启动-6-节点-Redis-服务器" class="headerlink" title="4. 启动 6 节点 Redis 服务器"></a>4. 启动 6 节点 Redis 服务器</h3><pre class=" language-shell"><code class="language-shell">#进入r1节点
+docker exec -it r1 bash
+cp /home/redis/redis.conf /usr/redis/redis.conf
+cd /usr/redis/src
+./redis-server ../redis.conf
+#进入r2节点
+docker exec -it r2 bash
+cp /home/redis/redis.conf /usr/redis/redis.conf
+cd /usr/redis/src
+./redis-server ../redis.conf
+#进入r3节点
+docker exec -it r3 bash
+cp /home/redis/redis.conf /usr/redis/redis.conf
+cd /usr/redis/src
+./redis-server ../redis.conf
+#进入r4节点
+docker exec -it r4 bash
+cp /home/redis/redis.conf /usr/redis/redis.conf
+cd /usr/redis/src
+./redis-server ../redis.conf
+#进入r5节点
+docker exec -it r5 bash
+cp /home/redis/redis.conf /usr/redis/redis.conf
+cd /usr/redis/src
+./redis-server ../redis.conf
+#进入r6节点
+docker exec -it r6 bash
+cp /home/redis/redis.conf /usr/redis/redis.conf
+cd /usr/redis/src
+./redis-server ../redis.conf
+</code></pre>
+<h3 id="5-创建-Cluster-集群"><a href="#5-创建-Cluster-集群" class="headerlink" title="5. 创建 Cluster 集群"></a>5. 创建 Cluster 集群</h3><pre class=" language-shell"><code class="language-shell">#在r1节点上执行下面的指令
+cd /usr/redis/src
+mkdir -p ../cluster
+cp redis-trib.rb ../cluster/
+cd ../cluster
+#创建Cluster集群
+./redis-trib.rb create --replicas 1 172.19.0.2:6379 172.19.0.3:6379 172.19.0.4:6379 172.19.0.5:6379 172.19.0.6:6379 172.19.0.7:6379
+</code></pre>
+<h2 id="打包部署后端项目"><a href="#打包部署后端项目" class="headerlink" title="打包部署后端项目"></a>打包部署后端项目</h2><h3 id="1-进入人人开源后端项目，执行打包（修改配置文件，更改端口，打包三次生成三个-JAR-文件）"><a href="#1-进入人人开源后端项目，执行打包（修改配置文件，更改端口，打包三次生成三个-JAR-文件）" class="headerlink" title="1. 进入人人开源后端项目，执行打包（修改配置文件，更改端口，打包三次生成三个 JAR 文件）"></a>1. 进入人人开源后端项目，执行打包（修改配置文件，更改端口，打包三次生成三个 JAR 文件）</h3><pre class=" language-shell"><code class="language-shell">mvn clean install -Dmaven.test.skip=true
+</code></pre>
+<h3 id="2-安装-Java-镜像"><a href="#2-安装-Java-镜像" class="headerlink" title="2. 安装 Java 镜像"></a>2. 安装 Java 镜像</h3><pre class=" language-shell"><code class="language-shell">docker pull java
+</code></pre>
+<h3 id="3-创建-3-节点-Java-容器"><a href="#3-创建-3-节点-Java-容器" class="headerlink" title="3. 创建 3 节点 Java 容器"></a>3. 创建 3 节点 Java 容器</h3><pre class=" language-shell"><code class="language-shell">#创建数据卷，上传JAR文件
+docker volume create j1
+#启动容器
+docker run -it -d --name j1 -v j1:/home/soft --net=host java
+#进入j1容器
+docker exec -it j1 bash
+#启动Java项目
+nohup java -jar /home/soft/renren-fast.jar
+
+#创建数据卷，上传JAR文件
+docker volume create j2
+#启动容器
+docker run -it -d --name j2 -v j2:/home/soft --net=host java
+#进入j1容器
+docker exec -it j2 bash
+#启动Java项目
+nohup java -jar /home/soft/renren-fast.jar
+
+#创建数据卷，上传JAR文件
+docker volume create j3
+#启动容器
+docker run -it -d --name j3 -v j3:/home/soft --net=host java
+#进入j1容器
+docker exec -it j3 bash
+#启动Java项目
+nohup java -jar /home/soft/renren-fast.jar
+</code></pre>
+<h3 id="4-安装-Nginx-镜像"><a href="#4-安装-Nginx-镜像" class="headerlink" title="4. 安装 Nginx 镜像"></a>4. 安装 Nginx 镜像</h3><pre class=" language-shell"><code class="language-shell">docker pull nginx
+</code></pre>
+<h3 id="5-创建-Nginx-容器，配置负载均衡"><a href="#5-创建-Nginx-容器，配置负载均衡" class="headerlink" title="5. 创建 Nginx 容器，配置负载均衡"></a>5. 创建 Nginx 容器，配置负载均衡</h3><p>宿主机上/home/n1/nginx.conf 配置文件内容如下：</p>
+<pre class=" language-properties"><code class="language-properties"><span class="token attr-name">user</span> <span class="token attr-value"> nginx;</span>
+<span class="token attr-name">worker_processes</span> <span class="token attr-value"> 1;</span>
+<span class="token attr-name">error_log</span> <span class="token attr-value"> /var/log/nginx/error.log warn;</span>
+<span class="token attr-name">pid</span> <span class="token attr-value">       /var/run/nginx.pid;</span>
+
+<span class="token attr-name">events</span> <span class="token attr-value">{</span>
+<span class="token attr-name">   worker_connections</span> <span class="token attr-value"> 1024;</span>
+}
+
+<span class="token attr-name">http</span> <span class="token attr-value">{</span>
+<span class="token attr-name">   include</span> <span class="token attr-value">      /etc/nginx/mime.types;</span>
+<span class="token attr-name">   default_type</span> <span class="token attr-value"> application/octet-stream;</span>
+
+<span class="token attr-name">   log_format</span> <span class="token attr-value"> main  '$remote_addr - $remote_user [$time_local] "$request" '</span>
+<span class="token attr-name">                     '$status</span> <span class="token attr-value">$body_bytes_sent "$http_referer" '</span>
+<span class="token attr-name">                     '"$http_user_agent"</span> <span class="token attr-value">"$http_x_forwarded_for"';</span>
+
+<span class="token attr-name">   access_log</span> <span class="token attr-value"> /var/log/nginx/access.log  main;</span>
+
+<span class="token attr-name">   sendfile</span> <span class="token attr-value">       on;</span>
+<span class="token comment" spellcheck="true">   #tcp_nopush     on;</span>
+
+<span class="token attr-name">   keepalive_timeout</span> <span class="token attr-value"> 65;</span>
+
+<span class="token comment" spellcheck="true">   #gzip  on;</span>
+
+<span class="token attr-name">   proxy_redirect</span> <span class="token attr-value">         off;</span>
+<span class="token attr-name">   proxy_set_header</span> <span class="token attr-value">       Host $host;</span>
+<span class="token attr-name">   proxy_set_header</span> <span class="token attr-value">       X-Real-IP $remote_addr;</span>
+<span class="token attr-name">   proxy_set_header</span> <span class="token attr-value">       X-Forwarded-For $proxy_add_x_forwarded_for;</span>
+<span class="token attr-name">   client_max_body_size</span> <span class="token attr-value">   10m;</span>
+<span class="token attr-name">   client_body_buffer_size</span> <span class="token attr-value">  128k;</span>
+<span class="token attr-name">   proxy_connect_timeout</span> <span class="token attr-value">  5s;</span>
+<span class="token attr-name">   proxy_send_timeout</span> <span class="token attr-value">     5s;</span>
+<span class="token attr-name">   proxy_read_timeout</span> <span class="token attr-value">     5s;</span>
+<span class="token attr-name">   proxy_buffer_size</span> <span class="token attr-value">       4k;</span>
+<span class="token attr-name">   proxy_buffers</span> <span class="token attr-value">          4 32k;</span>
+<span class="token attr-name">   proxy_busy_buffers_size</span> <span class="token attr-value"> 64k;</span>
+<span class="token attr-name">   proxy_temp_file_write_size</span> <span class="token attr-value">64k;</span>
+
+<span class="token attr-name">   upstream</span> <span class="token attr-value">tomcat {</span>
+<span class="token attr-name">       server</span> <span class="token attr-value">192.168.99.104:6001;</span>
+<span class="token attr-name">       server</span> <span class="token attr-value">192.168.99.104:6002;</span>
+<span class="token attr-name">       server</span> <span class="token attr-value">192.168.99.104:6003;</span>
+   }
+<span class="token attr-name">   server</span> <span class="token attr-value">{</span>
+<span class="token attr-name">       listen</span> <span class="token attr-value">      6101;</span>
+<span class="token attr-name">       server_name</span> <span class="token attr-value"> 192.168.99.104;</span>
+<span class="token attr-name">       location</span> <span class="token attr-value">/ {</span>
+<span class="token attr-name">           proxy_pass</span> <span class="token attr-value">  http://tomcat;</span>
+<span class="token attr-name">           index</span> <span class="token attr-value"> index.html index.htm;</span>
+       }
+   }
+}
+</code></pre>
+<p><strong>创建第 1 个 Nginx 节点</strong></p>
+<pre class=" language-shell"><code class="language-shell">docker run -it -d --name n1 -v /home/n1/nginx.conf:/etc/nginx/nginx.conf --net=host --privileged nginx
+</code></pre>
+<p><strong>宿主机上/home/n2/nginx.conf 配置文件内容如下：</strong></p>
+<pre class=" language-properties"><code class="language-properties"><span class="token attr-name">user</span> <span class="token attr-value"> nginx;</span>
+<span class="token attr-name">worker_processes</span> <span class="token attr-value"> 1;</span>
+<span class="token attr-name">error_log</span> <span class="token attr-value"> /var/log/nginx/error.log warn;</span>
+<span class="token attr-name">pid</span> <span class="token attr-value">       /var/run/nginx.pid;</span>
+
+<span class="token attr-name">events</span> <span class="token attr-value">{</span>
+<span class="token attr-name">   worker_connections</span> <span class="token attr-value"> 1024;</span>
+}
+
+<span class="token attr-name">http</span> <span class="token attr-value">{</span>
+<span class="token attr-name">   include</span> <span class="token attr-value">      /etc/nginx/mime.types;</span>
+<span class="token attr-name">   default_type</span> <span class="token attr-value"> application/octet-stream;</span>
+
+<span class="token attr-name">   log_format</span> <span class="token attr-value"> main  '$remote_addr - $remote_user [$time_local] "$request" '</span>
+<span class="token attr-name">                     '$status</span> <span class="token attr-value">$body_bytes_sent "$http_referer" '</span>
+<span class="token attr-name">                     '"$http_user_agent"</span> <span class="token attr-value">"$http_x_forwarded_for"';</span>
+
+<span class="token attr-name">   access_log</span> <span class="token attr-value"> /var/log/nginx/access.log  main;</span>
+
+<span class="token attr-name">   sendfile</span> <span class="token attr-value">       on;</span>
+<span class="token comment" spellcheck="true">   #tcp_nopush     on;</span>
+
+<span class="token attr-name">   keepalive_timeout</span> <span class="token attr-value"> 65;</span>
+
+<span class="token comment" spellcheck="true">   #gzip  on;</span>
+
+<span class="token attr-name">   proxy_redirect</span> <span class="token attr-value">         off;</span>
+<span class="token attr-name">   proxy_set_header</span> <span class="token attr-value">       Host $host;</span>
+<span class="token attr-name">   proxy_set_header</span> <span class="token attr-value">       X-Real-IP $remote_addr;</span>
+<span class="token attr-name">   proxy_set_header</span> <span class="token attr-value">       X-Forwarded-For $proxy_add_x_forwarded_for;</span>
+<span class="token attr-name">   client_max_body_size</span> <span class="token attr-value">   10m;</span>
+<span class="token attr-name">   client_body_buffer_size</span> <span class="token attr-value">  128k;</span>
+<span class="token attr-name">   proxy_connect_timeout</span> <span class="token attr-value">  5s;</span>
+<span class="token attr-name">   proxy_send_timeout</span> <span class="token attr-value">     5s;</span>
+<span class="token attr-name">   proxy_read_timeout</span> <span class="token attr-value">     5s;</span>
+<span class="token attr-name">   proxy_buffer_size</span> <span class="token attr-value">       4k;</span>
+<span class="token attr-name">   proxy_buffers</span> <span class="token attr-value">          4 32k;</span>
+<span class="token attr-name">   proxy_busy_buffers_size</span> <span class="token attr-value"> 64k;</span>
+<span class="token attr-name">   proxy_temp_file_write_size</span> <span class="token attr-value">64k;</span>
+
+<span class="token attr-name">   upstream</span> <span class="token attr-value">tomcat {</span>
+<span class="token attr-name">       server</span> <span class="token attr-value">192.168.99.104:6001;</span>
+<span class="token attr-name">       server</span> <span class="token attr-value">192.168.99.104:6002;</span>
+<span class="token attr-name">       server</span> <span class="token attr-value">192.168.99.104:6003;</span>
+   }
+<span class="token attr-name">   server</span> <span class="token attr-value">{</span>
+<span class="token attr-name">       listen</span> <span class="token attr-value">      6102;</span>
+<span class="token attr-name">       server_name</span> <span class="token attr-value"> 192.168.99.104;</span>
+<span class="token attr-name">       location</span> <span class="token attr-value">/ {</span>
+<span class="token attr-name">           proxy_pass</span> <span class="token attr-value">  http://tomcat;</span>
+<span class="token attr-name">           index</span> <span class="token attr-value"> index.html index.htm;</span>
+       }
+   }
+}
+</code></pre>
+<p><strong>创建第 2 个 Nginx 节点</strong></p>
+<pre class=" language-shell"><code class="language-shell">docker run -it -d --name n2 -v /home/n2/nginx.conf:/etc/nginx/nginx.conf --net=host --privileged nginx
+</code></pre>
+<h3 id="6-在-Nginx-容器安装-Keepalived"><a href="#6-在-Nginx-容器安装-Keepalived" class="headerlink" title="6. 在 Nginx 容器安装 Keepalived"></a>6. 在 Nginx 容器安装 Keepalived</h3><pre class=" language-shell"><code class="language-shell">#进入n1节点
+docker exec -it n1 bash
+#更新软件包
+apt-get update
+#安装VIM
+apt-get install vim
+#安装Keepalived
+apt-get install keepalived
+#编辑Keepalived配置文件(如下)
+vim /etc/keepalived/keepalived.conf
+#启动Keepalived
+service keepalived start
+</code></pre>
+<pre><code>vrrp_instance VI_1 {
+   state MASTER
+   interface ens33
+   virtual_router_id 51
+   priority 100
+   advert_int 1
+   authentication {
+       auth_type PASS
+       auth_pass 123456
+   }
+   virtual_ipaddress {
+       192.168.99.151
+   }
+}
+virtual_server 192.168.99.151 6201 {
+   delay_loop 3
+   lb_algo rr
+   lb_kind NAT
+   persistence_timeout 50
+   protocol TCP
+   real_server 192.168.99.104 6101 {
+       weight 1
+   }
+}
+</code></pre><pre class=" language-shell"><code class="language-shell">#进入n1节点
+docker exec -it n2 bash
+#更新软件包
+apt-get update
+#安装VIM
+apt-get install vim
+#安装Keepalived
+apt-get install keepalived
+#编辑Keepalived配置文件(如下)
+vim /etc/keepalived/keepalived.conf
+#启动Keepalived
+service keepalived start
+</code></pre>
+<pre class=" language-shell"><code class="language-shell">vrrp_instance VI_1 {
+   state MASTER
+   interface ens33
+   virtual_router_id 51
+   priority 100
+   advert_int 1
+   authentication {
+       auth_type PASS
+       auth_pass 123456
+   }
+   virtual_ipaddress {
+       192.168.99.151
+   }
+}
+virtual_server 192.168.99.151 6201 {
+   delay_loop 3
+   lb_algo rr
+   lb_kind NAT
+   persistence_timeout 50
+   protocol TCP
+   real_server 192.168.99.104 6102 {
+       weight 1
+   }
+}
+</code></pre>
+<h2 id="打包部署前端项目"><a href="#打包部署前端项目" class="headerlink" title="打包部署前端项目"></a>打包部署前端项目</h2><h3 id="1-在前端项目路径下执行打包指令"><a href="#1-在前端项目路径下执行打包指令" class="headerlink" title="1. 在前端项目路径下执行打包指令"></a>1. 在前端项目路径下执行打包指令</h3><pre class=" language-shell"><code class="language-shell">npm run build
+</code></pre>
+<h3 id="2-build-目录的文件拷贝到宿主机的-home-fn1-renren-vue、-home-fn2-renren-vue、-home-fn3-renren-vue-的目录下面"><a href="#2-build-目录的文件拷贝到宿主机的-home-fn1-renren-vue、-home-fn2-renren-vue、-home-fn3-renren-vue-的目录下面" class="headerlink" title="2. build 目录的文件拷贝到宿主机的/home/fn1/renren-vue、/home/fn2/renren-vue、/home/fn3/renren-vue 的目录下面"></a>2. build 目录的文件拷贝到宿主机的/home/fn1/renren-vue、/home/fn2/renren-vue、/home/fn3/renren-vue 的目录下面</h3><h3 id="3-创建-3-节点的-Nginx，部署前端项目"><a href="#3-创建-3-节点的-Nginx，部署前端项目" class="headerlink" title="3. 创建 3 节点的 Nginx，部署前端项目"></a>3. 创建 3 节点的 Nginx，部署前端项目</h3><p>宿主机/home/fn1/nginx.conf 的配置文件</p>
+<pre><code>user  nginx;
+worker_processes  1;
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+
+events {
+   worker_connections  1024;
+}
+
+http {
+   include       /etc/nginx/mime.types;
+   default_type  application/octet-stream;
+
+   log_format  main  &#39;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#39;
+                     &#39;$status $body_bytes_sent &quot;$http_referer&quot; &#39;
+                     &#39;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#39;;
+
+   access_log  /var/log/nginx/access.log  main;
+
+   sendfile        on;
+   #tcp_nopush     on;
+
+   keepalive_timeout  65;
+
+   #gzip  on;
+
+   proxy_redirect          off;
+   proxy_set_header        Host $host;
+   proxy_set_header        X-Real-IP $remote_addr;
+   proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+   client_max_body_size    10m;
+   client_body_buffer_size   128k;
+   proxy_connect_timeout   5s;
+   proxy_send_timeout      5s;
+   proxy_read_timeout      5s;
+   proxy_buffer_size        4k;
+   proxy_buffers           4 32k;
+   proxy_busy_buffers_size  64k;
+   proxy_temp_file_write_size 64k;
+
+   server {
+       listen 6501;
+       server_name  192.168.99.104;
+       location  /  {
+           root  /home/fn1/renren-vue;
+           index  index.html;
+       }
+   }
+}
+</code></pre><pre class=" language-shell"><code class="language-shell">#启动第fn1节点
+docker run -it -d --name fn1 -v /home/fn1/nginx.conf:/etc/nginx/nginx.conf -v /home/fn1/renren-vue:/home/fn1/renren-vue --privileged --net=host nginx
+</code></pre>
+<p>宿主机/home/fn2/nginx.conf 的配置文件</p>
+<pre class=" language-shell"><code class="language-shell">user  nginx;
+worker_processes  1;
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+
+events {
+   worker_connections  1024;
+}
+
+http {
+   include       /etc/nginx/mime.types;
+   default_type  application/octet-stream;
+
+   log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                     '$status $body_bytes_sent "$http_referer" '
+                     '"$http_user_agent" "$http_x_forwarded_for"';
+
+   access_log  /var/log/nginx/access.log  main;
+
+   sendfile        on;
+   #tcp_nopush     on;
+
+   keepalive_timeout  65;
+
+   #gzip  on;
+
+   proxy_redirect          off;
+   proxy_set_header        Host $host;
+   proxy_set_header        X-Real-IP $remote_addr;
+   proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+   client_max_body_size    10m;
+   client_body_buffer_size   128k;
+   proxy_connect_timeout   5s;
+   proxy_send_timeout      5s;
+   proxy_read_timeout      5s;
+   proxy_buffer_size        4k;
+   proxy_buffers           4 32k;
+   proxy_busy_buffers_size  64k;
+   proxy_temp_file_write_size 64k;
+
+   server {
+       listen 6502;
+       server_name  192.168.99.104;
+       location  /  {
+           root  /home/fn2/renren-vue;
+           index  index.html;
+       }
+   }
+}
+</code></pre>
+<pre class=" language-shell"><code class="language-shell">#启动第fn2节点
+docker run -it -d --name fn2 -v /home/fn2/nginx.conf:/etc/nginx/nginx.conf -v /home/fn2/renren-vue:/home/fn2/renren-vue --privileged --net=host nginx
+</code></pre>
+<p>宿主机/home/fn3/nginx.conf 的配置文件</p>
+<pre class=" language-shell"><code class="language-shell">user  nginx;
+worker_processes  1;
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+
+events {
+   worker_connections  1024;
+}
+
+http {
+   include       /etc/nginx/mime.types;
+   default_type  application/octet-stream;
+
+   log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                     '$status $body_bytes_sent "$http_referer" '
+                     '"$http_user_agent" "$http_x_forwarded_for"';
+
+   access_log  /var/log/nginx/access.log  main;
+
+   sendfile        on;
+   #tcp_nopush     on;
+
+   keepalive_timeout  65;
+
+   #gzip  on;
+
+   proxy_redirect          off;
+   proxy_set_header        Host $host;
+   proxy_set_header        X-Real-IP $remote_addr;
+   proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+   client_max_body_size    10m;
+   client_body_buffer_size   128k;
+   proxy_connect_timeout   5s;
+   proxy_send_timeout      5s;
+   proxy_read_timeout      5s;
+   proxy_buffer_size        4k;
+   proxy_buffers           4 32k;
+   proxy_busy_buffers_size  64k;
+   proxy_temp_file_write_size 64k;
+
+   server {
+       listen 6503;
+       server_name  192.168.99.104;
+       location  /  {
+           root  /home/fn3/renren-vue;
+           index  index.html;
+       }
+   }
+}
+</code></pre>
+<p>启动 fn3 节点</p>
+<pre class=" language-shell"><code class="language-shell">#启动第fn3节点
+docker run -it -d --name fn3 -v /home/fn3/nginx.conf:/etc/nginx/nginx.conf -v /home/fn3/renren-vue:/home/fn3/renren-vue --privileged --net=host nginx
+</code></pre>
+<h3 id="4-配置负载均衡"><a href="#4-配置负载均衡" class="headerlink" title="4. 配置负载均衡"></a>4. 配置负载均衡</h3><p>宿主机/home/ff1/nginx.conf 配置文件</p>
+<pre class=" language-shell"><code class="language-shell">user  nginx;
+worker_processes  1;
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+
+events {
+   worker_connections  1024;
+}
+
+http {
+   include       /etc/nginx/mime.types;
+   default_type  application/octet-stream;
+
+   log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                     '$status $body_bytes_sent "$http_referer" '
+                     '"$http_user_agent" "$http_x_forwarded_for"';
+
+   access_log  /var/log/nginx/access.log  main;
+
+   sendfile        on;
+   #tcp_nopush     on;
+
+   keepalive_timeout  65;
+
+   #gzip  on;
+
+   proxy_redirect          off;
+   proxy_set_header        Host $host;
+   proxy_set_header        X-Real-IP $remote_addr;
+   proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+   client_max_body_size    10m;
+   client_body_buffer_size   128k;
+   proxy_connect_timeout   5s;
+   proxy_send_timeout      5s;
+   proxy_read_timeout      5s;
+   proxy_buffer_size        4k;
+   proxy_buffers           4 32k;
+   proxy_busy_buffers_size  64k;
+   proxy_temp_file_write_size 64k;
+
+   upstream fn {
+       server 192.168.99.104:6501;
+       server 192.168.99.104:6502;
+       server 192.168.99.104:6503;
+   }
+   server {
+       listen       6601;
+       server_name  192.168.99.104;
+       location / {
+           proxy_pass   http://fn;
+           index  index.html index.htm;
+       }
+   }
+}
+</code></pre>
+<pre class=" language-shell"><code class="language-shell">#启动ff1节点
+docker run -it -d --name ff1 -v /home/ff1/nginx.conf:/etc/nginx/nginx.conf --net=host --privileged nginx
+</code></pre>
+<p>宿主机/home/ff2/nginx.conf 配置文件</p>
+<pre class=" language-shell"><code class="language-shell">user  nginx;
+worker_processes  1;
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+
+events {
+   worker_connections  1024;
+}
+
+http {
+   include       /etc/nginx/mime.types;
+   default_type  application/octet-stream;
+
+   log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                     '$status $body_bytes_sent "$http_referer" '
+                     '"$http_user_agent" "$http_x_forwarded_for"';
+
+   access_log  /var/log/nginx/access.log  main;
+
+   sendfile        on;
+   #tcp_nopush     on;
+
+   keepalive_timeout  65;
+
+   #gzip  on;
+
+   proxy_redirect          off;
+   proxy_set_header        Host $host;
+   proxy_set_header        X-Real-IP $remote_addr;
+   proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+   client_max_body_size    10m;
+   client_body_buffer_size   128k;
+   proxy_connect_timeout   5s;
+   proxy_send_timeout      5s;
+   proxy_read_timeout      5s;
+   proxy_buffer_size        4k;
+   proxy_buffers           4 32k;
+   proxy_busy_buffers_size  64k;
+   proxy_temp_file_write_size 64k;
+
+   upstream fn {
+       server 192.168.99.104:6501;
+       server 192.168.99.104:6502;
+       server 192.168.99.104:6503;
+   }
+   server {
+       listen       6602;
+       server_name  192.168.99.104;
+       location / {
+           proxy_pass   http://fn;
+           index  index.html index.htm;
+       }
+   }
+}
+</code></pre>
+<pre class=" language-shell"><code class="language-shell">#启动ff2节点
+docker run -it -d --name ff2 -v /home/ff2/nginx.conf:/etc/nginx/nginx.conf --net=host --privileged nginx
+</code></pre>
+<h3 id="5-配置双机热备"><a href="#5-配置双机热备" class="headerlink" title="5. 配置双机热备"></a>5. 配置双机热备</h3><pre class=" language-shell"><code class="language-shell">#进入ff1节点
+docker exec -it ff1 bash
+#更新软件包
+apt-get update
+#安装VIM
+apt-get install vim
+#安装Keepalived
+apt-get install keepalived
+#编辑Keepalived配置文件(如下)
+vim /etc/keepalived/keepalived.conf
+#启动Keepalived
+service keepalived start
+</code></pre>
+<pre class=" language-shell"><code class="language-shell">vrrp_instance VI_1 {
+   state MASTER
+   interface ens33
+   virtual_router_id 52
+   priority 100
+   advert_int 1
+   authentication {
+       auth_type PASS
+       auth_pass 123456
+   }
+   virtual_ipaddress {
+       192.168.99.152
+   }
+}
+virtual_server 192.168.99.151 6701 {
+   delay_loop 3
+   lb_algo rr
+   lb_kind NAT
+   persistence_timeout 50
+   protocol TCP
+   real_server 192.168.99.104 6601 {
+       weight 1
+   }
+}
+</code></pre>
+<pre class=" language-shell"><code class="language-shell">#进入ff1节点
+docker exec -it ff2 bash
+#更新软件包
+apt-get update
+#安装VIM
+apt-get install vim
+#安装Keepalived
+apt-get install keepalived
+#编辑Keepalived配置文件(如下)
+vim /etc/keepalived/keepalived.conf
+#启动Keepalived
+service keepalived start
+</code></pre>
+<pre class=" language-shell"><code class="language-shell">vrrp_instance VI_1 {
+   state MASTER
+   interface ens33
+   virtual_router_id 52
+   priority 100
+   advert_int 1
+   authentication {
+       auth_type PASS
+       auth_pass 123456
+   }
+   virtual_ipaddress {
+       192.168.99.152
+   }
+}
+virtual_server 192.168.99.151 6701 {
+   delay_loop 3
+   lb_algo rr
+   lb_kind NAT
+   persistence_timeout 50
+   protocol TCP
+   real_server 192.168.99.104 6602 {
+       weight 1
+   }
+}
+</code></pre>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-05-24T11:30:13.000Z" itemprop="dateUpdated">2018-05-24 19:30:13</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/微服务/">微服务</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/a0b65e8c/&title=《Docker 常用命令及实践》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/a0b65e8c/&title=《Docker 常用命令及实践》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/a0b65e8c/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Docker 常用命令及实践》 — Sixin的小站&url=http://coder.liusixin.cn/posts/a0b65e8c/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/a0b65e8c/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/a4336408/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">HTTP 相关知识了解一下</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/ed5f9f50/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Eslint 规则总结</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/a0b65e8c/&title=《Docker 常用命令及实践》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/a0b65e8c/&title=《Docker 常用命令及实践》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/a0b65e8c/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Docker 常用命令及实践》 — Sixin的小站&url=http://coder.liusixin.cn/posts/a0b65e8c/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/a0b65e8c/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABw0lEQVR42u3ay47CMAwFUP7/pxlptgwZX7tJQTpZoULDaReWH3k8yuv5u9bfvq71ves9RwsXF3fMfS7X69br36TX6wZcXNzz3HWgqVDWr+DdnnGww8XF/TDuOt/oPTwuLu63c98FrDT8HY27uLi4A26l+EnLmEpnY2OthouLO+CmDdMdnzf2d3FxcUPuM1xpulNPfUr/jouLe4RbKWDSSJImMWmjBBcXdzd3MiJNy6c0hfonhOHi4m7mzkenlQdImyZ/XMHFxb2Jm6Y7adnTa9E+KlkSLi7uRdzeIar50avKvcE7xsXF3cattyfmE5u0aTI64YWLi9vi9sJWGsIuHrvi4uJu5s6bpPUEZXIXLi7uGW69lZkOWupJEi4u7mdyr0poeoGvPsLBxcU9w72qzdFrhaRHwXBxcc9we4chemlK2nDBxcW9l5tC0/brZE9cXNy7uPWVhqTe9ZIdFxd3G7cXmCoPMPn9aFaMi4t7EXfSHu2dlBgFOFxc3IPcNHilxy7ThxzVVbi4uAe59eLnqp1HgQwXF/cgt17YzMskXFzce7n1BGXSPE1Lo1FbBBcXd8DtDU3rB60qo9w4nOHi4u7i/gDR/r5VGtH1EwAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

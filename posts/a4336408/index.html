@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/a4336408/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/a4336408/">
+    
+    
+    <title>HTTP 相关知识了解一下 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="HTTP,性能优化">
+    <meta name="description" content="很多前端开发的同学  不是特别了解 http 相关的知识，本文我们就深入去了解下 http 协议原理和实践相关的内容。 首先了解下浏览器输入 url 后 http 请求返回的过程是什么，看下图">
+<meta name="keywords" content="HTTP,性能优化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTP 相关知识了解一下">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/a4336408/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="很多前端开发的同学  不是特别了解 http 相关的知识，本文我们就深入去了解下 http 协议原理和实践相关的内容。 首先了解下浏览器输入 url 后 http 请求返回的过程是什么，看下图">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180606-002640-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180606-144132-2x-2.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180606-162521-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180606-162552-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180606-181124-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180606-193151-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180606-222909-2x-2.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180606-222733-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180606-233126-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180607-134507-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180607-134342-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180607-141513-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180607-164944-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180607-170036-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180607-171314-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180607-180941-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180607-183042-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180607-185148-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180608-121046-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180608-121213-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180608-130309-2x-2.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180608-131702-2x-2.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180608-170452-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180608-170824-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180608-171754-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180608-175257-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180608-183211-2x-2.png">
+<meta property="og:updated_time" content="2018-05-29T12:36:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HTTP 相关知识了解一下">
+<meta name="twitter:description" content="很多前端开发的同学  不是特别了解 http 相关的知识，本文我们就深入去了解下 http 协议原理和实践相关的内容。 首先了解下浏览器输入 url 后 http 请求返回的过程是什么，看下图">
+<meta name="twitter:image" content="http://cdn-blog.liusixin.cn/WX20180606-002640-2x.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">HTTP 相关知识了解一下</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">HTTP 相关知识了解一下</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-05-26T04:13:04.000Z" itemprop="datePublished" class="page-time">
+  2018-05-26
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/后端/">后端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/后端/运维/">运维</a></li></ul></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-网络协议分层"><span class="post-toc-number">1.</span> <span class="post-toc-text">1. 网络协议分层</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-1-传输层"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">1.1 传输层</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-2-应用层"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">1.2 应用层</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-http-协议发展历史"><span class="post-toc-number">2.</span> <span class="post-toc-text">2. http 协议发展历史</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3-http-的连接"><span class="post-toc-number">3.</span> <span class="post-toc-text">3. http 的连接</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-1-tcp-的三次握手"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">3.1 tcp 的三次握手</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-2-URI、URL、URN"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">3.2 URI、URL、URN</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-3-HTTP-报文"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">3.3 HTTP 报文</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#3-3-1-请求报文"><span class="post-toc-number">3.3.1.</span> <span class="post-toc-text">3.3.1 请求报文</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#3-3-2-响应报文"><span class="post-toc-number">3.3.2.</span> <span class="post-toc-text">3.3.2 响应报文</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-4-HTTP-方法"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">3.4 HTTP 方法</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-5-HTTP-CODE"><span class="post-toc-number">3.5.</span> <span class="post-toc-text">3.5 HTTP CODE</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#4-HTTP-客户端"><span class="post-toc-number">4.</span> <span class="post-toc-text">4. HTTP 客户端</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-1-CORS-跨域请求的限制与解决"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">4.1 CORS 跨域请求的限制与解决</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#4-1-1-CORS-预请求"><span class="post-toc-number">4.1.1.</span> <span class="post-toc-text">4.1.1 CORS 预请求</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-2-缓存-Cache-Control"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">4.2 缓存 Cache-Control</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-3-资源验证"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">4.3 资源验证</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#4-3-1-验证头"><span class="post-toc-number">4.3.1.</span> <span class="post-toc-text">4.3.1 验证头</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-4-Cookie-和-Session"><span class="post-toc-number">4.4.</span> <span class="post-toc-text">4.4 Cookie 和 Session</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-5-HTTP-长连接"><span class="post-toc-number">4.5.</span> <span class="post-toc-text">4.5 HTTP 长连接</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-6-数据协商"><span class="post-toc-number">4.6.</span> <span class="post-toc-text">4.6 数据协商</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-7-Redirect"><span class="post-toc-number">4.7.</span> <span class="post-toc-text">4.7 Redirect</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-8-CSP"><span class="post-toc-number">4.8.</span> <span class="post-toc-text">4.8 CSP</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#5-Nginx-代理服务器"><span class="post-toc-number">5.</span> <span class="post-toc-text">5. Nginx 代理服务器</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-1-基础代理配置"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">5.1 基础代理配置</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-2-nginx-缓存"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">5.2 nginx 缓存</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-3-HTTPS"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">5.3 HTTPS</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#5-3-1-nginx-部署-https-服务"><span class="post-toc-number">5.3.1.</span> <span class="post-toc-text">5.3.1 nginx 部署 https 服务</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#5-3-2-http2"><span class="post-toc-number">5.3.2.</span> <span class="post-toc-text">5.3.2 http2</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/性能优化/HTTP-相关知识了解一下" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">HTTP 相关知识了解一下</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-05-26 12:13:04" datetime="2018-05-26T04:13:04.000Z" itemprop="datePublished">2018-05-26</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/后端/">后端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/后端/运维/">运维</a></li></ul></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>很多前端开发的同学  不是特别了解 http 相关的知识，本文我们就深入去了解下 http 协议原理和实践相关的内容。</p>
+<p>首先了解下<strong>浏览器输入 url 后 http 请求返回的过程是什么</strong>，看下图</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180606-002640-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>(一) 首先一开始要做 == redirect == 重定向，那么为什么要 redirect 呢，因为浏览器可能记录了你这个地址已经永久跳转成一个新的地址，所以一开始浏览器需要判断需不需要 redirect 以及 redirect 到哪里。</p>
+<p>(二) 看缓存，请求的资源可能已经缓存过，在 == App cache == 里看是否有缓存，如果没有缓存，就会去服务器请求资源。</p>
+<p>(三) 输入域名，域名会对应 ip 之后才能真正访问到服务器，所以这时候会先去查找域名对应的 IP 地址， 这就叫 == DNS 解析 ==</p>
+<p>(四) 有了 IP 之后，就会创建 == tcp 连接 ==，该过程要经过 tcp 的 == 三次握手 == 之后才能真正创建连接。同时如果这个请求是 https 的，就会创建 https 的链接，这跟 tcp 的三次握手不一样，中间会有一个保证安全的数据传输的过程。</p>
+<p>(五) 连接创建好之后，才会真正发起 http 请求的数据包，数据包发送完成之后，服务器接收到这个数据并进行处理之后会  返回这个请求响应的内容数据，返回数据之后这个 http 请求才真正完成</p>
+<h2 id="1-网络协议分层"><a href="#1-网络协议分层" class="headerlink" title="1. 网络协议分层"></a>1. 网络协议分层</h2><p>我们先来看下经典五层模型图例：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180606-144132-2x-2.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>这个五层模型中，分为应用层、传输层、网络层、数据链路层、物理层，每一个服务器上都会有这样的层级关系存在来维护整个网络数据传输的过程。</p>
+<p>本文主要内容是 http 相关内容，所以主要是在应用层展开。http 协议基于传输层里的 TCP/IP 协议，该协议会涉及到一些 http 请求的性能，以及请求过程的消耗， 会面也会有一些 TCP/IP 协议的介绍。</p>
+<p><strong>低三层：</strong></p>
+<ul>
+<li>物理层(硬件) - 主要作用是定义物理设备如何传输数据</li>
+<li>数据链路层 - 在通信的实体间建立数据链路连接</li>
+<li>网络层 - 为数据在结点之间传输创建逻辑链路</li>
+</ul>
+<h3 id="1-1-传输层"><a href="#1-1-传输层" class="headerlink" title="1.1 传输层"></a>1.1 传输层</h3><p>传输层主要有两个协议，一个是 TCP/IP，一个是 UDP。更多情况下都使用的是 TCP/IP 协议，因为它更可靠的传输数据。</p>
+<p><strong>向用户提供可靠的端到端(e2e)服务</strong></p>
+<p>个人电脑到网络服务器建立连接之后，如果传输数据很大，一次性无法完成传输，就需要分片传输，传输成功之后再重新组装。两端传输数据的方式都是在这一层定义</p>
+<p><strong>传输层向高层屏蔽了下层数据通信的细节</strong></p>
+<p>http 协议要传输数据只需在浏览器输入 url，输入 url 这个过程还涉及到一系列数据的拼装及传输，比如分包传输具体是怎么实现，服务器怎么接收，ajax 请求，整个过程传输层已经做好了封装，这个过程用户不需要知道。</p>
+<h3 id="1-2-应用层"><a href="#1-2-应用层" class="headerlink" title="1.2 应用层"></a>1.2 应用层</h3><p>http 协议所在层</p>
+<ul>
+<li>为应用软件提供了很多服务</li>
+<li>构建于 TCP 协议之上</li>
+<li>屏蔽网络传输相关细节</li>
+</ul>
+<h2 id="2-http-协议发展历史"><a href="#2-http-协议发展历史" class="headerlink" title="2. http 协议发展历史"></a>2. http 协议发展历史</h2><ul>
+<li>HTTP/0.9<ul>
+<li>只有一个命令 GET</li>
+<li>没有 HEADER 等描述数据的信息</li>
+<li>服务器发送完毕，就关闭 TCP 连接</li>
+</ul>
+</li>
+<li>HTTP/1.0<ul>
+<li>增加了很多命令</li>
+<li>增加 status code 和 header</li>
+<li>多字符集支持、多部分发送、权限、缓存等</li>
+</ul>
+</li>
+<li>HTTP/1.1<ul>
+<li>持久连接</li>
+<li>pipeline</li>
+<li>增加 host 和其它一些命令</li>
+</ul>
+</li>
+<li>HTTP2<ul>
+<li>所有数据以二进制传输</li>
+<li>同一个连接里面发送多个请求不再需要按照顺序来</li>
+<li>头信息压缩以及推送等提高效率的功能</li>
+</ul>
+</li>
+</ul>
+<p><strong>头信息压缩及推送</strong></p>
+<p>http2 解决了 http 里整体性能低下的问题，在 http1.1 里，每次发送请求和返回请求，它的 http 头都会进行一个完整传输， 并且很多字段都是以字符串形式保存，占用大量带宽。http2 里会将头信息进行压缩传输。</p>
+<p>推送是什么概念呢？在 http1.1 里，客户端发起请求然后服务端响应请求返回内容，客户端永远是主动方，服务端永远是被动方。在 http2 里，服务端是可以主动发起数据传输的。比如：一个 html 页面中引入了 css 和 js，浏览器首先要对 html 进行分析，再寻找 css 和 js 对应的 url 去请求对应的文件，这就涉及到一个顺序问题，需要先请求到 html 文本，在浏览器里运行解析了这个文本之后才能发送 css 及 js 的请求。但是  在 http2 中服务端可以主动把 css 及 js 文件推送到客户端，与 html 并行传输，极大提高传输效率</p>
+<h2 id="3-http-的连接"><a href="#3-http-的连接" class="headerlink" title="3. http 的连接"></a>3. http 的连接</h2><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180606-162521-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>在客户端和服务端之间进行 http 请求的发送和返回的过程当中，需要创建一个 TCP connection。http 只有请求和响应这个概念，不存在连接，请求和响应都是数据包，<br>之间要经过一个传输的通道，这个传输的通道就是在 tcp 里创建的一个连接(TCP connection)。这个连接可以保持状态，http 请求就是在这个连接之上发送的，所以在一个 tcp 连接上可以发送多个 http 请求。</p>
+<p>在不同版本下，http 连接的模式不一样，在 http1.0 里，这个连接是在 http 请求创建同时创建 tcp 连接，请求结束后 tcp 连接就会关闭。</p>
+<p>在 http1.1 里，这个连接可以通过某种方式声明是否保持连接状态。tcp 连接在创建过程中有三次握手消耗，三次握手就表示三次网络传输(客户端发送 - 服务端响应 - 客户端再次发送)，然后才能发送 http 请求。如果 tcp 连接一直保持，第二个 http 请求就没有三次握手的开销</p>
+<p>在 http2 里不仅可以保持 tcp 的连接，同时这个连接上的 http 请求可以并发，就是说同一个用户对同一个服务器发起一个网页请求时只需要一个 tcp 连接。</p>
+<h3 id="3-1-tcp-的三次握手"><a href="#3-1-tcp-的三次握手" class="headerlink" title="3.1 tcp 的三次握手"></a>3.1 tcp 的三次握手</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180606-162552-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>(一) 在 tcp 的三次握手当中，客户端会向服务端发起一个创建连接的数据包请求，这里会有一个标识为 <code>SYN=1</code>,SYN 是一个标志位，表示创建请求的数据包。后面会发送一个叫 <code>Seq=X</code>，X 表示数字，一般为 1。服务端接收到这个数据包之后就会知道要创建一个连接</p>
+<p>(二) 创建  连接之后， 服务端就会开启一个 tcp 端口，返回给客户端数据，这个数据 <code>SYN=1,ACK=X+1,Seq=Y</code>,客户端拿到这个数据表示服务端允许创建这个 tcp 连接。</p>
+<p>(三) 这时候客户端再去发送 <code>ACK=Y+1,Seq=Z</code>。</p>
+<p>那么  为什么 tcp 要进行三次握手呢，这是为了防止服务端开启一些无用连接，网络连接具有延时性。客户端向服务端发起创建连接请求时，服务端直接创建了这个连接，返回的数据包因为网络原因丢失，那么客户端就一直接收不到服务器返回的数据，连接超时这个连接就会关闭，然后再发起新的连接，如果没有三次握手的话，这时服务端是不知道客户端到底有没有接收到返回的数据，浪费服务端的开销。所以需要三次握手去即时的察觉到网络原因导致的数据包传输中断的问题。</p>
+<h3 id="3-2-URI、URL、URN"><a href="#3-2-URI、URL、URN" class="headerlink" title="3.2 URI、URL、URN"></a>3.2 URI、URL、URN</h3><p>在 http 协议中，基本上使用的都是 URL。</p>
+<ul>
+<li>URI(Uniform Resource Identifier)<ul>
+<li>统一资源标志符</li>
+<li>用来唯一标识互联网上的信息资源</li>
+<li>包含 URL 和 URN</li>
+</ul>
+</li>
+<li>URL(Uniform Resource Locator)<ul>
+<li>统一资源定位器 </li>
+</ul>
+</li>
+<li>URN<ul>
+<li>永久统一资源定位符</li>
+<li>在资源移动之后还能被找到</li>
+<li>目前还没有非常成熟的使用方案</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-3-HTTP-报文"><a href="#3-3-HTTP-报文" class="headerlink" title="3.3 HTTP 报文"></a>3.3 HTTP 报文</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180606-181124-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>从图中可以看到 http 首部下面有一段空行，空行下面表示 http body 部分，上面就是 http headers 部分。</p>
+<h4 id="3-3-1-请求报文"><a href="#3-3-1-请求报文" class="headerlink" title="3.3.1 请求报文"></a>3.3.1 请求报文</h4><p>(一) <strong>GET</strong></p>
+<p>http 请求头中，首行第一部分包含的是 <code>method</code> 请求方法 ，每个方法有各自的语义，分别是 GET(获取数据)、POST(创建数据)、PUT(更新数据)、DELETE(删除数据)。这几种方法只是语义上的说明，并没有强约束， 比如使用 GET 方法去更新数据，只是这样违反了 http 语义化的定义规则。</p>
+<p>(二) <strong>/test/hi-there.txt</strong></p>
+<p>首行第二部分是请求的资源资源地址 url，一般这里是存放  路由相关的内容</p>
+<p>(三) <strong>HTTP/1.0</strong></p>
+<p>首行第三部分是 http 的版本，现在的 web 服务一般都是 http1.1，http2 也会有越来越多的实现，不同的版本也会有不同操作方式。</p>
+<h4 id="3-3-2-响应报文"><a href="#3-3-2-响应报文" class="headerlink" title="3.3.2 响应报文"></a>3.3.2 响应报文</h4><p>(一) <strong>200 ok</strong></p>
+<p>http 状态码，200 代表成功</p>
+<h3 id="3-4-HTTP-方法"><a href="#3-4-HTTP-方法" class="headerlink" title="3.4 HTTP 方法"></a>3.4 HTTP 方法</h3><ul>
+<li>用来定义对于资源的操作</li>
+<li>常用有 GET、POST 等</li>
+<li>从定义上有各自的语义</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">方法</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<p>GET | 请求指定的页面信息，并返回实体主体。<br>HEAD | 类似于get请求，只不过返回的响应中没有具体的内容，用于获取报头<br>POST | 向指定资源提交数据进行处理请求（例如提交表单或者上传文件）。数据被包含在请求体中。POST请求可能会导致新的资源的建立和/或已有资源的修改。<br>PUT | 从客户端向服务器传送的数据取代指定的文档的内容。<br>DELETE | 请求服务器删除指定的页面。</p>
+<h3 id="3-5-HTTP-CODE"><a href="#3-5-HTTP-CODE" class="headerlink" title="3.5 HTTP CODE"></a>3.5 HTTP CODE</h3><ul>
+<li>定义服务器对请求的处理结果</li>
+<li>各个区间的 CODE 有各自的语义</li>
+<li>好的 HTTP 服务可以通过 CODE 判断结果</li>
+</ul>
+<p><strong>HTTP Status：</strong></p>
+<p>1xx（临时响应）<br>表示临时响应并需要请求者继续执行操作的状态代码。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">代码</th>
+<th style="text-align:center">状态</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<p>100 | （继续） | 请求者应当继续提出请求。 服务器返回此代码表示已收到请求的第一部分，正在等待其余部分。<br>101 | （切换协议） | 请求者已要求服务器切换协议，服务器已确认并准备切换。</p>
+<p>2xx （成功）<br>表示成功处理了请求的状态代码。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">代码</th>
+<th style="text-align:center">状态</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<p>200 | （成功） | 服务器已成功处理了请求。 通常，这表示服务器提供了请求的网页。<br>201 | （已创建） | 请求成功并且服务器创建了新的资源。<br>202 | （已接受） | 服务器已接受请求，但尚未处理。<br>203 | （非授权信息） | 服务器已成功处理了请求，但返回的信息可能来自另一来源。<br>204 | （无内容） | 服务器成功处理了请求，但没有返回任何内容。<br>205 | （重置内容） | 服务器成功处理了请求，但没有返回任何内容。<br>206 | （部分内容） | 服务器成功处理了部分 GET 请求。</p>
+<p>3xx （重定向）<br>表示要完成请求，需要进一步操作。 通常，这些状态代码用来重定向。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">代码</th>
+<th style="text-align:center">状态</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<p>300 | （多种选择） | 针对请求，服务器可执行多种操作。 服务器可根据请求者 (user agent) 选择一项操作，或提供操作列表供请求者选择。<br>301 | （永久移动） | 请求的网页已永久移动到新位置。 服务器返回此响应（对 GET 或 HEAD 请求的响应）时，会自动将请求者转到新位置。<br>302 | （临时移动） | 服务器目前从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求。<br>303 | （查看其他位置） | 请求者应当对不同的位置使用单独的 GET 请求来检索响应时，服务器返回此代码。<br>304 | （未修改） | 自从上次请求后，请求的网页未修改过。 服务器返回此响应时，不会返回网页内容。<br>305 | （使用代理） | 请求者只能使用代理访问请求的网页。 如果服务器返回此响应，还表示请求者应使用代理。<br>307 | （临时重定向） | 服务器目前从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求。</p>
+<p>4xx（请求错误）<br>这些状态代码表示请求可能出错，妨碍了服务器的处理。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">代码</th>
+<th style="text-align:center">状态</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<p>400 | （错误请求） | 服务器不理解请求的语法。<br>401 | （未授权） | 请求要求身份验证。 对于需要登录的网页，服务器可能返回此响应。<br>403 | （禁止） | 服务器拒绝请求。<br>404 | （未找到） | 服务器找不到请求的网页。<br>405 | （方法禁用） | 禁用请求中指定的方法。<br>406 | （不接受） | 无法使用请求的内容特性响应请求的网页。<br>407 | （需要代理授权）| 此状态代码与 401（未授权）类似，但指定请求者应当授权使用代理。<br>408 | （请求超时）| 服务器等候请求时发生超时。<br>409 | （冲突）| 服务器在完成请求时发生冲突。 服务器必须在响应中包含有关冲突的信息。<br>410 | （已删除） | 如果请求的资源已永久删除，服务器就会返回此响应。<br>411 | （需要有效长度） | 服务器不接受不含有效内容长度标头字段的请求。<br>412 | （未满足前提条件） | 服务器未满足请求者在请求中设置的其中一个前提条件。<br>413 | （请求实体过大） | 服务器无法处理请求，因为请求实体过大，超出服务器的处理能力。<br>414 | （请求的 URI 过长） | 请求的 URI（通常为网址）过长，服务器无法处理。<br>415 | （不支持的媒体类型） | 请求的格式不受请求页面的支持。<br>416 | （请求范围不符合要求） | 如果页面无法提供请求的范围，则服务器会返回此状态代码。<br>417 | （未满足期望值） | 服务器未满足”期望”请求标头字段的要求。</p>
+<p>5xx（服务器错误）<br>这些状态代码表示服务器在尝试处理请求时发生内部错误。 这些错误可能是服务器本身的错误，而不是请求出错。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">代码</th>
+<th style="text-align:center">状态</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<p>500 | （服务器内部错误） | 服务器遇到错误，无法完成请求。<br>501 | （尚未实施） | 服务器不具备完成请求的功能。 例如，服务器无法识别请求方法时可能会返回此代码。<br>502 | （错误网关）| 服务器作为网关或代理，从上游服务器收到无效响应。<br>503 | （服务不可用） | 服务器目前无法使用（由于超载或停机维护）。 通常，这只是暂时状态。<br>504 | （网关超时） | 服务器作为网关或代理，但是没有及时从上游服务器收到请求。<br>505 | （HTTP 版本不受支持） | 服务器不支持请求中所用的 HTTP 协议版本。</p>
+<h2 id="4-HTTP-客户端"><a href="#4-HTTP-客户端" class="headerlink" title="4. HTTP 客户端"></a>4. HTTP 客户端</h2><p>浏览器就是我们最常用的 http 客户端</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180606-193151-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p> 同时 curl 可以查看 http 请求返回的内容</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180606-222909-2x-2.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>curl 还可以查看请求的详细内容， <code>curl -v [host]</code></p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180606-222733-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<h3 id="4-1-CORS-跨域请求的限制与解决"><a href="#4-1-CORS-跨域请求的限制与解决" class="headerlink" title="4.1 CORS 跨域请求的限制与解决"></a>4.1 CORS 跨域请求的限制与解决</h3><p>做过前端开发的同学对跨域并不会陌生，通常我们可以使用 jsonp 去实现跨域请求。</p>
+<p><strong>jsonp 跨域：</strong></p>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.example.com:8080<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script language-javascript"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+</code></pre>
+<p><strong>原理：</strong></p>
+<p>浏览器允许 link、img、script 标签上写入路径加载一些内容的时候，是允许跨域的。</p>
+<p><strong>服务端设置跨域：</strong></p>
+<p>这里以 express 为例，我们只需在响应头中  添加 <code>Access-Control-Allow-Origin</code> 即可</p>
+<pre class=" language-js"><code class="language-js">response<span class="token punctuation">.</span><span class="token function">writeHead</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token string">'Access-Control-Allow-Origin'</span><span class="token punctuation">:</span> <span class="token string">'*'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>浏览器在发送请求的时候并不知道服务是否跨域，还是会发送请求并且接收返回内容，只是在浏览器接收内容的时候  没有找到 <code>Access-Control-Allow-Origin</code> 头设置为  允许的话，它会把请求返回的内容忽略掉并且会在服务端报错。这个是浏览器所提供的功能。</p>
+<p>实际上 Access-Control-Allow-Origin 值为 * 是不安全的，这样会导致第三方服务也可以通过跨域访问你的服务，可以设置为特定的域名</p>
+<pre class=" language-js"><code class="language-js">response<span class="token punctuation">.</span><span class="token function">writeHead</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token string">'Access-Control-Allow-Origin'</span><span class="token punctuation">:</span> <span class="token string">'http://xxxx.com'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<h4 id="4-1-1-CORS-预请求"><a href="#4-1-1-CORS-预请求" class="headerlink" title="4.1.1 CORS 预请求"></a>4.1.1 CORS 预请求</h4><p>浏览器是根据 header 判断某个请求的返回是否允许，如果  想要允许自定义的头进行发送的话，需要返回新的头  告知浏览器允许</p>
+<pre class=" language-js"><code class="language-js">response<span class="token punctuation">.</span><span class="token function">writeHead</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token string">'Access-Control-Allow-Origin'</span><span class="token punctuation">:</span> <span class="token string">'*'</span><span class="token punctuation">,</span>
+  <span class="token string">'Access-Control-Allow-Headers'</span><span class="token punctuation">:</span> <span class="token string">'X-Test-Cors'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180606-233126-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>同时会发现 network 中多出一个请求，这就是预请求</p>
+<p>(一) 在跨域请求中，默认允许的方法只有 GET、HEAD、POST，其它的方法默认不允许，浏览器是有一个预请求的方式去验证的。</p>
+<p>(二) 默认允许的 Content-Type：text/plain、multipart/form-data、application/x-www-form-urlencoded。这三个就是在 html 里使用 form 表单可以设置的三种数据类型。其它的也需要预请求验证过之后才能进行发送。</p>
+<p>(三) 其它的请求头限制具体可以查看文档<br><a href="https://fetch.spec.whatwg.org/#cors-safelisted-request-header" rel="external nofollow noopener noreferrer" target="_blank">https://fetch.spec.whatwg.org/#cors-safelisted-request-header</a></p>
+<p>(四) <code>XMLHttpRequestUpload</code> 对象均没有注册任何事件监听器</p>
+<p>(五) 请求中没有使用 <code>ReadableStream</code> 对象</p>
+<h3 id="4-2-缓存-Cache-Control"><a href="#4-2-缓存-Cache-Control" class="headerlink" title="4.2 缓存 Cache-Control"></a>4.2 缓存 Cache-Control</h3><ul>
+<li>可缓存性<ul>
+<li><code>public</code>（任何地方都会缓存）</li>
+<li><code>private</code>（发起请求的浏览器）</li>
+<li><code>no-cache</code> 可以在本地进行缓存，但是每次发起请求都要在服务端验证，如果服务端允许使用本地缓存，才能真正使用本地缓存。</li>
+</ul>
+</li>
+<li>到期<ul>
+<li><code>max-age = &lt;seconds&gt;</code></li>
+<li><code>s-maxage = &lt;seconds&gt;</code> 在代理服务器中才会生效，代理服务器中如果两个都设置了，会优先选择 s-maxage 配置项</li>
+<li><code>max-stale = &lt;secon ds&gt;</code> 发起端设置。即便缓存失效，只要这个时间内还可以使用过期的缓存，而不需要去原服务器请求新的内容。</li>
+</ul>
+</li>
+<li>重新验证(不常用)<ul>
+<li><code>must-revalidate</code> 在设置了 max-age 缓存中如果过期，必须去原服务端发送请求  然后重新获取数据再来验证内容是否真的过期，而不能直接使用本地缓存。</li>
+<li><code>proxy-revalidate</code> 和 must-revalidate 类似，但是用在缓存服务器当中。</li>
+</ul>
+</li>
+<li>其它<ul>
+<li><code>no-store</code> 与 no-cache 对应，表示任何情况下都不会存储缓存，永远都要去服务端请求新的内容才能使用它。即便服务端允许使用缓存，但本地  没有进行缓存</li>
+<li><code>no-transform</code> 用在 proxy 服务器，有些 proxy 服务器返回资源过大，会帮助进行压缩及格式转换，该属性会不允许。</li>
+</ul>
+</li>
+</ul>
+<p>没有缓存情况下请求资源</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180607-134507-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>设置客户端缓存后</p>
+<pre class=" language-js"><code class="language-js">response<span class="token punctuation">.</span><span class="token function">writeHead</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token string">'Content-Type'</span><span class="token punctuation">:</span> <span class="token string">'text/javascript'</span><span class="token punctuation">,</span>
+  <span class="token string">'Cache-Control'</span><span class="token punctuation">:</span> <span class="token string">'max-age=200'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+response<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token string">'console.log("script loaded")'</span><span class="token punctuation">)</span>
+</code></pre>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180607-134342-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>可以看到 Size 变为了 == (from memory cache) ==，表示从浏览器中读取缓存。</p>
+<p>在做前端开发的时候，有些静态资源文件我们希望浏览器缓存下来，但是在服务端内容更新之后，客户端请求的是缓存下的旧资源文件，这样就没法更新应用。</p>
+<p>目前最常见的方式就是前端编译的时候加静态资源文件 md5 戳。</p>
+<h3 id="4-3-资源验证"><a href="#4-3-资源验证" class="headerlink" title="4.3 资源验证"></a>4.3 资源验证</h3><p>首先看一张图</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180607-141513-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>浏览器创建请求，请求到达本地缓存(如果有 cache-control)，如果有本地缓存，就直接返回给浏览器显示出来，不经过任何网络传输。如果没有本地缓存，请求进入网络传输， 如果有代理服务器就会进入并查找缓存设置，查看资源是否被缓存，有缓存就返回缓存资源经过本地缓存再到浏览器显示。如果代理服务器未缓存，就会进入原服务器获取新的内容再返回。</p>
+<h4 id="4-3-1-验证头"><a href="#4-3-1-验证头" class="headerlink" title="4.3.1 验证头"></a>4.3.1 验证头</h4><ul>
+<li>Last-Modified<ul>
+<li>上次修改时间</li>
+<li>配合 If-Modified-Since 或者 If-Unmodified-Since 使用</li>
+</ul>
+</li>
+</ul>
+<p>浏览器在请求资源的 headers 里有 <code>Last-Modified</code> 这个头，并指定了时间，这个时间内下次浏览器发起请求时就会带上 <code>Last-Modified</code>传入的值，通过 <code>If-Modified-Since</code> 或 <code>If-Unmodified-Since</code>(通常为 If-Modified-Since)带到服务器上，服务器通过读取 headers 里 If-Modified-Since 带入的值找到资源存在的地方对比上次修改的时间，如果时间一样，就表示资源没有被重新修改过，服务器就通知浏览器直接使用缓存的资源，这就是资源验证的过程。</p>
+<ul>
+<li>Etag(更加严格的验证方式)<ul>
+<li>数据签名 - 对内容产生唯一的签名</li>
+<li>配合 If-Match 或者 If-Non-Match 使用</li>
+</ul>
+</li>
+</ul>
+<p>有任何的修改两个签名就会不一样，最典型的做法就是对资源内容做哈希计算，计算之后会得到一个唯一值，用这个签名来标记这个资源，下一次浏览器发起请求时会带上<br>If-Match 或者 If-Non-Match 头，这个头的值就是服务端返回 Etag 的值，然后对比服务器拿到浏览器传入的签名和服务器存在的签名，如果相同，就不需要返回新的内容。</p>
+<h3 id="4-4-Cookie-和-Session"><a href="#4-4-Cookie-和-Session" class="headerlink" title="4.4 Cookie 和 Session"></a>4.4 Cookie 和 Session</h3><ul>
+<li>Cookie<ul>
+<li>通过 Set-Cookie 设置</li>
+<li>下次请求会自动带上</li>
+<li>键值对，可以设置多个</li>
+</ul>
+</li>
+<li>Cookie 属性<ul>
+<li>max-age(有效时间)和 expires(到某个时间点过期)设置过期时间</li>
+<li>Secure 只在 https 的时候发送</li>
+<li>HttpOnly 无法通过 document.cookie 访问</li>
+</ul>
+</li>
+</ul>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// Cookie设置，以express为例</span>
+response<span class="token punctuation">.</span><span class="token function">writeHead</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token string">'Content-Type'</span><span class="token punctuation">:</span> <span class="token string">'text/html'</span><span class="token punctuation">,</span>
+  <span class="token string">'Set-Cookie'</span><span class="token punctuation">:</span> <span class="token string">'name=hello'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">// 设置多个</span>
+<span class="token string">'Set-Cookie'</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'name=hello'</span><span class="token punctuation">,</span> <span class="token string">'age=12'</span><span class="token punctuation">]</span>
+
+<span class="token comment" spellcheck="true">// 过期时间</span>
+<span class="token string">'Set-Cookie'</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'name=hello; max-age=2'</span><span class="token punctuation">,</span> <span class="token string">'age=12'</span><span class="token punctuation">]</span>
+
+<span class="token comment" spellcheck="true">// 禁止js访问cookie</span>
+<span class="token string">'Set-Cookie'</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'name=hello'</span><span class="token punctuation">,</span> <span class="token string">'age=12; HttpOnly'</span><span class="token punctuation">]</span>
+
+<span class="token comment" spellcheck="true">// 子域名共享主域名cookie，前提是cookie要在主域名下设置</span>
+<span class="token string">'Set-Cookie'</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'name=hello'</span><span class="token punctuation">,</span> <span class="token string">'age=12; domain=example.com'</span><span class="token punctuation">]</span>
+</code></pre>
+<p><strong>Session</strong></p>
+<p>session 机制是一种服务器端的机制，服务器使用一种类似于散列表的结构（也可能就是使用散列表）来保存信息。</p>
+<p>当程序需要为某个客户端的请求创建一个 session 的时候，服务器首先检查这个客户端的请求里是否已包含了一个 session 标识 - 称为 session id，如果已包含一个 session id 则说明以前已经为此客户端创建过 session，服务器就按照 session id 把这个 session 检索出来使用（如果检索不到，可能会新建一个），如果客户端请求不包含 session id，则为此客户端创建一个 session 并且生成一个与此 session 相关联的 session id，session id 的值应该是一个既不会重复，又不容易被找到规律以仿造的字符串，这个 session id 将被在本次响应中返回给客户端保存。</p>
+<p>保存这个 session id 的方式可以采用 cookie，这样在交互过程中浏览器可以自动的按照规则把这个标识发挥给服务器。一般这个 cookie 的名字都是类似于<code>SEEESIONID</code>，而。比如 weblogic 对于 web 应用程序生成的 cookie，<code>JSESSIONID=ByOK3vjFD75aPnrF7C2HmdnV6QZcEbzWoWiBYEnLerjQ99zWpBng!-145788764</code>，它的名字就是<code>JSESSIONID</code>。</p>
+<p>由于 cookie 可以被人为的禁止，必须有其他机制以便在 cookie 被禁止时仍然能够把 session id 传递回服务器。经常被使用的一种技术叫做 URL 重写，就是把 session id 直接附加在 URL 路径的后面，附加方式也有两种，一种是作为 URL 路径的附加信息，表现形式为<code>http://...../xxx;jsessionid=ByOK3vjFD75aPnrF7C2HmdnV6QZcEbzWoWiBYEnLerjQ99zWpBng!-145788764</code></p>
+<p>另一种是作为查询字符串附加在 URL 后面，表现形式为<code>http://...../xxx?jsessionid=ByOK3vjFD75aPnrF7C2HmdnV6QZcEbzWoWiBYEnLerjQ99zWpBng!-145788764</code></p>
+<p>这两种方式对于用户来说是没有区别的，只是服务器在解析的时候处理的方式不同，采用第一种方式也有利于把 session id 的信息和正常程序参数区分开来。为了在整个交互过程中始终保持状态，就必须在每个客户端可能请求的路径后面都包含这个 session id。</p>
+<p>另一种技术叫做表单隐藏字段。就是服务器会自动修改表单，添加一个隐藏字段，以便在表单提交时能够把 session id 传递回服务器。比如下面的表单：</p>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>testform<span class="token punctuation">"</span></span> <span class="token attr-name">action</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>/xxx<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">></span></span>
+</code></pre>
+<p>在被传递给客户端之前将被改写成：</p>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>testform<span class="token punctuation">"</span></span> <span class="token attr-name">action</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>/xxx<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>hidden<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>jsessionid<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>ByOK3vjFD75aPnrF7C2HmdnV6QZcEbzWoWiBYEnLerjQ99zWpBng!-145788764<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">></span></span>
+</code></pre>
+<p>这种技术现在已较少应用，实际上这种技术可以简单的用对 action 应用 URL 重写来代替。</p>
+<h3 id="4-5-HTTP-长连接"><a href="#4-5-HTTP-长连接" class="headerlink" title="4.5 HTTP 长连接"></a>4.5 HTTP 长连接</h3><p>http 的请求是在 tcp 的连接上进行发送的，tcp 连接又分为长连接和短连接。</p>
+<p>长连接就是在 tcp 连接上把 http 请求发送并接收返回，这个时候一次 http 请求已经结束，浏览器和服务器会协商是否断掉这个连接，长连接就是在不断掉连接下可以持续发送 http 请求，适合高并发。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180607-164944-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>在 Connection Id 这一栏可以看到很多 10247 的相同 id，表示这些请求都是在同一连接下发送的。但还是会有不同的连接，因为 http1.1 的连接在 tcp 连接上发送请求是有先后顺序的，不会并发请求。</p>
+<p>我们希望在加载网站首页的时候可以并发处理这些请求，浏览器可以允许产生一个并发的创建 tcp 连接，chrome 允许最大并发数为 6。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180607-170036-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>可以看到，并发情况下会创建不同的 tcp 连接，chrome 如果超出了 6 个并发，后面的请求会等待前面的完成，并且会尽量复用前面的连接地址而保持长连接，这是浏览器默认的行为。</p>
+<p>可以手动关闭长连接</p>
+<pre class=" language-js"><code class="language-js">response<span class="token punctuation">.</span><span class="token function">writeHead</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token string">'Content-Type'</span><span class="token punctuation">:</span> <span class="token string">'image/jpg'</span><span class="token punctuation">,</span>
+  <span class="token string">'Connection'</span><span class="token punctuation">:</span> <span class="token string">'close'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180607-171314-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>关闭长连接之后可以发现每次连接 id 都会不一样，后面的也会等待前面的完成，没有重复利用 tcp 连接，每次请求发送完成 tcp 连接就会关闭。</p>
+<p>一般情况下 keep-alive 都是开启的，并且  会设置一个自动关闭时间。</p>
+<p><strong>信道复用</strong></p>
+<p>在 tcp 连接上并发的发送 http 请求，也就是说在连接一个网站时只需一个 tcp 连接，只在同域下请求有效，http2 实现了这个功能。</p>
+<h3 id="4-6-数据协商"><a href="#4-6-数据协商" class="headerlink" title="4.6 数据协商"></a>4.6 数据协商</h3><p>在客户端发送给服务端请求的时候，客户端会声明这个请求拿到的数据格式以及数据相关的一些限制是怎样的，服务端会根据客户端的这个声明做出判断，从而返回不同的数据类型格式。</p>
+<p><strong>分类</strong></p>
+<ul>
+<li>请求<ul>
+<li>Accept</li>
+<li>Accept-Encoding</li>
+<li>Accept-Language</li>
+<li>User-Agent</li>
+</ul>
+</li>
+<li>返回<ul>
+<li>Content-Type</li>
+<li>Content-Encoding</li>
+<li>Content-Language</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>MIME_types 相关对照表看这里<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types" rel="external nofollow noopener noreferrer" target="_blank">文档</a></p>
+</blockquote>
+<h3 id="4-7-Redirect"><a href="#4-7-Redirect" class="headerlink" title="4.7 Redirect"></a>4.7 Redirect</h3><p>在开发中，我们存放资源的位置如果发生了改变，页面在请求时就会报 404 错误，为了避免这种错误，需要帮助浏览器指向到正确的地址。</p>
+<pre class=" language-js"><code class="language-js">http<span class="token punctuation">.</span><span class="token function">createServer</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> res<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span>req<span class="token punctuation">.</span>url <span class="token operator">===</span> <span class="token string">'/'</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    res<span class="token punctuation">.</span><span class="token function">writeHead</span><span class="token punctuation">(</span><span class="token number">302</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+      <span class="token string">'Location'</span><span class="token punctuation">:</span> <span class="token string">'/new'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    res<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">if</span><span class="token punctuation">(</span>req<span class="token punctuation">.</span>url <span class="token operator">===</span> <span class="token string">'/new'</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    res<span class="token punctuation">.</span><span class="token function">writeHead</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+      <span class="token string">'Content-Type'</span><span class="token punctuation">:</span> <span class="token string">'text/html'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    res<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token string">'&lt;div>web&lt;/div>'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180607-180941-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>图中可以看到第一次请求页面状态码为 302，并跳转到了 new 这个 url 下。</p>
+<p>但是 302 是临时跳转，每一次  访问都要经过服务端的跳转，图中也可以看到有两个 url 的请求。如果确定每次访问 / 下都会跳转到 new 下，可以指定状态码为 301 永久跳转，这样访问页面就只出现 new。</p>
+<p>需要注意的是，301 会尽可能长时间的把跳转页面缓存下来，这时候服务端即使修改了 url，浏览器还是会从缓存里读取，这个是有用户使用浏览器情况所决定的，除非用户主动去清理浏览器缓存。所以 301 要慎重处理。</p>
+<h3 id="4-8-CSP"><a href="#4-8-CSP" class="headerlink" title="4.8 CSP"></a>4.8 CSP</h3><p>Content-Security-Policy 内容安全策略，这使得浏览器变得更加安全。</p>
+<p><strong>作用</strong></p>
+<ul>
+<li>限制资源获取</li>
+<li>报告资源获取越权</li>
+</ul>
+<p><strong>限制方式</strong></p>
+<ul>
+<li>default-src 限制全局</li>
+<li>制定资源类型<ul>
+<li>connect-src</li>
+<li>img-src</li>
+<li>manifest-src</li>
+<li>font-src</li>
+<li>media-src</li>
+<li>style-src</li>
+<li>frame-src</li>
+<li>script-src</li>
+</ul>
+</li>
+</ul>
+<pre class=" language-js"><code class="language-js">res<span class="token punctuation">.</span><span class="token function">writeHead</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token string">'Content-Type'</span><span class="token punctuation">:</span> <span class="token string">'text/html'</span><span class="token punctuation">,</span>
+  <span class="token string">'Content-Security-Policy'</span><span class="token punctuation">:</span> <span class="token string">'default-src http: https:'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>加入限制之后浏览器就会阻止 js 脚本的加载并报错</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180607-183042-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>只允许本站下的资源</p>
+<pre class=" language-js"><code class="language-js">res<span class="token punctuation">.</span><span class="token function">writeHead</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token string">'Content-Type'</span><span class="token punctuation">:</span> <span class="token string">'text/html'</span><span class="token punctuation">,</span>
+  <span class="token string">'Content-Security-Policy'</span><span class="token punctuation">:</span> <span class="token string">'default-src \'self\''</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>允许某些站点的内容</p>
+<pre class=" language-js"><code class="language-js">res<span class="token punctuation">.</span><span class="token function">writeHead</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token string">'Content-Type'</span><span class="token punctuation">:</span> <span class="token string">'text/html'</span><span class="token punctuation">,</span>
+  <span class="token string">'Content-Security-Policy'</span><span class="token punctuation">:</span> <span class="token string">'default-src \'self\' http://www.example.com/'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>限制 form 表单的  跳转</p>
+<pre class=" language-js"><code class="language-js">res<span class="token punctuation">.</span><span class="token function">writeHead</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token string">'Content-Type'</span><span class="token punctuation">:</span> <span class="token string">'text/html'</span><span class="token punctuation">,</span>
+  <span class="token string">'Content-Security-Policy'</span><span class="token punctuation">:</span> <span class="token string">'default-src \'self\'; form-action \'self\''</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<blockquote>
+<p>详细内容可以查看 csp 文档 <a href="https://developer.mozilla.org/zh-CN/docs/Web/Security/CSP" rel="external nofollow noopener noreferrer" target="_blank">MDN CSP</a></p>
+</blockquote>
+<p>内容安全策略如果出现了不希望出现的情况下，可以申请主动向服务端发起请求来汇报</p>
+<pre class=" language-js"><code class="language-js">res<span class="token punctuation">.</span><span class="token function">writeHead</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token string">'Content-Type'</span><span class="token punctuation">:</span> <span class="token string">'text/html'</span><span class="token punctuation">,</span>
+  <span class="token string">'Content-Security-Policy'</span><span class="token punctuation">:</span> <span class="token string">'default-src \'self\' report-uri /report'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180607-185148-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>如果我们只想对限制进行错误报告而不阻止资源加载的话，可以这么写</p>
+<pre class=" language-js"><code class="language-js">res<span class="token punctuation">.</span><span class="token function">writeHead</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token string">'Content-Type'</span><span class="token punctuation">:</span> <span class="token string">'text/html'</span><span class="token punctuation">,</span>
+  <span class="token string">'Content-Security-Policy-Report-Only'</span><span class="token punctuation">:</span> <span class="token string">'default-src \'self\''</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>scp不仅可以写在 headers 里，还可以在html的meta标签里写</p>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">http-equiv</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>Content-Security-Policy<span class="token punctuation">"</span></span> <span class="token attr-name">content</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>default-src <span class="token punctuation">'</span>self<span class="token punctuation">'</span><span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+</code></pre>
+<p>在meta下是不允许写 report-uri 的，这个指令只能写在 headers 里。</p>
+<h2 id="5-Nginx-代理服务器"><a href="#5-Nginx-代理服务器" class="headerlink" title="5. Nginx 代理服务器"></a>5. Nginx 代理服务器</h2><h3 id="5-1-基础代理配置"><a href="#5-1-基础代理配置" class="headerlink" title="5.1 基础代理配置"></a>5.1 基础代理配置</h3><p>nginx 是现在互联网界用的最多的 web 服务器，它是一个非常纯粹的做 http 协议实现的服务器，并没有一个工具来实现业务逻辑的开发。主要是用来做 http 的代理服务器。</p>
+<p>nginx 的安装和用法可以查网上相关教程。这里介绍的主要是 nginx 的代理和缓存的功能。</p>
+<p> 一个最简单的代理</p>
+<pre class=" language-shell"><code class="language-shell">// nginx.conf
+
+server {
+  listen       80;
+  server_name  test.com;
+
+  location / {
+    proxy_pass http://127.0.0.1:8888;
+    # proxy_set_header Host $host;
+  }
+}
+</code></pre>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180608-121046-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180608-121213-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>可以看到，浏览器下 host 是 <code>test.com</code>，但在服务器下就变成了 <code>127.0.0.1:8888</code>。这是因为设置了代理，浏览器请求是发送到 nginx 的，nginx 再进行转发，发送到实际的 node 服务，这时候作为发起方， 它认为的 host 就是这里设置的 <code>proxy_pass</code>。</p>
+<p>想要拿到浏览器的 host 。可以设置 <code>proxy_set_header</code> 属性 <code>$host</code>。</p>
+<p>中间代理可以修改任何想要修改的数据，但只是在 http 中，https 的传输过程是加密的，中间代理无法解析。在手机上所看到的一些移动联通的  广告就是  经过代理层插入了一些代码所展示的。</p>
+<h3 id="5-2-nginx-缓存"><a href="#5-2-nginx-缓存" class="headerlink" title="5.2 nginx 缓存"></a>5.2 nginx 缓存</h3><pre class=" language-shell"><code class="language-shell"># nginx.conf
+
+proxy_cache_path cache levels=1:2 keys_zone=my_cache:10m;
+
+server {
+  listen       80;
+  server_name  example.com;
+
+  location / {
+    proxy_cache my_cache;
+    proxy_pass http://127.0.0.1:8080;
+    proxy_set_header Host $host;
+  }
+}
+</code></pre>
+<p><strong>proxy_cache_path：</strong>第一个选项表示缓存路径，<code>levels</code> 是否创建二级文件夹，<code>keys_zone</code> url 对应的缓存位置及内存大小</p>
+<pre class=" language-js"><code class="language-js">response<span class="token punctuation">.</span><span class="token function">writeHead</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token string">'Cache-Control'</span><span class="token punctuation">:</span> <span class="token string">'max-age=10, s-maxage=10, private'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p><code>s-maxage</code> 是专门为代理缓存设置过期时间的，而 private 就表示只允许浏览器缓存。</p>
+<h3 id="5-3-HTTPS"><a href="#5-3-HTTPS" class="headerlink" title="5.3 HTTPS"></a>5.3 HTTPS</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180608-130309-2x-2.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>https 在传输过程中，客户端会生成一个随机数传输到服务端，中间会带上一个  支持的加密套件，服务端拿到之后保存并且也生成一段随机数，然后把这段随机数和服务端生成的证书一同发到客户端，同时客户端也会把服务端的随机数保存，并且通过服务端证书生成预主秘钥，生成过程也会生成一个随机数，这个随机数  通过公钥加密后传输给服务端，服务端通过私钥解密拿到预主秘钥。然后客户端和服务端同时对这  三个随机数进行算法解密生成主密钥(这里会涉及到加密套件，服务端选择的加密套件必须是客户端所支持的)，后续的数据传输都是经过主密钥加密进行传输的。这对主密钥只有客户端和服务端共有，中间代理无法破解 ，这就是 https 的加密原理。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180608-131702-2x-2.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>这里是通过抓取工具抓的 https 加密的站点，可以看到，数据都被加密，无法破解。</p>
+<h4 id="5-3-1-nginx-部署-https-服务"><a href="#5-3-1-nginx-部署-https-服务" class="headerlink" title="5.3.1 nginx 部署 https 服务"></a>5.3.1 nginx 部署 https 服务</h4><p>要部署 https 服务，首先要生成一对公钥和私钥，这里有一个  命令可以帮助生成</p>
+<pre class=" language-shell"><code class="language-shell">openssl req -x509 -newkey rsa:2048 -nodes -sha256 -keyout localhost-privkey.pem -out localhost-cert.pem
+</code></pre>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180608-170452-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>敲入回车之后可以看到这样的提示，这里我们测试，全部按回车跳过就好。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180608-170824-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>最终会生成两个文件，然后在 nginx 配置这个证书</p>
+<pre class=" language-shell"><code class="language-shell">// nginx.conf
+
+proxy_cache_path cache levels=1:2 keys_zone=my_cache:10m;
+
+server {
+  listen       80 default_server;
+  listen       [::]:80 default_server;
+  server_name  test.com;
+  return 302 https://$server_name$request_uri;
+}
+
+server {
+  listen       443;
+  server_name  test.com;
+
+  ssl on;
+  ssl_certificate_key /www/data/cert/localhost-privkey.pem;
+  ssl_certificate /www/data/cert/localhost-cert.pem;
+
+  location / {
+    proxy_cache my_cache;
+    proxy_pass http://127.0.0.1:8080;
+    proxy_set_header Host $host;
+  }
+}
+  ssl on;
+  ssl_certificate_key /www/data/cert/localhost-privkey.pem;
+  ssl_certificate /www/data/cert/localhost-cert.pem;
+
+  location / {
+    proxy_cache my_cache;
+    proxy_pass http://127.0.0.1:8080;
+    proxy_set_header Host $host;
+  }
+}
+</code></pre>
+<p>配置好之后重启 nginx 服务，然后输入 https 的域名<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180608-171754-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure></p>
+<p>提示非安全连接是因为 chrome 浏览器认为的安全证书是要通过有权威的机构去签发的，这种机构会先认证域名所有者与服务是否属于你，验证通过才会签发证书。</p>
+<h4 id="5-3-2-http2"><a href="#5-3-2-http2" class="headerlink" title="5.3.2 http2"></a>5.3.2 http2</h4><ul>
+<li>优势<ul>
+<li>信道复用</li>
+<li>分帧传输</li>
+<li>Server Push(推送)</li>
+</ul>
+</li>
+</ul>
+<p><strong>http2 的使用</strong></p>
+<pre class=" language-js"><code class="language-js">res<span class="token punctuation">.</span><span class="token function">writeHead</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  <span class="token string">'Content-Type'</span><span class="token punctuation">:</span> <span class="token string">'text/html'</span><span class="token punctuation">,</span>
+  <span class="token string">'Link'</span><span class="token punctuation">:</span> <span class="token string">'&lt;/test.jpg>; as=image; rel=preload'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>server 头信息了的 <code>Link</code>可以指定这个头想要推送的内容，<code>&lt;/xxx&gt;</code> 为文件绝对路径，<code>as</code> 指定文件类型，<code>preload</code> 表示需要进行服务端推送。</p>
+<p>nginx 里也要做这些配置。在使用 nginx 做反向代理时，我们希望 nginx 帮助处理这些东西，而 http2 也是在 nginx 里提供的，node server 还是  为 http 的服务，nginx 会把 http2 的请求转化为 http 的请求发送到 node 服务上。</p>
+<p>为何不在 node 上做 http2 的服务呢，因为在 nginx 开启一个 http2 的服务是非常容易的，在 node 上做 http2 的服务可能还会涉及到大量的逻辑修改，成本开销比较大。</p>
+<blockquote>
+<p>需要注意的是，目前只有在 https 下才能开启 http2</p>
+</blockquote>
+<p>在 nginx 下开启 http2 很简单。</p>
+<pre class=" language-shell"><code class="language-shell">// nginx.conf
+
+proxy_cache_path cache levels=1:2 keys_zone=my_cache:10m;
+
+server {
+  listen       80 default_server;
+  listen       [::]:80 default_server;
+  server_name  test.com;
+  return 302 https://$server_name$request_uri;
+}
+
+server {
+  listen       443 http2;
+  server_name  test.com;
+  http2_push_preload on;
+
+  ssl on;
+  ssl_certificate_key /www/data/cert/localhost-privkey.pem;
+  ssl_certificate /www/data/cert/localhost-cert.pem;
+
+  location / {
+    proxy_cache my_cache;
+    proxy_pass http://127.0.0.1:8080;
+    proxy_set_header Host $host;
+  }
+}
+</code></pre>
+<p><code>http2_push_preload</code> 开启之后，在接收 node 返回信息里如果有  <code>Link：rel=preload</code>，就会去寻找该路径资源，然后主动推送。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180608-175257-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>可以看到 <code>Protocal</code> 值为 <code>h2</code>，这个就是 http2 的缩写。</p>
+<p>这里有一个可以测试 http2 性能的网站 <a href="https://http2.akamai.com/demo/http2-lab.html" rel="external nofollow noopener noreferrer" target="_blank">网站入口</a></p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180608-183211-2x-2.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>可以看到，使用 HTTP2 的性能提升非常显著。</p>
+<p>有些浏览器不支持 http2，nginx 会帮助浏览器做兼容处理，这个兼容方案为 ALPN ，客户端跟服务端会进行协商用哪个协议，如果客户端只支持 http1.1，服务端就会以 http1.1 的传输方式进行。</p>
+<p><strong>以上就是对 http 知识的总结</strong></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-05-29T12:36:00.000Z" itemprop="dateUpdated">2018-05-29 20:36:00</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能优化/">性能优化</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/a4336408/&title=《HTTP 相关知识了解一下》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/a4336408/&title=《HTTP 相关知识了解一下》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/a4336408/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《HTTP 相关知识了解一下》 — Sixin的小站&url=http://coder.liusixin.cn/posts/a4336408/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/a4336408/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/92e76411/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">网站性能优化实战——从12.67s到1.06s的故事</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/a0b65e8c/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Docker 常用命令及实践</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/a4336408/&title=《HTTP 相关知识了解一下》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/a4336408/&title=《HTTP 相关知识了解一下》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/a4336408/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《HTTP 相关知识了解一下》 — Sixin的小站&url=http://coder.liusixin.cn/posts/a4336408/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/a4336408/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABxklEQVR42u3aS24jMQwFQN//0s52gIa7H8mIcAalleEocmlD8KPXK17vy/r3+0+fr/uvZ75OLFxc3DH3fbuue5JrfAIl5z9cFRcXd5F7H2jug87kqrkBFxf3L3Krp+Hi4v5P3LwQuj8ZFxf3+7lJmpLQE+JSrYaLizvg5l3Kc5+P9HdxcXFb3Hdx9f6rGto+noCLi7vCzQNKMkqZnxbtxMXFXeFOmpv5NaopVOEEXFzcX+X2GhAnmqTNjAwXF/cAN+8/JH+dlEO9ESwuLu45brWRkYe5ahITpUq4uLgr3HxrvmcyLo0iLi4u7jFuNe3I06D8MoWmDC4u7gq3OizptUerdVhUq+Hi4h7j5q3PXtjKU6ik1YKLi7vDnacyvYvl66EhgouLe5g7CVXzJ1aFX8TFxV3kJvRJU6M6cH1om+Li4q5we6VL/k1vlFJ+G4KLizvm9p5S5YPV5LFFoUzCxcVd4VbbE72UZfIqpHkZXFzcMTcPXr3RaT6+jS6Di4u7yM0DTZ7iRE+serUaLi7uV3Kro9bq84uH5gguLu6XcScFzLxMwsXF3eROmp7JeDVpeUShExcXd4U7aW72SprekAYXF3eF+wMpAkjn7K9ZDAAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

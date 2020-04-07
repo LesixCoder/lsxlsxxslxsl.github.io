@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/9853017/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/9853017/">
+    
+    
+    <title>你不知道的Javascript--this指针 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="javascript">
+    <meta name="description" content="阅读 你不知道的 JavaScript 上卷 整理的关于 this 问题的总结  前言this 关键字是 JavaScript 中最复杂的机制之一，它不是一个特殊的关键字，被自动定义在所有的函数作用域中。 来看一个例子 function identify() {   console.log(this.name);   return this.name.toUpperCase(); }  func">
+<meta name="keywords" content="javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="你不知道的Javascript--this指针">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/9853017/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="阅读 你不知道的 JavaScript 上卷 整理的关于 this 问题的总结  前言this 关键字是 JavaScript 中最复杂的机制之一，它不是一个特殊的关键字，被自动定义在所有的函数作用域中。 来看一个例子 function identify() {   console.log(this.name);   return this.name.toUpperCase(); }  func">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180722-152634@2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180722-153046@2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180722-153249@2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180722-172731@2x.png">
+<meta property="og:updated_time" content="2018-01-10T13:50:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="你不知道的Javascript--this指针">
+<meta name="twitter:description" content="阅读 你不知道的 JavaScript 上卷 整理的关于 this 问题的总结  前言this 关键字是 JavaScript 中最复杂的机制之一，它不是一个特殊的关键字，被自动定义在所有的函数作用域中。 来看一个例子 function identify() {   console.log(this.name);   return this.name.toUpperCase(); }  func">
+<meta name="twitter:image" content="http://cdn-blog.liusixin.cn/WX20180722-152634@2x.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">你不知道的Javascript--this指针</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">你不知道的Javascript--this指针</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-01-10T13:50:04.000Z" itemprop="datePublished" class="page-time">
+  2018-01-10
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#关于-this-的误解"><span class="post-toc-number">2.</span> <span class="post-toc-text">关于 this 的误解</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#this-值得是它自己"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">this 值得是它自己</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#this-值得是他的作用域"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">this 值得是他的作用域</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#什么是-this"><span class="post-toc-number">3.</span> <span class="post-toc-text">什么是 this</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#彻底明白-this-到底指向谁"><span class="post-toc-number">4.</span> <span class="post-toc-text">彻底明白 this 到底指向谁</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#调用点"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">调用点</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#来点规则，有规可寻"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">来点规则，有规可寻</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">5.</span> <span class="post-toc-text">总结</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#绑定例外"><span class="post-toc-number">6.</span> <span class="post-toc-text">绑定例外</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#es6-中的箭头函数"><span class="post-toc-number">6.1.</span> <span class="post-toc-text">es6 中的箭头函数</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#经典面试题"><span class="post-toc-number">7.</span> <span class="post-toc-text">经典面试题</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/javascript/你不知道的Javascript--this指针" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">你不知道的Javascript--this指针</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-01-10 21:50:04" datetime="2018-01-10T13:50:04.000Z" itemprop="datePublished">2018-01-10</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>阅读 你不知道的 JavaScript 上卷 整理的关于 this 问题的总结</p>
+</blockquote>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>this 关键字是 JavaScript 中最复杂的机制之一，它不是一个特殊的关键字，被自动定义在所有的函数作用域中。</p>
+<p>来看一个例子</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">identify</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>name<span class="token punctuation">.</span><span class="token function">toUpperCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">speak</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> gretting <span class="token operator">=</span> <span class="token string">'Hello I am '</span> <span class="token operator">+</span> identify<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>gretting<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">var</span> me <span class="token operator">=</span> <span class="token punctuation">{</span>
+  name<span class="token punctuation">:</span> <span class="token string">'Liusixin'</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">var</span> you <span class="token operator">=</span> <span class="token punctuation">{</span>
+  name<span class="token punctuation">:</span> <span class="token string">'xinxin'</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+identify<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>me<span class="token punctuation">)</span><span class="token punctuation">;</span>
+identify<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>you<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+speak<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>me<span class="token punctuation">)</span><span class="token punctuation">;</span>
+speak<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>you<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>运行结果如下</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180722-152634@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<h2 id="关于-this-的误解"><a href="#关于-this-的误解" class="headerlink" title="关于 this 的误解"></a>关于 this 的误解</h2><h3 id="this-值得是它自己"><a href="#this-值得是它自己" class="headerlink" title="this 值得是它自己"></a>this 值得是它自己</h3><p>通常人们都会认为 this 就是指向函数本身，至于为什么在函数中引用他自己呢，可能就是因为递归这种情况的存在吧。但是这里，我想说，this 并不是指向函数本身的</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">foo</span><span class="token punctuation">(</span>num<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'foo:'</span> <span class="token operator">+</span> num<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>count<span class="token operator">++</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+foo<span class="token punctuation">.</span>count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">foo</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>foo<span class="token punctuation">.</span>count<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180722-153046@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>通过运行上面的代码我们可以看到，foo 函数的确是被调用了十次，但是 this.count 似乎并没有加到 foo.count 上。也就是说，函数中的 this.count 并不是 foo.count。</p>
+<p>所以，这里我们一定要记住一个，就是函数中的 this 并不是指向函数本身的。上面的代码修改如下：</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">foo</span><span class="token punctuation">(</span>num<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'foo:'</span> <span class="token operator">+</span> num<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>count<span class="token operator">++</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+foo<span class="token punctuation">.</span>count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  foo<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>foo<span class="token punctuation">,</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>foo<span class="token punctuation">.</span>count<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180722-153249@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>运行如上代码，此时我们就可以看到 foo 函数中的 count 的确已经变成 10 了</p>
+<h3 id="this-值得是他的作用域"><a href="#this-值得是他的作用域" class="headerlink" title="this 值得是他的作用域"></a>this 值得是他的作用域</h3><p>另一种对 this 的误解是它不知怎么指向函数的作用域，其实从某种意义上来说他是正确的，但是从另一种意义上来说，这的确是一种误解。</p>
+<p>明确的说，this 不会以任何方式指向函数的词法作用域，作用域好像是一个将所有可用标识符作为属性的对象，这从内部来说他是对的，但是 JavaScript 代码不能访问这个作用域“对象”，因为它是引擎内部的实现。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> a <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">bar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">bar</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// undefined</span>
+</code></pre>
+<p>首先，<code>this.bar()</code>访问 bar 函数，的确他做到了。虽然只是碰巧而已。然而，写下这段代码的开发者试图使用 this 在 foo 和 bar 的词法作用域中建立一座桥，是的 bar 可以访问 foo 内部变量作用域 a。当然，这是不可能的，不可能使用 this 引用在词法作用域中查找东西。</p>
+<h2 id="什么是-this"><a href="#什么是-this" class="headerlink" title="什么是 this"></a>什么是 this</h2><p>记住，this 不是在编写时候绑定的，而是在运行时绑定的上下文执行环境。this 绑定和函数声明无关，反而和函数被调用的方式有关系。</p>
+<p>当一个函数被调用的时候，会建立一个活动记录，也成为执行环境。这个记录包含函数是从何处（call-stack）被调用的，函数是 如何 被调用的，被传递了什么参数等信息。这个记录的属性之一，就是在函数执行期间将被使用的 this 引用。</p>
+<h2 id="彻底明白-this-到底指向谁"><a href="#彻底明白-this-到底指向谁" class="headerlink" title="彻底明白 this 到底指向谁"></a>彻底明白 this 到底指向谁</h2><h3 id="调用点"><a href="#调用点" class="headerlink" title="调用点"></a>调用点</h3><p>为了彻底弄明白 this 的指向问题，我们还必须明白什么是调用点，即一个函数被调用的位置。考虑调用栈（即使我们到达当前执行位置而被调用的所有方法堆栈）是非常重要的，我们关心的调用点就是当前执行函数的之前的调用</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">baz</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// 调用栈是: `baz`</span>
+  <span class="token comment" spellcheck="true">// 我们的调用点是global scope（全局作用域）</span>
+
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'baz'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">bar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// &lt;-- `bar`的调用点</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">bar</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// 调用栈是: `baz` -> `bar`</span>
+  <span class="token comment" spellcheck="true">// 我们的调用点位于`baz`</span>
+
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'bar'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// &lt;-- `foo`的call-site</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// 调用栈是: `baz` -> `bar` -> `foo`</span>
+  <span class="token comment" spellcheck="true">// 我们的调用点位于`bar`</span>
+
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'foo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token function">baz</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// &lt;-- `baz`的调用点</span>
+</code></pre>
+<h3 id="来点规则，有规可寻"><a href="#来点规则，有规可寻" class="headerlink" title="来点规则，有规可寻"></a>来点规则，有规可寻</h3><p>我们必须考察调用点，来判断下面即将要说的四中规则哪一种适用。先独立解释下四中规则的每一种，然后再来说明下如果多种规则适用调用点时他们的优先级。</p>
+<p><strong>默认绑定</strong></p>
+<p>所谓的默认绑定，就是独立函数的调用形式。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">var</span> a <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+
+<span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 2</span>
+</code></pre>
+<p>为什么会是 2 呢，因为在调用 foo 的时候，JavaScript 对 this 实施了默认绑定，所以 this 就指向了全局对象。</p>
+<p>我们怎么知道这里适用 默认绑定 ？我们考察调用点来看看 foo()是如何被调用的。在我们的代码段中，foo()是被一个直白的，毫无修饰的函数引用调用的。没有其他的我们将要展示的规则适用于这里，所以 默认绑定 在这里适用。</p>
+<p>需要注意的是，对于严格模式来说，默认绑定全局对象是不合法的，this 被置为 undefined。但是一个很微妙的事情是，即便是所有的 this 绑定规则都是基于调用点的，如果 foo 的内容没有严格模式下，默认绑定也是合法的。</p>
+<p><strong>隐含绑定</strong></p>
+<p>调用点是否有一个环境对象，也成为拥有者和容器对象。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">var</span> obj <span class="token operator">=</span> <span class="token punctuation">{</span>
+  a<span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">,</span>
+  foo<span class="token punctuation">:</span> foo
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+obj<span class="token punctuation">.</span><span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 2</span>
+</code></pre>
+<p>foo 被声明，然后被 obj 添加到其属性上，无论<code>foo()</code>是否一开始就在 obj 上被声明，还是后来作为引用添加（如上面代码所示），都是这个 函数 被 obj 所“拥有”或“包含”。</p>
+<p>这里需要注意的是，只有对象属性引用链的最后一层才影响调用点</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">var</span> obj2 <span class="token operator">=</span> <span class="token punctuation">{</span>
+  a<span class="token punctuation">:</span> <span class="token number">42</span><span class="token punctuation">,</span>
+  foo<span class="token punctuation">:</span> foo
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">var</span> obj1 <span class="token operator">=</span> <span class="token punctuation">{</span>
+  a<span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">,</span>
+  obj2<span class="token punctuation">:</span> obj2
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+obj1<span class="token punctuation">.</span>obj2<span class="token punctuation">.</span><span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 42</span>
+</code></pre>
+<p><strong>隐含绑定丢死</strong></p>
+<p>this 绑定最让人头疼的地方就是隐含绑定丢失了他的绑定，其实明确了调用位置，这个也不是难点。直接看代码</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">var</span> obj <span class="token operator">=</span> <span class="token punctuation">{</span>
+  a<span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">,</span>
+  foo<span class="token punctuation">:</span> foo
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">var</span> bar <span class="token operator">=</span> obj<span class="token punctuation">.</span>foo<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 函数引用！</span>
+
+<span class="token keyword">var</span> a <span class="token operator">=</span> <span class="token string">'oops, global'</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// `a`也是一个全局对象的属性</span>
+
+<span class="token function">bar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// "oops, global"</span>
+</code></pre>
+<p>所以如上的调用模式，我们又退回到了默认绑定模式。</p>
+<p>接着看</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">doFoo</span><span class="token punctuation">(</span>fn<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// `fn` 只不过`foo`的另一个引用</span>
+
+  <span class="token function">fn</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// &lt;-- 调用点!</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">var</span> obj <span class="token operator">=</span> <span class="token punctuation">{</span>
+  a<span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">,</span>
+  foo<span class="token punctuation">:</span> foo
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">var</span> a <span class="token operator">=</span> <span class="token string">'oops, global'</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// `a`也是一个全局对象的属性</span>
+
+<span class="token function">doFoo</span><span class="token punctuation">(</span>obj<span class="token punctuation">.</span>foo<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// "oops, global"</span>
+</code></pre>
+<p>参数传递，仅仅是一种隐含的赋值，而且因为我们是传递一个函数，他是一个隐含的引用赋值，所以最终结果和我们前一段代码一样。</p>
+<p>所以，在回调函数中丢失 this 绑定是一件很常见的事情，但是还有另一种情况，接受我们回调的函数故意改变 this 的值。那些很受欢迎的事件处理 JavaScript 包就十分喜欢强制你的回调的 this 指向触发事件的 DOM 元素。</p>
+<p>不管哪一种意外改变 this 的方式，你都不能真正地控制你的回调函数引用将如何被执行，所以你（还）没有办法控制调用点给你一个故意的绑定。我们很快就会看到一个方法，通过 固定 this 来解决这个问题。</p>
+<p><strong>如上，我们一定要清除的是引用和调用。记住，找 this，我们只看调用，别被引用所迷惑</strong></p>
+<p><strong>明确绑定</strong></p>
+<p>在 JavaScript 中，我们可以强制制定一个函数在运行时候的 this 值。是的，call 和 apply，他们的作用就是扩充函数赖以生存的作用域。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">var</span> obj <span class="token operator">=</span> <span class="token punctuation">{</span>
+  a<span class="token punctuation">:</span> <span class="token number">2</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+foo<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 2</span>
+</code></pre>
+<p>上面代码，我们使用 foo，强制将 foo 的 this 指定为 obj</p>
+<p>如果你传递一个简单原始类型值（string，boolean，或 number 类型）作为 this 绑定，那么这个原始类型值会被包装在它的对象类型中（分别是 new String(..)，new Boolean(..)，或 new Number(..)）。这通常称为“boxing（封箱）”。</p>
+<p>但是，单独的依靠明确绑定仍然不能为我们先前提到的问题，提供很好的解决方案，也就是函数丢失自己原本的 this 绑定。</p>
+<p><strong>硬性绑定</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">var</span> obj <span class="token operator">=</span> <span class="token punctuation">{</span>
+  a<span class="token punctuation">:</span> <span class="token number">2</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">var</span> bar <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  foo<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token function">bar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 2</span>
+<span class="token function">setTimeout</span><span class="token punctuation">(</span>bar<span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 2</span>
+
+<span class="token comment" spellcheck="true">// `bar`将`foo`的`this`硬绑定到`obj`</span>
+<span class="token comment" spellcheck="true">// 所以它不可以被覆盖</span>
+bar<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>window<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 2</span>
+</code></pre>
+<p>我们创建了一个函数<code>bar()</code>，在它的内部手动调用<code>foo.call(obj)</code>，由此强制 this 绑定到 obj 并调用 foo。无论你过后怎样调用函数 bar，它总是手动使用 obj 调用 foo。这种绑定即明确又坚定，所以我们称之为 硬绑定（hard binding）</p>
+<p><strong>new 绑定</strong></p>
+<p>这个比较简单，当函数前面加入 new 关键字调用的时候，其实就是当做构造函数调用的。其内部其实完成了如下事情：</p>
+<ul>
+<li>一个新的对象会被创建</li>
+<li>这个新创建的对象会被接入原型链</li>
+<li>这个新创建的对象会被设置为函数调用的 this 绑定</li>
+<li>除非函数返回一个他自己的其他对象，这个被 new 调用的函数将自动返回一个新创建的对象</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>函数是否在 new 中调用，如果是的话 this 绑定的是新创建的对象</li>
+</ul>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> bar <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<ul>
+<li>函数是否通过 call、apply 或者其他硬性调用，如果是的话，this 绑定的是指定的对象</li>
+</ul>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> bar <span class="token operator">=</span> foo<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<ul>
+<li>函数是否在某一个上下文对象中调用,如果是的话，this 绑定的是那个上下文对象</li>
+</ul>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> bar <span class="token operator">=</span> obj<span class="token punctuation">.</span><span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<ul>
+<li>如果都不是的话，使用默认绑定，如果在严格模式下，就绑定到 undefined，注意这里是方法里面的严格声明。否则绑定到全局对象</li>
+</ul>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> bar <span class="token operator">=</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<h2 id="绑定例外"><a href="#绑定例外" class="headerlink" title="绑定例外"></a>绑定例外</h2><p>第一种情况就是将 null 和 undefined 传给 call、apply、bind 等函数，然后此时 this 采用的绑定规则是默认绑定</p>
+<p>第二种情况这里举个例子，也是面试中常常会出现的例子</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> a <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> o <span class="token operator">=</span> <span class="token punctuation">{</span>
+  a<span class="token punctuation">:</span> <span class="token number">3</span><span class="token punctuation">,</span>
+  foo<span class="token punctuation">:</span> foo
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> p <span class="token operator">=</span> <span class="token punctuation">{</span>
+  a<span class="token punctuation">:</span> <span class="token number">4</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">(</span>p<span class="token punctuation">.</span>foo <span class="token operator">=</span> o<span class="token punctuation">.</span>foo<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 2</span>
+</code></pre>
+<p>如上调用，其实 foo 采用的也是默认绑定，这里我们需要知道的是，p.foo = o.foo 的返回值是目标函数的引用，所以最后一句其实就是 foo()</p>
+<h3 id="es6-中的箭头函数"><a href="#es6-中的箭头函数" class="headerlink" title="es6 中的箭头函数"></a>es6 中的箭头函数</h3><p>es6 中的箭头函数比较简单，由于箭头函数并不是 function 关键字定义的，所以箭头函数不适用 this 的这四中规则，而是根据外层函数或者全局作用域来决定 this</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// 返回一个arrow function</span>
+  <span class="token keyword">return</span> a <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 这里的`this`是词法上从`foo()`采用</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">var</span> obj1 <span class="token operator">=</span> <span class="token punctuation">{</span>
+  a<span class="token punctuation">:</span> <span class="token number">2</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">var</span> obj2 <span class="token operator">=</span> <span class="token punctuation">{</span>
+  a<span class="token punctuation">:</span> <span class="token number">3</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">var</span> bar <span class="token operator">=</span> foo<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>obj1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+bar<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span>obj2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 2</span>
+</code></pre>
+<p>这里 foo 内部创建的箭头函数会自动获取 foo 的 this。</p>
+<h2 id="经典面试题"><a href="#经典面试题" class="headerlink" title="经典面试题"></a>经典面试题</h2><p>如果能把这两个题搞清楚的话，可以说所有的关于 this 指向的问题都难不倒你了，go on！</p>
+<ul>
+<li>第一题</li>
+</ul>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> a <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> foo <span class="token operator">=</span> <span class="token punctuation">{</span>
+  a<span class="token punctuation">:</span> <span class="token number">20</span><span class="token punctuation">,</span>
+  bar<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> a <span class="token operator">=</span> <span class="token number">30</span><span class="token punctuation">;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>a<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+foo<span class="token punctuation">.</span><span class="token function">bar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+foo<span class="token punctuation">.</span><span class="token function">bar</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">(</span>foo<span class="token punctuation">.</span>bar <span class="token operator">=</span> foo<span class="token punctuation">.</span>bar<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">(</span>foo<span class="token punctuation">.</span>bar<span class="token punctuation">,</span> foo<span class="token punctuation">.</span>bar<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>这个题的答案是怎么分析的呢:</p>
+<ul>
+<li>第一个不多说了</li>
+<li>第二个也不多做解释，引用没有变</li>
+<li>第三个需要解释一下，经过赋值，运算符运算后，都是纯粹的函数，不是对象方法的引用。所以函数指向的 this 都是 windows 的</li>
+<li>第四个，首先要清楚逗号表示什么，一张图说明一切<br><img src="http://cdn-blog.liusixin.cn/WX20180722-172731@2x.png" alt=""></li>
+</ul>
+<p><strong>答案：20 20 10 10</strong></p>
+<ul>
+<li>第二题</li>
+</ul>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> number <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> obj <span class="token operator">=</span> <span class="token punctuation">{</span>
+  number<span class="token punctuation">:</span> <span class="token number">4</span><span class="token punctuation">,</span>
+  <span class="token comment" spellcheck="true">/*匿名函数自调*/</span>
+  fn1<span class="token punctuation">:</span> <span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> number<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>number <span class="token operator">*</span><span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+
+    number <span class="token operator">=</span> number <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">;</span>
+    number <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">var</span> num <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>number<span class="token punctuation">;</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>number <span class="token operator">*</span><span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>num<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      number <span class="token operator">*</span><span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span>
+      <span class="token function">alert</span><span class="token punctuation">(</span>number<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+
+  db2<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>number <span class="token operator">*</span><span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">var</span> fn1 <span class="token operator">=</span> obj<span class="token punctuation">.</span>fn1<span class="token punctuation">;</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span>number<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">fn1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+obj<span class="token punctuation">.</span><span class="token function">fn1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span>window<span class="token punctuation">.</span>number<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span>obj<span class="token punctuation">.</span>number<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>这个题目有点长，解释这个题，我们需要分步骤去理解它，我们先给题目做个标注</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> number <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> obj <span class="token operator">=</span> <span class="token punctuation">{</span>
+  number<span class="token punctuation">:</span> <span class="token number">4</span><span class="token punctuation">,</span>
+  fn1<span class="token punctuation">:</span> <span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 匿名函数1</span>
+    <span class="token keyword">var</span> number<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>number <span class="token operator">*</span><span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// (1)</span>
+    number <span class="token operator">=</span> number <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// (2)</span>
+    number <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">// 匿名函数(2)</span>
+      <span class="token keyword">var</span> num <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>number<span class="token punctuation">;</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>number <span class="token operator">*</span><span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>num<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      number <span class="token operator">*</span><span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span>
+      <span class="token function">alert</span><span class="token punctuation">(</span>number<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  db2<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>number <span class="token operator">*</span><span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> fn1 <span class="token operator">=</span> obj<span class="token punctuation">.</span>fn1<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// (3)</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>number<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// (4)</span>
+<span class="token function">fn1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// (5)</span>
+obj<span class="token punctuation">.</span><span class="token function">fn1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// (6)</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>window<span class="token punctuation">.</span>number<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>obj<span class="token punctuation">.</span>number<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<ul>
+<li>当定义<code>obj</code>的时候执行了<code>匿名函数1</code>，此时处于全局作用域内，因此上下文 this 是 window。执行完语句<code>(1)</code>导致<code>全局变量number</code>的值变为 4；执行语句<code>(2)</code>时<code>临时变量number</code>还没有被赋值，所以是 NaN，但下一句会将其赋值为 3；最后，<code>匿名函数1</code>返回了<code>匿名函数2</code>，因此<code>obj.fn1=匿名函数2</code>。（注意匿名函数 2 里面会用到<code>临时变量number</code>）</li>
+<li>来到语句<code>(3)</code>，这句会把<code>fn1</code>这个变量赋值为<code>obj.fn1</code>，也就是<code>匿名函数2</code></li>
+<li>由于<code>全局变量number</code>已经在语句<code>(1)</code>中变为了 4，所以语句<code>(4)</code>弹出的对话框结果为 4</li>
+<li>语句<code>(5)</code>执行的是<code>fn1()</code>，它与执行<code>obj.fn1()</code>的区别是两者 this 不一样。前者为 null，而后者 this 为 obj。但是又由于 JS 规定，this 为 null 时相当于全局对象 window，所以这句代码执行时函数的 this 为 window。在<code>匿名函数2</code>里会将<code>全局变量number</code>更新为 8，同时将匿名函数 1 中被闭包的<code>临时变量number</code>更新为 9</li>
+<li>语句<code>(6)</code>的效果在上面已经分析过了，this 是 obj，所以<code>obj.number</code>更新为 8，<code>闭包的number</code>更新为 27</li>
+</ul>
+<p><strong>答案：弹出 4 9 27 8 8</strong></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-01-10T13:50:04.000Z" itemprop="dateUpdated">2018-01-10 21:50:04</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/9853017/&title=《你不知道的Javascript--this指针》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/9853017/&title=《你不知道的Javascript--this指针》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/9853017/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《你不知道的Javascript--this指针》 — Sixin的小站&url=http://coder.liusixin.cn/posts/9853017/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/9853017/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/84b9f49b/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Javascript 原型与原型链浅析</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/efd83ca1/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">使用canvas制作粒子效果全屏背景</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/9853017/&title=《你不知道的Javascript--this指针》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/9853017/&title=《你不知道的Javascript--this指针》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/9853017/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《你不知道的Javascript--this指针》 — Sixin的小站&url=http://coder.liusixin.cn/posts/9853017/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/9853017/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABxklEQVR42u3ay2rDMBAF0Pz/T6fQVaBEuVeyFBeOVqZVpeMuhnn48YjX83e9Pr/+ZLzn786/+y9euLi4y9zncOWU8Z71/bi4uOe5bfAaHzpmjZ8/2HBxcW/GzV9j7uVxcXH/IzcJZ+vBDhcX9z7c/OI2ARp3NjbWari4uAvcuYbptc/b+7u4uLgXTSWSRmcSntr26NvbcXFxj3DfXT9XDrWF0FyjBBcXdzc3/7M8qM2VLlEzBRcX9wh3pThZSXTak9+mOLi4uBu44yFHPgKZO6FNenBxcc9w5xqjc8OPfGQ7Dou4uLh34Cbh7Ko0qC6ccHFxt3Hb4NW2S9oRywXzXlxc3A3cvHTJT8tHJh/24OLifonb9lzbZAgXF/fO3LwIaT/PaguepP2Ki4t7hlsMLcq2acKde0lcXNzd3HYUmh/dpjvRqBUXF/cgd2UQMlfYPOKFi4v7LW6+Vj7MSgqtwo6Li7uN2waUPAFqmx3tb3FxcXdzdwSv/MOLehCLi4t7kDv3IcX6mKS9FxcX927cuTSoPfnDvbi4uLfktiPVHBSNbXBxcQ9yi2FnOS5tP9W6rC2Ci4u7wJ1rmF6VHs39a3BxcbdxfwAlXPwzOnqZygAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

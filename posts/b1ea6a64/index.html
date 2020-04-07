@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/b1ea6a64/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/b1ea6a64/">
+    
+    
+    <title>造轮子系列：JS封装拖拽组件 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="javascript,jQuery">
+    <meta name="description" content="封装一个拖拽对象1. 如何让一个 DOM 元素动起来拖拽的本质就是让 DOM 元素能够跟着鼠标运动起来。 在页面中创建一个 class 名为 drag 的 div 标签，它的基本样式如下: &amp;lt;!DOCTYPE html&amp;gt; &amp;lt;html lang=&quot;en&quot;&amp;gt; &amp;lt;head&amp;gt;   &amp;lt;meta charset=&quot;UTF-8&quot;&amp;gt;   &amp;lt;meta name=&quot;viewport&quot; c">
+<meta name="keywords" content="javascript,jQuery">
+<meta property="og:type" content="article">
+<meta property="og:title" content="造轮子系列：JS封装拖拽组件">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/b1ea6a64/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="封装一个拖拽对象1. 如何让一个 DOM 元素动起来拖拽的本质就是让 DOM 元素能够跟着鼠标运动起来。 在页面中创建一个 class 名为 drag 的 div 标签，它的基本样式如下: &amp;lt;!DOCTYPE html&amp;gt; &amp;lt;html lang=&quot;en&quot;&amp;gt; &amp;lt;head&amp;gt;   &amp;lt;meta charset=&quot;UTF-8&quot;&amp;gt;   &amp;lt;meta name=&quot;viewport&quot; c">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-08-20T05:57:39.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="造轮子系列：JS封装拖拽组件">
+<meta name="twitter:description" content="封装一个拖拽对象1. 如何让一个 DOM 元素动起来拖拽的本质就是让 DOM 元素能够跟着鼠标运动起来。 在页面中创建一个 class 名为 drag 的 div 标签，它的基本样式如下: &amp;lt;!DOCTYPE html&amp;gt; &amp;lt;html lang=&quot;en&quot;&amp;gt; &amp;lt;head&amp;gt;   &amp;lt;meta charset=&quot;UTF-8&quot;&amp;gt;   &amp;lt;meta name=&quot;viewport&quot; c">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">造轮子系列：JS封装拖拽组件</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">造轮子系列：JS封装拖拽组件</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-08-20T05:57:39.000Z" itemprop="datePublished" class="page-time">
+  2017-08-20
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/造轮子系列/">造轮子系列</a></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#封装一个拖拽对象"><span class="post-toc-number">1.</span> <span class="post-toc-text">封装一个拖拽对象</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-如何让一个-DOM-元素动起来"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">1. 如何让一个 DOM 元素动起来</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-如何获取元素的初始位置"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">2. 如何获取元素的初始位置</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#拖拽的原理"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">拖拽的原理</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#代码实现"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">代码实现</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#使用面向对象进行封装"><span class="post-toc-number">2.</span> <span class="post-toc-text">使用面向对象进行封装</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#将拖曳对象扩展为一个-jQuery-插件"><span class="post-toc-number">3.</span> <span class="post-toc-text">将拖曳对象扩展为一个 jQuery 插件</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/JS核心技术开发解密/造轮子系列：JS封装拖拽组件" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">造轮子系列：JS封装拖拽组件</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-08-20 13:57:39" datetime="2017-08-20T05:57:39.000Z" itemprop="datePublished">2017-08-20</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/造轮子系列/">造轮子系列</a></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="封装一个拖拽对象"><a href="#封装一个拖拽对象" class="headerlink" title="封装一个拖拽对象"></a>封装一个拖拽对象</h2><h3 id="1-如何让一个-DOM-元素动起来"><a href="#1-如何让一个-DOM-元素动起来" class="headerlink" title="1. 如何让一个 DOM 元素动起来"></a>1. 如何让一个 DOM 元素动起来</h3><p>拖拽的本质就是让 DOM 元素能够跟着鼠标运动起来。</p>
+<p>在页面中创建一个 class 名为 drag 的 div 标签，它的基本样式如下:</p>
+<pre class=" language-html"><code class="language-html"><span class="token doctype">&lt;!DOCTYPE html></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span> <span class="token attr-name">lang</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>en<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">charset</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>UTF-8<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>viewport<span class="token punctuation">"</span></span> <span class="token attr-name">content</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>width<span class="token punctuation">=</span>device-width, initial-scale<span class="token punctuation">=</span>1.0<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">http-equiv</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>X-UA-Compatible<span class="token punctuation">"</span></span> <span class="token attr-name">content</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>ie<span class="token punctuation">=</span>edge<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">></span></span>拖拽封装<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">></span></span><span class="token style language-css">
+    <span class="token selector"><span class="token class">.drag</span> </span><span class="token punctuation">{</span>
+      <span class="token property">width</span><span class="token punctuation">:</span> <span class="token number">50</span>px<span class="token punctuation">;</span>
+      <span class="token property">height</span><span class="token punctuation">:</span> <span class="token number">50</span>px<span class="token punctuation">;</span>
+      <span class="token property">background-color</span><span class="token punctuation">:</span> red<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>drag<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span>
+</code></pre>
+<p>由于 <code>left/top</code> 会导致频繁的重排与回流，因此我们在处理元素运动时控制 <code>translate</code> 的值。</p>
+<pre class=" language-css"><code class="language-css"><span class="token selector"><span class="token class">.drag</span> </span><span class="token punctuation">{</span>
+  <span class="token property">width</span><span class="token punctuation">:</span> <span class="token number">50</span>px<span class="token punctuation">;</span>
+  <span class="token property">height</span><span class="token punctuation">:</span> <span class="token number">50</span>px<span class="token punctuation">;</span>
+  <span class="token property">background-color</span><span class="token punctuation">:</span> red<span class="token punctuation">;</span>
+  <span class="token property">transform</span><span class="token punctuation">:</span> <span class="token function">translateX</span><span class="token punctuation">(</span><span class="token number">0</span>px<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>首先要考虑兼容性，需要判断当前浏览器环境支持的 <code>transform</code> 属性是哪一种</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// 获取当前浏览器支持的 transform 兼容写法</span>
+<span class="token keyword">function</span> <span class="token function">getTransform</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> transform <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">,</span>
+    divStyle <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'div'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>style<span class="token punctuation">,</span>
+    _transforms <span class="token operator">=</span> <span class="token punctuation">[</span>
+      <span class="token string">'transform'</span><span class="token punctuation">,</span>
+      <span class="token string">'webkitTransform'</span><span class="token punctuation">,</span>
+      <span class="token string">'MozTransform'</span><span class="token punctuation">,</span>
+      <span class="token string">'msTransform'</span><span class="token punctuation">,</span>
+      <span class="token string">'OTransform'</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span>
+    len <span class="token operator">=</span> _transforms<span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> len<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>_transforms<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token keyword">in</span> divStyle<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">// 找到之后立即返回，结束函数</span>
+      <span class="token keyword">return</span> <span class="token punctuation">(</span>transform <span class="token operator">=</span> _transforms<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment" spellcheck="true">// 如果没有找到，就直接返回空字符串</span>
+  <span class="token keyword">return</span> transform<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>该方法用于获取当前浏览器支持的 <code>transform</code> 属性。 如果返回空字符串，则表示该浏览器不支持 <code>transform</code>，这个时候就要考虑使用 <code>left/top</code>。</p>
+<h3 id="2-如何获取元素的初始位置"><a href="#2-如何获取元素的初始位置" class="headerlink" title="2. 如何获取元素的初始位置"></a>2. 如何获取元素的初始位置</h3><p>获取元素的初始位置，需要声明一个专门用来获取元素样式的功能函数。获取元素样式的方法在 IE 中与其他浏览器中有所不同，所以需要考虑兼容性:</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">getStyle</span><span class="token punctuation">(</span>elem<span class="token punctuation">,</span> property<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// IE通过 currentStyle 来获取元素的样式，</span>
+  <span class="token comment" spellcheck="true">// 其他浏览器通过 getComputedStyle 来获取</span>
+  <span class="token keyword">return</span> document<span class="token punctuation">.</span>defaultView<span class="token punctuation">.</span>getComputedStyle
+    <span class="token operator">?</span> document<span class="token punctuation">.</span>defaultView<span class="token punctuation">.</span><span class="token function">getComputedStyle</span><span class="token punctuation">(</span>elem<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">[</span>property<span class="token punctuation">]</span>
+    <span class="token punctuation">:</span> elem<span class="token punctuation">.</span>currentStyle<span class="token punctuation">[</span>property<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>有了这个方法，然后来实现一个获取元素位置的方法</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">getTargetPos</span><span class="token punctuation">(</span>elem<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> pos <span class="token operator">=</span> <span class="token punctuation">{</span> x<span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">,</span> y<span class="token punctuation">:</span> <span class="token number">0</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> transform <span class="token operator">=</span> <span class="token function">getTransform</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>transform<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> transformValue <span class="token operator">=</span> <span class="token function">getStyle</span><span class="token punctuation">(</span>elem<span class="token punctuation">,</span> transform<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>transformValue <span class="token operator">==</span> <span class="token string">'none'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      elem<span class="token punctuation">.</span>style<span class="token punctuation">[</span>transform<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">'translate(0, 0)'</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span> pos<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token keyword">var</span> temp <span class="token operator">=</span> transformValue<span class="token punctuation">.</span><span class="token function">match</span><span class="token punctuation">(</span><span class="token regex">/-?\d+/g</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span> <span class="token punctuation">(</span>pos <span class="token operator">=</span> <span class="token punctuation">{</span>
+        x<span class="token punctuation">:</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>temp<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">trim</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        y<span class="token punctuation">:</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>temp<span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">trim</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">getStyle</span><span class="token punctuation">(</span>elem<span class="token punctuation">,</span> <span class="token string">'position'</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token string">'static'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      elem<span class="token punctuation">.</span>style<span class="token punctuation">.</span>position <span class="token operator">=</span> <span class="token string">'relative'</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span> pos<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token keyword">var</span> x <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span><span class="token function">getStyle</span><span class="token punctuation">(</span>elem<span class="token punctuation">,</span> <span class="token string">'left'</span><span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token function">getStyle</span><span class="token punctuation">(</span>elem<span class="token punctuation">,</span> <span class="token string">'left'</span><span class="token punctuation">)</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> y <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span><span class="token function">getStyle</span><span class="token punctuation">(</span>elem<span class="token punctuation">,</span> <span class="token string">'top'</span><span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token function">getStyle</span><span class="token punctuation">(</span>elem<span class="token punctuation">,</span> <span class="token string">'top'</span><span class="token punctuation">)</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span> <span class="token punctuation">(</span>pos <span class="token operator">=</span> <span class="token punctuation">{</span>
+        x<span class="token punctuation">:</span> x<span class="token punctuation">,</span>
+        y<span class="token punctuation">:</span> y
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>在拖拽过程中，需要不停地设置目标元素的位置，这样它才能够移动起来，因此还需要声明一个设置元素位置的方法。</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// pos = { x: 200, y: 100 }</span>
+<span class="token keyword">function</span> <span class="token function">setTargetPos</span><span class="token punctuation">(</span>elem<span class="token punctuation">,</span> pos<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> transform <span class="token operator">=</span> <span class="token function">getTransform</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>transform<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    elem<span class="token punctuation">.</span>style<span class="token punctuation">[</span>transform<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">'translate('</span> <span class="token operator">+</span> pos<span class="token punctuation">.</span>x <span class="token operator">+</span> <span class="token string">'px, '</span> <span class="token operator">+</span> pos<span class="token punctuation">.</span>y <span class="token operator">+</span> <span class="token string">'px)'</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    elem<span class="token punctuation">.</span>style<span class="token punctuation">.</span>left <span class="token operator">=</span> pos<span class="token punctuation">.</span>x <span class="token operator">+</span> <span class="token string">'px'</span><span class="token punctuation">;</span>
+    elem<span class="token punctuation">.</span>style<span class="token punctuation">.</span>top <span class="token operator">=</span> pos<span class="token punctuation">.</span>y <span class="token operator">+</span> <span class="token string">'px'</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> elem<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>有了这几个工具方法后，就可以使用更为完善的方式来实现上述要求的效果了</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> drag <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.drag'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+drag<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> curPos <span class="token operator">=</span> <span class="token function">getTargetPos</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">setTargetPos</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    x<span class="token punctuation">:</span> curPos<span class="token punctuation">.</span>x <span class="token operator">+</span> <span class="token number">5</span><span class="token punctuation">,</span>
+    y<span class="token punctuation">:</span> curPos<span class="token punctuation">.</span>y
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<h4 id="拖拽的原理"><a href="#拖拽的原理" class="headerlink" title="拖拽的原理"></a>拖拽的原理</h4><p>结合 <code>mousedown</code>、<code>mousemove</code>、<code>mouseup</code> 这三个事件来实现拖拽。在这些事件触发的回调函数中得到了一个事件对象，通过事件对象获取当前鼠标所处的位置。</p>
+<ul>
+<li><p>当鼠标按下 <code>mousedown</code> 时，记住鼠标的初始位置与目标元素的初始位置。当鼠标移动时，目标元素也跟着移动，因此鼠标与目标元素的位置有如下关系: <code>移动后鼠标位置-鼠标初始位置=移动后目标元素位置-目标元素初始位置</code>；</p>
+</li>
+<li><p>如果鼠标位置的差值用变量 <code>dis</code> 来表示，那么目标元素的位置就等于: <code>移动后目标元素位置=dis+目标元素的初始位置</code>；</p>
+</li>
+<li><p>通过事件对象中提供的鼠标位置，在鼠标移动时可以计算出鼠标移动位置的差值，然后根据上面的关系，计算出目标元素的当前位置，这样拖拽就能够实现了。</p>
+</li>
+</ul>
+<h4 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h4><ul>
+<li>第一步：准备工作</li>
+</ul>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// 获取目标元素对象</span>
+<span class="token keyword">var</span> drag <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'.drag'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 声明2个变量用来保存鼠标初始位直的x, y坐标</span>
+<span class="token keyword">var</span> startX <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> startY <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 声明2个变量用来保存目标元素初始位直的X, y坐标</span>
+<span class="token keyword">var</span> sourceX <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> sourceY <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+</code></pre>
+<ul>
+<li>第二步：功能函数</li>
+</ul>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// 获取当前浏览器支持的 transform 兼容写法</span>
+<span class="token keyword">function</span> <span class="token function">getTransform</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// 获取元素属性</span>
+<span class="token keyword">function</span> <span class="token function">getStyle</span><span class="token punctuation">(</span>elem<span class="token punctuation">,</span> property<span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// 获取元素的初始位直</span>
+<span class="token keyword">function</span> <span class="token function">getTargetPos</span><span class="token punctuation">(</span>elem<span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// 设置元素的初始位直</span>
+<span class="token keyword">function</span> <span class="token function">setTargetPos</span><span class="token punctuation">(</span>elem<span class="token punctuation">,</span> potions<span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+</code></pre>
+<ul>
+<li>第三步：声明三个事件的回调</li>
+</ul>
+<pre class=" language-js"><code class="language-js">drag<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'mousedown'</span><span class="token punctuation">,</span> start<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 绑定在 mousedown 上的回调，event为传入的事件对象</span>
+<span class="token keyword">function</span> <span class="token function">start</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// 获取鼠标初始位直</span>
+  startX <span class="token operator">=</span> event<span class="token punctuation">.</span>pageX<span class="token punctuation">;</span>
+  startY <span class="token operator">=</span> event<span class="token punctuation">.</span>pageY<span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// 获取元素初始位置</span>
+  <span class="token keyword">var</span> pos <span class="token operator">=</span> <span class="token function">getTargetPos</span><span class="token punctuation">(</span>drag<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  sourceX <span class="token operator">=</span> pos<span class="token punctuation">.</span>x<span class="token punctuation">;</span>
+  sourceY <span class="token operator">=</span> pos<span class="token punctuation">.</span>y<span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// 绑定</span>
+  document<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'mousemove'</span><span class="token punctuation">,</span> move<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  document<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'mouseup'</span><span class="token punctuation">,</span> end<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">move</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// 获取鼠标当前位置</span>
+  <span class="token keyword">var</span> currentX <span class="token operator">=</span> event<span class="token punctuation">.</span>pageX<span class="token punctuation">;</span>
+  <span class="token keyword">var</span> currentY <span class="token operator">=</span> event<span class="token punctuation">.</span>pageY<span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// 计算差值</span>
+  <span class="token keyword">var</span> distanceX <span class="token operator">=</span> currentX <span class="token operator">-</span> startX<span class="token punctuation">;</span>
+  <span class="token keyword">var</span> distanceY <span class="token operator">=</span> currentY <span class="token operator">-</span> startY<span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// 计算并设直元素当前位置</span>
+  <span class="token function">setTargetPos</span><span class="token punctuation">(</span>drag<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    x<span class="token punctuation">:</span> <span class="token punctuation">(</span>sourceX <span class="token operator">+</span> distanceX<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toFixed</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    y<span class="token punctuation">:</span> <span class="token punctuation">(</span>sourceY <span class="token operator">+</span> distanceY<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toFixed</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">end</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  document<span class="token punctuation">.</span><span class="token function">removeEventListener</span><span class="token punctuation">(</span><span class="token string">'mousemove'</span><span class="token punctuation">,</span> move<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  document<span class="token punctuation">.</span><span class="token function">removeEventListener</span><span class="token punctuation">(</span><span class="token string">'mouseup'</span><span class="token punctuation">,</span> end<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">// do something</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>至此，一个简单的拖拽就实现了。</p>
+<h2 id="使用面向对象进行封装"><a href="#使用面向对象进行封装" class="headerlink" title="使用面向对象进行封装"></a>使用面向对象进行封装</h2><p>我们的目标是，只要声明一个拖拽实例，然后传入目标元素就自动具备可以被拖拽的功能。</p>
+<p>为了避免变量污染，我们需要将模块放置在一个函数自执行方式模拟的块级作用域中。</p>
+<pre class=" language-js"><code class="language-js"><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// ...</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>接下来我们如何用面向对象的思维合理地处理属性与方法的位置，需要考虑以下问题：</p>
+<ul>
+<li><strong>构造函数中</strong>：属性与方法为当前实例所单独拥有，只能被当前实例访问，并且每声明一个实例，其中的方法都会被重新创建一次。</li>
+<li><strong>原型中</strong>： 属性与方法为所有实例共同拥有，可以被所有实例访问，新声明的实例不会重复创建方法。</li>
+<li><strong>模块作用域中</strong>：属性和方法不能被任何实例访问，但是能被内部方法访问，新声明的实例不会重复创建相同的方法。</li>
+</ul>
+<p>对于方法的判断则比较简单，因为构造函数中的方法总是在声明一个新的实例时被重复创建，因此声明方法时应尽量避免出现在构造函数中。如果你的方法中需要用到构造函数中的变量，或者想要公开，那么就需要放在原型中。如果方法需要私有不被外界访问，那么就放置在模块作用域中。</p>
+<p>使用面向对象封装上面的几点必须认真思考。如果在封装时没有思考清楚，很可能会遇到很多意想不到的 bug。</p>
+<p>直接上代码：</p>
+<pre class=" language-js"><code class="language-js"><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// 这是一个私有属性，不需要被实例访问</span>
+  <span class="token keyword">var</span> transform <span class="token operator">=</span> <span class="token function">getTransform</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">function</span> <span class="token function">Drag</span><span class="token punctuation">(</span>selector<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 放在构造函数中的属性，被每一个实例所单独拥有</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>elem <span class="token operator">=</span> <span class="token keyword">typeof</span> selector <span class="token operator">==</span> <span class="token string">'Object'</span> <span class="token operator">?</span> selector <span class="token punctuation">:</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span>selector<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>startX <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>startY <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>sourceX <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>sourceY <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">init</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment" spellcheck="true">// 原型</span>
+  Drag<span class="token punctuation">.</span>prototype <span class="token operator">=</span> <span class="token punctuation">{</span>
+    constructor<span class="token punctuation">:</span> Drag<span class="token punctuation">,</span>
+
+    init<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">// 初始时需要做哪些事情</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setDrag</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+
+    <span class="token comment" spellcheck="true">// 稍作改造，仅用于获取当前元素的属性，类似于getName</span>
+    getStyle<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>property<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> document<span class="token punctuation">.</span>defaultView<span class="token punctuation">.</span>getComputedStyle <span class="token operator">?</span> document<span class="token punctuation">.</span>defaultView<span class="token punctuation">.</span><span class="token function">getComputedStyle</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>elem<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">[</span>property<span class="token punctuation">]</span> <span class="token punctuation">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span>elem<span class="token punctuation">.</span>currentStyle<span class="token punctuation">[</span>property<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+
+    <span class="token comment" spellcheck="true">// 用来获取当前元素的位直信息，注意与之前的不同之处</span>
+    getPosition<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">var</span> pos <span class="token operator">=</span> <span class="token punctuation">{</span>
+        x<span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+        y<span class="token punctuation">:</span> <span class="token number">0</span>
+      <span class="token punctuation">}</span><span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>transform<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> transformValue <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getStyle</span><span class="token punctuation">(</span>transform<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>transformValue <span class="token operator">==</span> <span class="token string">'none'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">this</span><span class="token punctuation">.</span>elem<span class="token punctuation">.</span>style<span class="token punctuation">[</span>transform<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">'translate(0, 0)'</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+          <span class="token keyword">var</span> temp <span class="token operator">=</span> transformValue<span class="token punctuation">.</span><span class="token function">match</span><span class="token punctuation">(</span><span class="token regex">/-?\d+/g</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          pos <span class="token operator">=</span> <span class="token punctuation">{</span>
+            x<span class="token punctuation">:</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>temp<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">trim</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+            y<span class="token punctuation">:</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>temp<span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">trim</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getStyle</span><span class="token punctuation">(</span><span class="token string">'position'</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token string">'static'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">this</span><span class="token punctuation">.</span>elem<span class="token punctuation">.</span>style<span class="token punctuation">.</span>position <span class="token operator">=</span> <span class="token string">'relative'</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+          pos <span class="token operator">=</span> <span class="token punctuation">{</span>
+            x<span class="token punctuation">:</span> <span class="token function">parseInt</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getStyle</span><span class="token punctuation">(</span><span class="token string">'left'</span><span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getStyle</span><span class="token punctuation">(</span><span class="token string">'left'</span><span class="token punctuation">)</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+            y<span class="token punctuation">:</span> <span class="token function">parseInt</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getStyle</span><span class="token punctuation">(</span><span class="token string">'top'</span><span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getStyle</span><span class="token punctuation">(</span><span class="token string">'top'</span><span class="token punctuation">)</span> <span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">)</span>
+          <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token keyword">return</span> pos<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+
+    <span class="token comment" spellcheck="true">// 用来设直当前元素的位置</span>
+    setPosition<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>pos<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>transform<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>elem<span class="token punctuation">.</span>style<span class="token punctuation">[</span>transform<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">'translate('</span> <span class="token operator">+</span> pos<span class="token punctuation">.</span>x <span class="token operator">+</span> <span class="token string">'px, '</span> <span class="token operator">+</span> pos<span class="token punctuation">.</span>y <span class="token operator">+</span> <span class="token string">'px)'</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>elem<span class="token punctuation">.</span>style<span class="token punctuation">.</span>left <span class="token operator">=</span> pos<span class="token punctuation">.</span>x <span class="token operator">+</span> <span class="token string">'px'</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>elem<span class="token punctuation">.</span>style<span class="token punctuation">.</span>top <span class="token operator">=</span> pos<span class="token punctuation">.</span>y <span class="token operator">+</span> <span class="token string">'px'</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+
+    <span class="token comment" spellcheck="true">// 该方法用来绑定事件</span>
+    setDrag<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">var</span> self <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>elem<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'mousedown'</span><span class="token punctuation">,</span> start<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">function</span> <span class="token function">start</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        self<span class="token punctuation">.</span>startX <span class="token operator">=</span> event<span class="token punctuation">.</span>pageX<span class="token punctuation">;</span>
+        self<span class="token punctuation">.</span>startY <span class="token operator">=</span> event<span class="token punctuation">.</span>pageY<span class="token punctuation">;</span>
+
+        <span class="token keyword">var</span> pos <span class="token operator">=</span> self<span class="token punctuation">.</span><span class="token function">getPosition</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        self<span class="token punctuation">.</span>sourceX <span class="token operator">=</span> pos<span class="token punctuation">.</span>x<span class="token punctuation">;</span>
+        self<span class="token punctuation">.</span>sourceY <span class="token operator">=</span> pos<span class="token punctuation">.</span>y<span class="token punctuation">;</span>
+
+        document<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'mousemove'</span><span class="token punctuation">,</span> move<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        document<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'mouseup'</span><span class="token punctuation">,</span> end<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token keyword">function</span> <span class="token function">move</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> currentX <span class="token operator">=</span> event<span class="token punctuation">.</span>pageX<span class="token punctuation">;</span>
+        <span class="token keyword">var</span> currentY <span class="token operator">=</span> event<span class="token punctuation">.</span>pageY<span class="token punctuation">;</span>
+
+        <span class="token keyword">var</span> distanceX <span class="token operator">=</span> currentX <span class="token operator">-</span> self<span class="token punctuation">.</span>startX<span class="token punctuation">;</span>
+        <span class="token keyword">var</span> distanceY <span class="token operator">=</span> currentY <span class="token operator">-</span> self<span class="token punctuation">.</span>startY<span class="token punctuation">;</span>
+
+        self<span class="token punctuation">.</span><span class="token function">setPosition</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          x<span class="token punctuation">:</span> <span class="token punctuation">(</span>self<span class="token punctuation">.</span>sourceX <span class="token operator">+</span> distanceX<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toFixed</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          y<span class="token punctuation">:</span> <span class="token punctuation">(</span>self<span class="token punctuation">.</span>sourceY <span class="token operator">+</span> distanceY<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toFixed</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token keyword">function</span> <span class="token function">end</span><span class="token punctuation">(</span>event<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        document<span class="token punctuation">.</span><span class="token function">removeEventListener</span><span class="token punctuation">(</span><span class="token string">'mousemove'</span><span class="token punctuation">,</span> move<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        document<span class="token punctuation">.</span><span class="token function">removeEventListener</span><span class="token punctuation">(</span><span class="token string">'mouseup'</span><span class="token punctuation">,</span> end<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// do other things</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment" spellcheck="true">// 私有方法，仅仅用来获取 transform 的兼容写法</span>
+  <span class="token keyword">function</span> <span class="token function">getTransform</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> transform <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">,</span>
+      divStyle <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'div'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>style<span class="token punctuation">,</span>
+      transformArr <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'transform'</span><span class="token punctuation">,</span> <span class="token string">'webkitTransform'</span><span class="token punctuation">,</span> <span class="token string">'MozTransform'</span><span class="token punctuation">,</span> <span class="token string">'msTransform'</span><span class="token punctuation">,</span> <span class="token string">'OTransform'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+      i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span>
+      len <span class="token operator">=</span> transformArr<span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> len<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>transformArr<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token keyword">in</span> divStyle<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> transform <span class="token operator">=</span> transformArr<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> transform<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment" spellcheck="true">// 对外暴露方法</span>
+  window<span class="token punctuation">.</span>Drag <span class="token operator">=</span> Drag<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>使用时只需</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// 使用</span>
+<span class="token keyword">new</span> <span class="token class-name">Drag</span><span class="token punctuation">(</span><span class="token string">'target'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>这样一个拖拽对象就封装完成了，封装过程代码都有注释详解，很简单。</p>
+<h2 id="将拖曳对象扩展为一个-jQuery-插件"><a href="#将拖曳对象扩展为一个-jQuery-插件" class="headerlink" title="将拖曳对象扩展为一个 jQuery 插件"></a>将拖曳对象扩展为一个 jQuery 插件</h2><p>jQuery 中可以使用 <code>$.extend</code> 扩展 jQuery 工具方法，来使用 <code>$.fn.extend</code> 扩展原型方法。当然，这里的拖拽插件扩展为原型方法是最合适的。</p>
+<p>在上面封装的代码基础上我们再加一些</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">//通过扩展方法将拖曳扩展为 jQuery 的一个实例方法</span>
+<span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>$<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  $<span class="token punctuation">.</span>fn<span class="token punctuation">.</span><span class="token function">extend</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    canDrag<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">new</span> <span class="token class-name">Drag</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
+      <span class="token comment" spellcheck="true">// 注意:为了保证 jQuery 所有的方法都能够链式访问， </span>
+      <span class="token comment" spellcheck="true">// 每一个方法的最后都需妥返回 this, 即返回 jQuery 实例</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span>jQuery<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>这样就能够很轻松地让目标 DOM 元素具备拖拽能力了，使用时只需</p>
+<pre class=" language-js"><code class="language-js"><span class="token function">$</span><span class="token punctuation">(</span><span class="token string">'#target'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">canDrag</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-08-20T05:57:39.000Z" itemprop="dateUpdated">2017-08-20 13:57:39</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jQuery/">jQuery</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/b1ea6a64/&title=《造轮子系列：JS封装拖拽组件》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/b1ea6a64/&title=《造轮子系列：JS封装拖拽组件》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/b1ea6a64/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《造轮子系列：JS封装拖拽组件》 — Sixin的小站&url=http://coder.liusixin.cn/posts/b1ea6a64/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/b1ea6a64/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/9f161534/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">webpack实践--打包速度优化</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/cd5a0d4f/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Nginx的服务器缓存策略</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/b1ea6a64/&title=《造轮子系列：JS封装拖拽组件》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/b1ea6a64/&title=《造轮子系列：JS封装拖拽组件》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/b1ea6a64/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《造轮子系列：JS封装拖拽组件》 — Sixin的小站&url=http://coder.liusixin.cn/posts/b1ea6a64/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/b1ea6a64/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAAB0ElEQVR42u3aQW7DMAxE0dz/0i7QbWH5DykxLvC1KtrYeeqCEIf6fPC6ftf699efxZ/dvOTKldvmXst1x7p7Q+ed68/LlSt3nsuLFNlA+lRQ7OTKlfsyLjkA9TcvV67c/8Xlx5T1U6N1V65cuQ0uaVTWbQ/5fKdZkitX7iQ3DUxP/Hww35UrV27IvcLVKXz8DbdvlitX7gh3PRrhlYS3OrXtPfRDcuXK3crdVaqC/w0+Qt2WMLly5R7m8oFo7ZhCQtViYZUrV+4xbq088TA0Pe48bEyuXLkjXF5KTsSpvHQ+eOTKlbuVu6tg1QYzvIDGvZpcuXLb3OABcKBJQ5MgTJErV+4It9+68GtbafgSTIHkypW7lcsLRxqDpsGrXLly38atBZrpmIQXtWCUIleu3APctOXojEvJZlD4Ileu3MNc/pW8vUnvfQSjVrly5Q5y+ZgEHUFAYSoOXeTKlTvI5YsHrPyyRXwBS65cuYe5aUFJI1Re/tK/ypUr9zSXFyPe9qQDmKDAyZUrd5DL405yAYuPSeIGSa5cuS/j8gi19mb0Brly5b6SSzZQ2xI5WsmVK3eSm4aeaZBaa41asYhcuXIb3NqVrE6kQtBy5cr9EvcH0btD+oXf52sAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

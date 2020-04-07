@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/cd5a0d4f/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/cd5a0d4f/">
+    
+    
+    <title>Nginx的服务器缓存策略 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Nginx">
+    <meta name="description" content="前言要了解缓存首先我们先了解下浏览器的执行机制是怎样的，先看一张图：                                                                                                             浏览器对我们的静态资源，比如说 js css html 图片 字体 等都是有缓存策略的，如果说浏览器自身有缓存，它">
+<meta name="keywords" content="Nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx的服务器缓存策略">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/cd5a0d4f/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="前言要了解缓存首先我们先了解下浏览器的执行机制是怎样的，先看一张图：                                                                                                             浏览器对我们的静态资源，比如说 js css html 图片 字体 等都是有缓存策略的，如果说浏览器自身有缓存，它">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-3f0f58a98ce21319.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-4b130ea412d1ad38.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-a34a2a533047951e.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-32fd9786edf42026.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-328e1800ede99170.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-2bc9122ba1eb38e1.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-f46f88dfd4c03450.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-5303db4c06044de7.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-e9a371ea740bf499.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-eb583788192f686f.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-cc3f355f290ef1ef.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-f83dc1adeea3ed85.png">
+<meta property="og:updated_time" content="2017-08-18T12:42:27.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nginx的服务器缓存策略">
+<meta name="twitter:description" content="前言要了解缓存首先我们先了解下浏览器的执行机制是怎样的，先看一张图：                                                                                                             浏览器对我们的静态资源，比如说 js css html 图片 字体 等都是有缓存策略的，如果说浏览器自身有缓存，它">
+<meta name="twitter:image" content="http://cdn-blog.liusixin.cn/9064013-3f0f58a98ce21319.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Nginx的服务器缓存策略</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Nginx的服务器缓存策略</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-08-18T12:42:27.000Z" itemprop="datePublished" class="page-time">
+  2017-08-18
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/后端/">后端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/后端/运维/">运维</a></li></ul></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#实践"><span class="post-toc-number">2.</span> <span class="post-toc-text">实践</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">3.</span> <span class="post-toc-text">总结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/Nginx/Nginx的服务器缓存策略" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Nginx的服务器缓存策略</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-08-18 20:42:27" datetime="2017-08-18T12:42:27.000Z" itemprop="datePublished">2017-08-18</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/后端/">后端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/后端/运维/">运维</a></li></ul></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>要了解缓存首先我们先了解下浏览器的执行机制是怎样的，先看一张图：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064013-3f0f58a98ce21319.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<ul>
+<li>浏览器对我们的静态资源，比如说 js css html 图片 字体 等都是有缓存策略的，如果说浏览器自身有缓存，它就会从自己本身的缓存里读了，我们也可以通过网络层类似于我们的服务器包括 Nginx 还有各种各样的静态资源服务器来设置我们的缓存。</li>
+<li>如果本机的浏览器有缓存的话，那么他直接就在这个缓存里就获取到了，然后呈现给用户</li>
+<li>那么这个缓存还需要查看，如果是在网络上会查看它是否是过期的：<ol>
+<li>如果不是过期的，它也是从本地的缓存中读取之后就可以了；</li>
+<li>如果是过期的就需要看一下这个资源有没有 Etag 这样的东西，Etag 是浏览器向服务器发送请求时的一个请求报头，服务器那边也会响应这个请求报头，然后两边共同的匹配一下资源是否过期，如果有 Etag 的话，它就会向浏览器注入 If-None-Match 这样的头。然后向我们的 webserver 发过去，然后服务器那边做一个基础的策略：是否是匹配的 Etag ，如果是匹配的就返回一个 304，如果没有匹配就给 Etag 这个文件一个戳，然后返回 200 更新，这样下次再请求的时候有了这个 Etag 就不会再把整个的资源再重新拉回来了。</li>
+<li>如果没有发现 Etag 的话，在我们服务器还可以设 Expires ，Expires 这个东西就是过期时间，他发现 Last-Modified 这样一个策略，它会向我们的服务器发送一个 If-Modified-Since ，就是说上次的修改时间，然后和服务器的 Expires 做一个对比，如果发现过期了就返回一个新的，如果是没过期就返回一个 304。</li>
+<li>如果是上面的 Etag 和 Last-Modified 两个值都没有，那么他就会直接向我们的 web服务器发送一个请求，然后是请求响应–缓存协商</li>
+<li>如果是上面的 Etag 和 Last-Modified 这两个值都进行设置了，那么就是会将两个值都比较，都满足了之后才会最终得到一个响应，没有谁先谁后的问题，那么当我们设置对应的文件的时候，你会发现很多对应的服务器都是同时的对他们进行设置的，就是设置了 Etag 又设置了 Last-Modified ，所以说当你这个文件有对应的修改的时候，你还要及时的去修改这个 Last-Modified 就是里面的一个 Expires 的东西。</li>
+<li>Etag 相比于 Expires 有很多优点，它是一个基于文件的一个戳的比较，可以实现一个实时的更新，Expires 这个东西实际上是做不到那种秒秒级别的，它是一个 Unix 的一个时间戳，他做不到那种特别精细的时间的控制。</li>
+<li>现在的话你也可以在 Header 里面设 control ，可以直接重写掉 Expires 这样的东西。</li>
+<li>如果是一个整个的项目，你不是运维工程师的话，你可以跟运维去说：我需要设置这个文件对应的强缓，就比如说：这个文件 30 年不过期，例如 jquery 这种长时间不过期的文件，这个的话一般就用 Expires 的比较多，就是说过期时间设置较长这个就是强缓，那么 Etag 的话一般是针对的我们的业务的文件。</li>
+</ol>
+</li>
+</ul>
+<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><ul>
+<li>你需要知道的是：在任何的其他的服务器里面，它们这个的逻辑、思维是一样的，关键是要去看你是怎么去配置的。</li>
+<li>操作 Nginx 的基础是你已经在服务器端安装并配置好了，这里以 Centos 为例。</li>
+</ul>
+<p><strong>编辑nginx.conf</strong></p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064013-4b130ea412d1ad38.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p><strong>找到对应的静态资源路径</strong></p>
+<p>比如 <code>/usr/share/nginx/</code> 下的 <code>html</code> 文件夹下 <code>index.html</code>，我们在 body 中加入 <code>jquery</code> 文件</p>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://cdn.bootcss.com/jquery/3.2.1/jquery.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script language-javascript"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+</code></pre>
+<p>同时在同级目录下添加 img 文件夹，放入几张图片。</p>
+<p>在 <code>index.html</code> 中添加这些 <code>img</code> 标签引入图片。配置nginx.conf 文件。<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064013-a34a2a533047951e.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure></p>
+<p>在请求所有的目录的路径中匹配 图片 正则表达式，如果匹配的话就是下面的 第一行是 文件的具体路径；第二行是过期时间 30天。</p>
+<p>还有一个需要注意的是：再进行验证的时候不能把下图中的这个 <code>Disable cache</code> 勾选上，这个勾选上的话就是禁用缓存了，这里我们实现的是需要缓存的，所以是绝对不能勾选的</p>
+<p><strong>来分析下请求到的东西</strong></p>
+<ul>
+<li><code>document</code><br><img src="http://cdn-blog.liusixin.cn/9064013-32fd9786edf42026.png" alt=""><ul>
+<li>请求报文中的 <code>Accept-Encoding</code> 这个可以看到是支持 gzip 压缩的。</li>
+<li>返回报文中的 <code>ETag</code> 加了一个戳，这个是 nginx 默认就开启的，如果是想要关闭的话，在 nginx.conf 文件中的 http 对象里加 etag: off; 即可，开启就是 on，不加的话默认的就是 on</li>
+<li>可以看到下面请求报文中有一个 If-None-Match 的值也是和上面的 Etag 的值是一样的。</li>
+</ul>
+</li>
+<li><code>jquery</code><br><img src="http://cdn-blog.liusixin.cn/9064013-328e1800ede99170.png" alt=""><ul>
+<li>因为这这里默认开启了 <code>Etag</code> 所以当你下次刷新的时候，它会跟服务器做对比，如果 <code>Etag</code> 的值是一样的说明没有改变就返回的是 304 ，可以看到下面请求报文中有一个 <code>If-None-Match</code> 的值也是和上面的 Etag 的值是一样的</li>
+</ul>
+</li>
+<li>再次刷新浏览器，查看 <code>document</code><br><img src="http://cdn-blog.liusixin.cn/9064013-2bc9122ba1eb38e1.png" alt=""><ul>
+<li>这个返回的是 304 是因为我们的 <code>index.html</code> 文件没有改变，<code>ETag</code> 的值也没有发生改变，如果 <code>Etag</code> 值是一样的说明没有改变就返回的是 304 ，可以看到下面请求报文中有一个 <code>If-None-Match</code> 的值也是和上面的 <code>Etag</code> 的值是一样的</li>
+</ul>
+</li>
+<li>开启<code>gzip</code>，同时为了看出效果我们在第二个命令行窗口中修改 <code>index.html</code> 文件之后再刷新浏览器<ul>
+<li>也会发现 <code>document</code> 返回的报文中多了一个 <code>gzip</code> 的属性，然后是可以看到下面请求报文中有一个 <code>If-None-Match</code> 的值和上面的 <code>Etag</code> 的值已经不一样的，这个的机制是以  <code>If-None-Match</code> 后面的戳去匹配 <code>Etag</code> 也就是服务器响应的戳，发现是不一样的就会重新将更新后的资源拿过来 状态码也是 200<br><img src="http://cdn-blog.liusixin.cn/9064013-f46f88dfd4c03450.png" alt=""></li>
+<li>如果是没有这个 <code>Etag</code> ，它会校验 <code>Last-Modified</code> 和 <code>If-Modified-Since</code> 的戳是否一样，服务器来返回相应的状态。</li>
+</ul>
+</li>
+</ul>
+<p><strong>接下来在第一个命令行窗口中在 nginx.conf 文件中增加一个 <code>epirse</code>，过期时间的属性，对比一下效果</strong></p>
+<ul>
+<li>这个时候再刷新浏览器查看<ul>
+<li>这个时候会发现返回报文中多了一个 Expires 过期时间的属性，后面的值刚好是今天再加上 30 天之后的具体日期<br><img src="http://cdn-blog.liusixin.cn/9064013-5303db4c06044de7.png" alt=""></li>
+</ul>
+</li>
+<li>还可以在 nginx.conf 文件中加一句话：告诉浏览器不要缓存文件 <code>add_header Cache-Control no-cache;</code><br><img src="http://cdn-blog.liusixin.cn/9064013-e9a371ea740bf499.png" alt=""></li>
+<li>再刷新浏览器，第一次是 200 第二次是 304 ，还有就是服务器返回时也有明确的标识：<code>Cache-Control: no-cache</code> 就是告诉浏览器不要缓存，然后具体的资源文件是像服务器请求的，服务器来决定返回的状态码<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064013-eb583788192f686f.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064013-cc3f355f290ef1ef.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>将上面的东西都尝试的设置一遍之后，那么 Nginx 上比较关键的东西：<code>Gzip</code> 、<code>Etag</code>、 <code>Expires</code> （过期时间）、<code>Cache-Control</code> 这些就都配置好了；</p>
+<p><code>Cache-Control</code> 下面还会有一些非常细致的东西：如果你在 <code>Cache-Control</code> 中配置了更多的过期时间就可以直接把 <code>Expires</code> 直接重写掉了，在一些不支持 <code>HTTP.1</code> 的浏览器里设置 <code>Expires</code> 是没有用的，所以你还是要再设置一个 <code>Cache-Control</code></p>
+<p>百度官网的一个 js 文件的响应头部，有颜色的那些对我们来说都是需要掌握的东西<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064013-f83dc1adeea3ed85.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure></p>
+<p>掌握这个东西之后，对于以后来讲我们就可以跟运维去聊这个东西，比如说：我们的 jquery ，你就可以直接告诉他，我的这个jquery需要在页面上缓存多久多久，这个就可以设置一个 过期时间 <code>Expires</code> 或者是 <code>Cache-Control</code>，我的其他业务文件可能会临时变，所以需要配置 <code>Etag</code> 。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-08-18T12:42:27.000Z" itemprop="dateUpdated">2017-08-18 20:42:27</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Nginx/">Nginx</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/cd5a0d4f/&title=《Nginx的服务器缓存策略》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/cd5a0d4f/&title=《Nginx的服务器缓存策略》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/cd5a0d4f/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Nginx的服务器缓存策略》 — Sixin的小站&url=http://coder.liusixin.cn/posts/cd5a0d4f/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/cd5a0d4f/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/b1ea6a64/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">造轮子系列：JS封装拖拽组件</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/75614776/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Nginx的反向代理与负载均衡</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/cd5a0d4f/&title=《Nginx的服务器缓存策略》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/cd5a0d4f/&title=《Nginx的服务器缓存策略》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/cd5a0d4f/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Nginx的服务器缓存策略》 — Sixin的小站&url=http://coder.liusixin.cn/posts/cd5a0d4f/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/cd5a0d4f/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABzElEQVR42u3aMW4DMQxEUd//0pvWjYQ/pCjbwVcVGBvtswtCHOr1wut5W+SZ9ydX/7XfrbXkypXb5j7bteIS1uqT/W6rZ+TKlXufuy80nRK2enGx2MmVK/fruaR4rXaTK1fu/+PuX7lvluTKlfsrXNL8cDpPMwZ7Nbly5Ta4PKWc+3sk35UrV26J+4SLhKe1gw56u1y5cq9weUHZh57pGJUfX+TKlfspbi3WJK1L5wiF9pErV+4ANx2LpnFnLWBFJzK5cuWOcdNClsasvMzVRrBy5cqd4/YPMem4lOyDejW5cuWOcTuDEF62eDtUrLhy5co9yiXHDv4JaXh4zIrCEbly5R7lkiMFb1Rqv1ZgkCtX7hUub1dq5YmzggsccuXKvc5NBx5pzJouFIjIlSt3mJu2NKeuWAVXuOTKlftRLp/Nphcp+FAWNT9y5cod49ZwPHKtjVJQHZUrV+5R7qlyw6ONNGyVK1fufW4aT6Qj1f6tkOKXkStXbpvLi1FtcMJLIfoycuXKvchNCw2PQtIyh3o1uXLlfhmXR5yn2ie5cuX+Crc2Xq1FIa0jjly5chvczgGlVpLS9kmuXLk3uf05Lcfx4cqBfFeuXLkV7h93LJp5eGBDqAAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/80d4f62/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/80d4f62/">
+    
+    
+    <title>Koa2 源码学习(一) | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Nodejs,Koa2">
+    <meta name="description" content="引言最近读了一下 Koa2 的源码；在阅读 Koa2 (2.3.0) 的源码的过程中，我的感受是整个代码设计精巧，思路清晰，是一个小而精的 nodejs web 服务框架。 设计理念作为 web 服务框架，都是要围绕核心服务而展开的。那什么是核心服务呢？其实就是接收客户端的一个 http 的请求，对于这个请求，除了接收以外，还有解析这个请求。所以说会有  HPPT：接收 -&amp;gt; 解析 -&amp;gt">
+<meta name="keywords" content="Nodejs,Koa2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Koa2 源码学习(一)">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/80d4f62/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="引言最近读了一下 Koa2 的源码；在阅读 Koa2 (2.3.0) 的源码的过程中，我的感受是整个代码设计精巧，思路清晰，是一个小而精的 nodejs web 服务框架。 设计理念作为 web 服务框架，都是要围绕核心服务而展开的。那什么是核心服务呢？其实就是接收客户端的一个 http 的请求，对于这个请求，除了接收以外，还有解析这个请求。所以说会有  HPPT：接收 -&amp;gt; 解析 -&amp;gt">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180425-000053-2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/1352261008-594a32c87b693_articlex.png">
+<meta property="og:updated_time" content="2018-03-05T07:25:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Koa2 源码学习(一)">
+<meta name="twitter:description" content="引言最近读了一下 Koa2 的源码；在阅读 Koa2 (2.3.0) 的源码的过程中，我的感受是整个代码设计精巧，思路清晰，是一个小而精的 nodejs web 服务框架。 设计理念作为 web 服务框架，都是要围绕核心服务而展开的。那什么是核心服务呢？其实就是接收客户端的一个 http 的请求，对于这个请求，除了接收以外，还有解析这个请求。所以说会有  HPPT：接收 -&amp;gt; 解析 -&amp;gt">
+<meta name="twitter:image" content="http://cdn-blog.liusixin.cn/WX20180425-000053-2x.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Koa2 源码学习(一)</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Koa2 源码学习(一)</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-03-02T03:09:27.000Z" itemprop="datePublished" class="page-time">
+  2018-03-02
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/后端/">后端</a></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#引言"><span class="post-toc-number">1.</span> <span class="post-toc-text">引言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#设计理念"><span class="post-toc-number">2.</span> <span class="post-toc-text">设计理念</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Koa-的组成结构"><span class="post-toc-number">3.</span> <span class="post-toc-text">Koa 的组成结构</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#结语"><span class="post-toc-number">4.</span> <span class="post-toc-text">结语</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/源码分析/Koa2-源码学习一" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Koa2 源码学习(一)</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-03-02 11:09:27" datetime="2018-03-02T03:09:27.000Z" itemprop="datePublished">2018-03-02</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/后端/">后端</a></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>最近读了一下 Koa2 的源码；在阅读 Koa2 (2.3.0) 的源码的过程中，我的感受是整个代码设计精巧，思路清晰，是一个小而精的 nodejs web 服务框架。</p>
+<h2 id="设计理念"><a href="#设计理念" class="headerlink" title="设计理念"></a>设计理念</h2><p>作为 web 服务框架，都是要围绕核心服务而展开的。那什么是核心服务呢？其实就是接收客户端的一个 http 的请求，对于这个请求，除了接收以外，还有解析这个请求。所以说会有</p>
+<blockquote>
+<p>HPPT：接收 -&gt; 解析 -&gt; 响应</p>
+</blockquote>
+<p>在响应客户端的时候，也有很多种方式，比如返回一个 html 页面，或者 json 文本。在解析请求和响应请求的中间，会有一些第三方的中间件，比如 日志、表单解析等等来增强 koa 的服务能力，所以 koa 至少要提供 <em>“请求解析”、”响应数据”、”中间件处理”</em> 这三种核心能力的封装，同时还需要有一个串联他们执行环境的上下文（context）</p>
+<ul>
+<li>HTTP</li>
+<li>接收</li>
+<li>解析</li>
+<li>响应</li>
+<li>中间件</li>
+<li>执行上下文</li>
+</ul>
+<p>上下文可以理解为是 http 的请求周期内的作用域环境来托管请求响应和中间件，方便他们之间互相访问。</p>
+<p>以上分析是站在单个 http 请求的角度来看一个 web 服务能力。那么站在整个网站，站在整个后端服务的角度来看的话，能够提供 <em>“请求”、”响应”、”解析”、”中间件”、”http 流程全链路”</em> 这些服务能力的综合体，可以看做是一个应用服务对象。如果把这些全放到 koa 里的话，那么对应的就是：</p>
+<ul>
+<li>Application</li>
+<li>Context</li>
+<li>Request</li>
+<li>Response</li>
+<li>Middlewares</li>
+<li>Session</li>
+<li>Cookie</li>
+</ul>
+<h2 id="Koa-的组成结构"><a href="#Koa-的组成结构" class="headerlink" title="Koa 的组成结构"></a>Koa 的组成结构</h2><p>首先看下 koa 的目录结构</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180425-000053-2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<ul>
+<li>application.js：框架入口；负责管理中间件，以及处理请求</li>
+<li>context.js：context 对象的原型，代理 request 与 response 对象上的方法和属性</li>
+<li>request.js：request 对象的原型，提供请求相关的方法和属性</li>
+<li>response.js：response 对象的原型，提供响应相关的方法和属性</li>
+</ul>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// application.js</span>
+
+<span class="token keyword">const</span> isGeneratorFunction <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'is-generator-function'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 判断当前传入的function是否是标准的generator function</span>
+<span class="token keyword">const</span> debug <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'debug'</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token string">'koa:application'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// js调试工具</span>
+<span class="token keyword">const</span> onFinished <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'on-finished'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 事件监听，当http请求关闭，完成或者出错的时候调用注册好的回调</span>
+<span class="token keyword">const</span> response <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'./response'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 响应请求</span>
+<span class="token keyword">const</span> compose <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'koa-compose'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 中间件的函数数组</span>
+<span class="token keyword">const</span> isJSON <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'koa-is-json'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 判断是否为json数据</span>
+<span class="token keyword">const</span> context <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'./context'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 运行服务上下文</span>
+<span class="token keyword">const</span> request <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'./request'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 客户端的请求</span>
+<span class="token keyword">const</span> statuses <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'statuses'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 请求状态码</span>
+<span class="token keyword">const</span> Cookies <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'cookies'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> accepts <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'accepts'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 约定可被服务端接收的数据，主要是协议和资源的控制</span>
+<span class="token keyword">const</span> Emitter <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'events'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 事件循环</span>
+<span class="token keyword">const</span> assert <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'assert'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 断言</span>
+<span class="token keyword">const</span> Stream <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'stream'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> http <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'http'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> only <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'only'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 白名单选择</span>
+<span class="token keyword">const</span> convert <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'koa-convert'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 兼容旧版本koa中间件</span>
+<span class="token keyword">const</span> deprecate <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'depd'</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token string">'koa'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 判断当前在运行koa的某些接口或者方法是否过期，如果过期，会给出一个升级的提示</span>
+</code></pre>
+<p>以上是 koa 入口文件的依赖分析。接下来我们进行源码分析，首先我们利用删减法来筛出代码的核心实现即可，不用上来就盯细节！<br>我们只保留 constructor</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// application.js</span>
+
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token keyword">class</span> <span class="token class-name">Application</span> <span class="token keyword">extends</span> <span class="token class-name">Emitter</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">this</span><span class="token punctuation">.</span>proxy <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 是否信任 proxy header 参数，默认为 false</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>middleware <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//保存通过app.use(middleware)注册的中间件</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>subdomainOffset <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 子域默认偏移量，默认为 2</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>env <span class="token operator">=</span> process<span class="token punctuation">.</span>env<span class="token punctuation">.</span>NODE_ENV <span class="token operator">||</span> <span class="token string">'development'</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 环境参数，默认为 NODE_ENV 或 ‘development’</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>context <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//context模块，通过context.js创建</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>request <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span>request<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//request模块，通过request.js创建</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>response <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//response模块，通过response.js创建</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment" spellcheck="true">// ...</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>我们可以看到，这段代码暴露出一个类，构造函数内预先声明了一些属性，该类继承了 Emitter，也就是说这个类可以直接为自定义事件注册回调函数和触发事件，同时可以捕捉到其他地方触发的事件。</p>
+<p>除了这些基本属性之外，还有一些公用的 api，最重要的两个一个是<strong>listen</strong>，一个是<strong>use</strong>。koa 的每个实例上都会有这些属性和方法。</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// application.js</span>
+
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token keyword">class</span> <span class="token class-name">Application</span> <span class="token keyword">extends</span> <span class="token class-name">Emitter</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">this</span><span class="token punctuation">.</span>proxy <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>middleware <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>subdomainOffset <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>env <span class="token operator">=</span> process<span class="token punctuation">.</span>env<span class="token punctuation">.</span>NODE_ENV <span class="token operator">||</span> <span class="token string">'development'</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>context <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>request <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span>request<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>response <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">listen</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> server <span class="token operator">=</span> http<span class="token punctuation">.</span><span class="token function">createServer</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">callback</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> server<span class="token punctuation">.</span>listen<span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span>server<span class="token punctuation">,</span> arguments<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">use</span><span class="token punctuation">(</span>fn<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>middleware<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>fn<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>listen 方法内部通过 <code>http.createServer</code> 创建了一个 http 服务的实例，通过这个实例去 listen 要监听的端口号，<code>http.createServer</code> 的参数传入了 <code>this.callback</code> 回调</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// application.js</span>
+
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token keyword">class</span> <span class="token class-name">Application</span> <span class="token keyword">extends</span> <span class="token class-name">Emitter</span> <span class="token punctuation">{</span>
+  <span class="token operator">...</span>
+  <span class="token function">callback</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> fn <span class="token operator">=</span> <span class="token function">compose</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>middleware<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 把所有middleware进行了组合，使用了koa-compose</span>
+
+    <span class="token keyword">const</span> handleRequest <span class="token operator">=</span> <span class="token punctuation">(</span>req<span class="token punctuation">,</span> res<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> ctx <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">createContext</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> res<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">handleRequest</span><span class="token punctuation">(</span>ctx<span class="token punctuation">,</span> fn<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 返回了本身的回调函数</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">return</span> handleRequest<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>可以看到，handleRequest 返回了本身的回调，接下来看 handleRequest 。</p>
+<p>handleRequest 方法直接作为监听成功的调用方法。已经拿到了 包含 req res 的 ctx 和可以执行所有中间件函数的 fn。<br>首先一进来默认设置状态码为404 . 然后分别声明了 成功函数执行完成以后的成功 失败回调方法。这两个方法实际上就是再将 ctx 分化成 req res。 分别调这两个对象去客户端执行内容返回。<br><strong>context.js request.js response.js</strong> 分别是封装了一些对 ctx req res 操作相关的属性，我们以后再说。</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// application.js</span>
+
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token keyword">class</span> <span class="token class-name">Application</span> <span class="token keyword">extends</span> <span class="token class-name">Emitter</span> <span class="token punctuation">{</span>
+  <span class="token operator">...</span>
+  <span class="token function">handleRequest</span><span class="token punctuation">(</span>ctx<span class="token punctuation">,</span> fnMiddleware<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> res <span class="token operator">=</span> ctx<span class="token punctuation">.</span>res<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 拿到context.res</span>
+    res<span class="token punctuation">.</span>statusCode <span class="token operator">=</span> <span class="token number">404</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 设置默认状态吗404</span>
+    <span class="token keyword">const</span> onerror <span class="token operator">=</span> err <span class="token operator">=</span><span class="token operator">></span> ctx<span class="token punctuation">.</span><span class="token function">onerror</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 设置onerror触发事件</span>
+    <span class="token keyword">const</span> handleResponse <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token function">respond</span><span class="token punctuation">(</span>ctx<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 向客户端返回数据</span>
+    <span class="token function">onFinished</span><span class="token punctuation">(</span>res<span class="token punctuation">,</span> onerror<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token function">fnMiddleware</span><span class="token punctuation">(</span>ctx<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>handleResponse<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token keyword">catch</span><span class="token punctuation">(</span>onerror<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><strong>失败执行的回调</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token function">onerror</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">assert</span><span class="token punctuation">(</span>err <span class="token keyword">instanceof</span> <span class="token class-name">Error</span><span class="token punctuation">,</span> <span class="token template-string"><span class="token string">`non-error thrown: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>err<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token number">404</span> <span class="token operator">==</span> err<span class="token punctuation">.</span>status <span class="token operator">||</span> err<span class="token punctuation">.</span>expose<span class="token punctuation">)</span> <span class="token keyword">return</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>silent<span class="token punctuation">)</span> <span class="token keyword">return</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">const</span> msg <span class="token operator">=</span> err<span class="token punctuation">.</span>stack <span class="token operator">||</span> err<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span>msg<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex">/^/gm</span><span class="token punctuation">,</span> <span class="token string">'  '</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><strong>成功执行的回调</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">respond</span><span class="token punctuation">(</span>ctx<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token operator">...</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>return fnMiddleware(ctx).then(handleResponse).catch(onerror);</code> 我们拆分理解，首先 return fnMiddleware(ctx) 返回了一个中间件数组处理链路，then(handleResponse) 等到整个中间件数组全部完成之后把返回结果通过 then 传递到 handleResponse。</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// application.js</span>
+
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token keyword">class</span> <span class="token class-name">Application</span> <span class="token keyword">extends</span> <span class="token class-name">Emitter</span> <span class="token punctuation">{</span>
+  <span class="token operator">...</span>
+  <span class="token function">createContext</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> res<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> context <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>context<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> request <span class="token operator">=</span> context<span class="token punctuation">.</span>request <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>request<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> response <span class="token operator">=</span> context<span class="token punctuation">.</span>response <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>response<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    context<span class="token punctuation">.</span>app <span class="token operator">=</span> request<span class="token punctuation">.</span>app <span class="token operator">=</span> response<span class="token punctuation">.</span>app <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
+    context<span class="token punctuation">.</span>req <span class="token operator">=</span> request<span class="token punctuation">.</span>req <span class="token operator">=</span> response<span class="token punctuation">.</span>req <span class="token operator">=</span> req<span class="token punctuation">;</span>
+    context<span class="token punctuation">.</span>res <span class="token operator">=</span> request<span class="token punctuation">.</span>res <span class="token operator">=</span> response<span class="token punctuation">.</span>res <span class="token operator">=</span> res<span class="token punctuation">;</span>
+    request<span class="token punctuation">.</span>ctx <span class="token operator">=</span> response<span class="token punctuation">.</span>ctx <span class="token operator">=</span> context<span class="token punctuation">;</span>
+    request<span class="token punctuation">.</span>response <span class="token operator">=</span> response<span class="token punctuation">;</span>
+    response<span class="token punctuation">.</span>request <span class="token operator">=</span> request<span class="token punctuation">;</span>
+    context<span class="token punctuation">.</span>originalUrl <span class="token operator">=</span> request<span class="token punctuation">.</span>originalUrl <span class="token operator">=</span> req<span class="token punctuation">.</span>url<span class="token punctuation">;</span>
+    context<span class="token punctuation">.</span>cookies <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Cookies</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> res<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+      keys<span class="token punctuation">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span>keys<span class="token punctuation">,</span>
+      secure<span class="token punctuation">:</span> request<span class="token punctuation">.</span>secure
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    request<span class="token punctuation">.</span>ip <span class="token operator">=</span> request<span class="token punctuation">.</span>ips<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">||</span> req<span class="token punctuation">.</span>socket<span class="token punctuation">.</span>remoteAddress <span class="token operator">||</span> <span class="token string">''</span><span class="token punctuation">;</span>
+    context<span class="token punctuation">.</span>accept <span class="token operator">=</span> request<span class="token punctuation">.</span>accept <span class="token operator">=</span> <span class="token function">accepts</span><span class="token punctuation">(</span>req<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    context<span class="token punctuation">.</span>state <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> context<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>这里我们不用去太深入代码，理解原理即可。createContext 创建 context 的时候，还会将 req 和 res 分别挂载到 context 对象上，并对 req 上一些关键的属性进行处理和简化 挂载到该对象本身，简化了对这些属性的调用。我们通过一张图来直观地看到所有这些对象之间的关系。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/1352261008-594a32c87b693_articlex.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<ul>
+<li>最左边一列表示每个文件的导出对象</li>
+<li>中间一列表示每个 Koa 应用及其维护的属性</li>
+<li>右边两列表示对应每个请求所维护的一些列对象</li>
+<li>黑色的线表示实例化</li>
+<li>红色的线表示原型链</li>
+<li>蓝色的线表示属性</li>
+</ul>
+<p>createContext 简单理解就是挂载上面的对象，方便整个上下游 http 能及时访问到进出请求及特定的行为。</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// application.js</span>
+
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token keyword">class</span> <span class="token class-name">Application</span> <span class="token keyword">extends</span> <span class="token class-name">Emitter</span> <span class="token punctuation">{</span>
+  <span class="token operator">...</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">function</span> <span class="token function">respond</span><span class="token punctuation">(</span>ctx<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// allow bypassing koa</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token boolean">false</span> <span class="token operator">===</span> ctx<span class="token punctuation">.</span>respond<span class="token punctuation">)</span> <span class="token keyword">return</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">const</span> res <span class="token operator">=</span> ctx<span class="token punctuation">.</span>res<span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>ctx<span class="token punctuation">.</span>writable<span class="token punctuation">)</span> <span class="token keyword">return</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">let</span> body <span class="token operator">=</span> ctx<span class="token punctuation">.</span>body<span class="token punctuation">;</span>
+  <span class="token keyword">const</span> code <span class="token operator">=</span> ctx<span class="token punctuation">.</span>status<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 赋值服务状态码</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token string">'HEAD'</span> <span class="token operator">==</span> ctx<span class="token punctuation">.</span>method<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">// 请求头方法判断</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>res<span class="token punctuation">.</span>headersSent <span class="token operator">&amp;&amp;</span> <span class="token function">isJSON</span><span class="token punctuation">(</span>body<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      ctx<span class="token punctuation">.</span>length <span class="token operator">=</span> Buffer<span class="token punctuation">.</span><span class="token function">byteLength</span><span class="token punctuation">(</span>JSON<span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>body<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> res<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment" spellcheck="true">// status body</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">null</span> <span class="token operator">==</span> body<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    body <span class="token operator">=</span> ctx<span class="token punctuation">.</span>message <span class="token operator">||</span> <span class="token function">String</span><span class="token punctuation">(</span>code<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>res<span class="token punctuation">.</span>headersSent<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      ctx<span class="token punctuation">.</span>type <span class="token operator">=</span> <span class="token string">'text'</span><span class="token punctuation">;</span>
+      ctx<span class="token punctuation">.</span>length <span class="token operator">=</span> Buffer<span class="token punctuation">.</span><span class="token function">byteLength</span><span class="token punctuation">(</span>body<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> res<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span>body<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment" spellcheck="true">// 通过判断body类型来调用，这里的res.end就是最终向客户端返回数据的动作</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>Buffer<span class="token punctuation">.</span><span class="token function">isBuffer</span><span class="token punctuation">(</span>body<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">return</span> res<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span>body<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token string">'string'</span> <span class="token operator">==</span> <span class="token keyword">typeof</span> body<span class="token punctuation">)</span> <span class="token keyword">return</span> res<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span>body<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>body <span class="token keyword">instanceof</span> <span class="token class-name">Stream</span><span class="token punctuation">)</span> <span class="token keyword">return</span> body<span class="token punctuation">.</span><span class="token function">pipe</span><span class="token punctuation">(</span>res<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// 返回为json数据</span>
+  body <span class="token operator">=</span> JSON<span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>body<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>res<span class="token punctuation">.</span>headersSent<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    ctx<span class="token punctuation">.</span>length <span class="token operator">=</span> Buffer<span class="token punctuation">.</span><span class="token function">byteLength</span><span class="token punctuation">(</span>body<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  res<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span>body<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>respond 函数是 handleRequest 成功处理的回调，内部做了合理性校验，诸如状态码，内容的类型判断，最后向客户端返回数据。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>以上就是我们对 application.js 文件的分析，通过上面的分析，我们已经可以大概得知 Koa 处理请求的过程：当请求到来的时候，会通过 req 和 res 来创建一个 context (ctx) ，然后执行中间件。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-03-05T07:25:12.000Z" itemprop="dateUpdated">2018-03-05 15:25:12</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Koa2/">Koa2</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Nodejs/">Nodejs</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/80d4f62/&title=《Koa2 源码学习(一)》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/80d4f62/&title=《Koa2 源码学习(一)》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/80d4f62/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Koa2 源码学习(一)》 — Sixin的小站&url=http://coder.liusixin.cn/posts/80d4f62/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/80d4f62/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/a73cd400/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Koa2 源码学习(二)</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/4bd5734d/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Javascript 高级技巧</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/80d4f62/&title=《Koa2 源码学习(一)》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/80d4f62/&title=《Koa2 源码学习(一)》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/80d4f62/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Koa2 源码学习(一)》 — Sixin的小站&url=http://coder.liusixin.cn/posts/80d4f62/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/80d4f62/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABxElEQVR42u3awa7DIAwEwP7/T/dJPb1L0NoONJWGU1XRMOnBgjWvVzzen/H/89W4mrN+5s0DFxd3zM2XT5Z5B6P3F+Di4p7n9orX+mWqM6Nih4uL+zDuumDloPWvcHFxf4u7nnk1Z/09Li7uk7nVmCMvbevX23hWw8XFHXB7gem9n7fnu7i4uDd1JZKilh9m8rJ1uTouLu4RbvLoZGuSh6rVv+CVnIdwcXG3cSeXJ6q/rbZtcHFxz3MniHnBmhRWXFzc3dzJZYtqeNo7YuHi4p7k3huAVmfmlzxwcXFPcvNNTOFxcU8kb+Li4uKe4VY3Lr1WSrXAjUIQXFzcW2849CKM3qanuq0pp7y4uLgDbh5nJCFm77e4uLi/xZ00SyYbo8vXw8XFPcKtlpIJPb/MUch3cXFxN3Dz5Xvt0t7G6PIlcXFxD3J7IWn1RkQ5EsXFxf0qNx/7rl5Fr4GLi3uEWy0ok2ZJLzbtlT9cXNw5Ny8668dNrmUUGrG4uLgHuUnxWte/Xjkrr4uLi/swbj6/9+RoLVxc3EdyeyHL5CiFi4v7LW6h2RmEHUkYmhyNRmc1XFzcAbcXmFbLU9RGzcsZLi7uLu4fxeGqoSsY2c4AAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

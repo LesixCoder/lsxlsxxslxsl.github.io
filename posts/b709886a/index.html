@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/b709886a/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/b709886a/">
+    
+    
+    <title>关于闭包及变量回收问题 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="javascript,技术杂谈,V8">
+    <meta name="description" content="文章转自 otakustay 的关于闭包及变量回收问题  本文的诞生，源自近期打算做的一个关于 javascript 中的闭包的专题，由于需要解析闭包对垃圾回收的影响，特此针对不同的 javascript 引擎，做了相关的测试。 为了能从本文中得到需要的知识，看本文前，请明确自己知道闭包的概念，并对垃圾回收的常用算法有一定的了解。 问题的提出假设有如下的代码： function outer()">
+<meta name="keywords" content="javascript,技术杂谈,V8">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于闭包及变量回收问题">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/b709886a/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="文章转自 otakustay 的关于闭包及变量回收问题  本文的诞生，源自近期打算做的一个关于 javascript 中的闭包的专题，由于需要解析闭包对垃圾回收的影响，特此针对不同的 javascript 引擎，做了相关的测试。 为了能从本文中得到需要的知识，看本文前，请明确自己知道闭包的概念，并对垃圾回收的常用算法有一定的了解。 问题的提出假设有如下的代码： function outer()">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-12-20T08:38:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于闭包及变量回收问题">
+<meta name="twitter:description" content="文章转自 otakustay 的关于闭包及变量回收问题  本文的诞生，源自近期打算做的一个关于 javascript 中的闭包的专题，由于需要解析闭包对垃圾回收的影响，特此针对不同的 javascript 引擎，做了相关的测试。 为了能从本文中得到需要的知识，看本文前，请明确自己知道闭包的概念，并对垃圾回收的常用算法有一定的了解。 问题的提出假设有如下的代码： function outer()">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">关于闭包及变量回收问题</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">关于闭包及变量回收问题</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-12-20T08:38:00.000Z" itemprop="datePublished" class="page-time">
+  2017-12-20
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#问题的提出"><span class="post-toc-number">1.</span> <span class="post-toc-text">问题的提出</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#测试方法"><span class="post-toc-number">2.</span> <span class="post-toc-text">测试方法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#测试过程级结果"><span class="post-toc-number">3.</span> <span class="post-toc-text">测试过程级结果</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#基本测试"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">基本测试</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#多个变量的情况"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">多个变量的情况</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#eval-的影响"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">eval 的影响</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#间接调用-eval"><span class="post-toc-number">3.4.</span> <span class="post-toc-text">间接调用 eval</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#多个嵌套函数"><span class="post-toc-number">3.5.</span> <span class="post-toc-text">多个嵌套函数</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用with表达式"><span class="post-toc-number">3.6.</span> <span class="post-toc-text">使用with表达式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用-catch-表达式"><span class="post-toc-number">3.7.</span> <span class="post-toc-text">使用 catch 表达式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#嵌套函数中声明的同名变量"><span class="post-toc-number">3.8.</span> <span class="post-toc-text">嵌套函数中声明的同名变量</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总体结论"><span class="post-toc-number">4.</span> <span class="post-toc-text">总体结论</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/javascript/关于闭包及变量回收问题" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">关于闭包及变量回收问题</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-12-20 16:38:00" datetime="2017-12-20T08:38:00.000Z" itemprop="datePublished">2017-12-20</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>文章转自 otakustay 的<a href="http://www.otakustay.com/about-closure-and-gc/" rel="external nofollow noopener noreferrer" target="_blank">关于闭包及变量回收问题</a></p>
+</blockquote>
+<p>本文的诞生，源自近期打算做的一个关于 javascript 中的闭包的专题，由于需要解析闭包对垃圾回收的影响，特此针对不同的 javascript 引擎，做了相关的测试。</p>
+<p>为了能从本文中得到需要的知识，看本文前，请明确自己知道闭包的概念，并对垃圾回收的常用算法有一定的了解。</p>
+<h2 id="问题的提出"><a href="#问题的提出" class="headerlink" title="问题的提出"></a>问题的提出</h2><p>假设有如下的代码：</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> largeObject <span class="token operator">=</span> LargeObject<span class="token punctuation">.</span><span class="token function">fromSize</span><span class="token punctuation">(</span><span class="token string">'100MB'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'inner'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> inner <span class="token operator">=</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>在这一段代码中，<code>outer</code>函数和<code>inner</code>函数间会形成一个闭包，致使<code>inner</code>函数能够访问到<code>largeObject</code>，但是显然<code>inner</code>并没有访问<code>largeObject</code>，那么在闭包中的<code>largeObject</code>对象是否能被回收呢？</p>
+<p>如果引入更复杂的情况：</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> largeObject <span class="token operator">=</span> LargeObject<span class="token punctuation">.</span><span class="token function">fromSize</span><span class="token punctuation">(</span><span class="token string">'100MB'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> anotherLargeObject <span class="token operator">=</span> LargeObject<span class="token punctuation">.</span><span class="token function">fromSize</span><span class="token punctuation">(</span><span class="token string">'100MB'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    largeObject<span class="token punctuation">.</span><span class="token function">work</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'inner'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> inner <span class="token operator">=</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>首先一个显然的概念是 <strong><code>largeObject</code>肯定不能被回收</strong> ，因为<code>inner</code>确实地需要使用它。但是<code>anotherLargeObject</code>又能不能被回收呢？它将跟随<code>largeObject</code>一起始终存在，还是和<code>largeObject</code>分离，独立地被回收呢？</p>
+<h2 id="测试方法"><a href="#测试方法" class="headerlink" title="测试方法"></a>测试方法</h2><p>带着这个疑问，对现有的几款现代 javascript 引擎分别进行了测试，参与测试的有：</p>
+<ul>
+<li>IE8 自带的 JScript.dll</li>
+<li>IE9 自带的 Chakra</li>
+<li>Opera 11.60 自带的 Carakan</li>
+<li>Chrome 16.0.912.63 自带的 V8（3.6.6.11）</li>
+<li>Firefox 9.0.1 自带的 SpiderMonkey</li>
+</ul>
+<p>测试的基本方案是，使用类似以下的代码：</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> largeObject <span class="token operator">=</span> LargeObject<span class="token punctuation">.</span><span class="token function">fromSize</span><span class="token punctuation">(</span><span class="token string">'100MB'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">debugger</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> inner <span class="token operator">=</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>通过各浏览器的开发者工具（Developer Tools、Firebug、Dragonfly 等），在断点处停止 javascript 的执行，并通过控制台或本地变量查看功能检查<code>largeObject</code>的值，如果其值存在，则认为 GC 并没有回收该对象。</p>
+<p>对于部分浏览器（特别是 IE），考虑到对脚本执行有 2 种模式（执行模式和调试模式，IE 通过开发者工具的 Script 面板中的“Start Debugging”按钮切换），在调试模式下才会命中断点，但是调试模式下可能存在不同的引擎优化方案，因此采用内存比对的方式进行测试。即打开资源浏览器，在<code>var inner = outer();</code>一行后强制执行一次垃圾回收（IE 使用<code>window.CollectGarbage()</code>；Opera 使用<code>window.opera.collect()</code>;），查看内存的变化。如果内存始终有 100MB 的占用，没有明显的下降现象，则认为 GC 并没有回收该对象。</p>
+<p>对于用例的设计，由于从 ECMAScript 标准中可以得知，所有的变量访问是通过一个 LexicalEnvironment 对象进行的，因此目标在于在不同的 LexicalEnvironment 结构下进行测试。从标准中，搜索<strong>LexicalEnvironment</strong>不难得出能够改变 LexicalEnvironment 结构的情况有以下几种：</p>
+<ol>
+<li>进入一个函数。</li>
+<li>进入一段 eval 代码。</li>
+<li>使用 with 语句。</li>
+<li>使用 catch 语句。</li>
+</ol>
+<p>因此以下将针对这 4 种情况，进行多用例的测试。</p>
+<h2 id="测试过程级结果"><a href="#测试过程级结果" class="headerlink" title="测试过程级结果"></a>测试过程级结果</h2><h3 id="基本测试"><a href="#基本测试" class="headerlink" title="基本测试"></a>基本测试</h3><p><strong>使用代码</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> largeObject <span class="token operator">=</span> LargeObject<span class="token punctuation">.</span><span class="token function">fromSize</span><span class="token punctuation">(</span><span class="token string">'100MB'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">debugger</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> inner <span class="token operator">=</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">inner</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p><strong>测试结果</strong></p>
+<ul>
+<li>JScript.dll - 不回收，内存无下降趋势。</li>
+<li>Chakra - 回收，内存会恢复到<code>outer</code>函数执行前的状态。</li>
+<li>Carakan - 不回收，内存无下降趋势。</li>
+<li>V8 - 回收，访问<code>largeObject</code>抛出 ReferenceError。</li>
+<li>SpiderMonkey - 回收，访问<code>largeObject</code>得到<code>undefined</code>。</li>
+</ul>
+<p><strong>结论</strong></p>
+<p>当一个函数<code>outer</code>返回另一个函数<code>inner</code>时，Chakra、V8 和 SpiderMonkey 会对<code>outer</code>中声明，但<code>inner</code>中不使用的变量进行回收，其中 V8 直接将变量从 LexicalEnvironment 上解除绑定，而 SpiderMonkey 仅仅将变量的值设为<code>undefined</code>，并不解除绑定。</p>
+<h3 id="多个变量的情况"><a href="#多个变量的情况" class="headerlink" title="多个变量的情况"></a>多个变量的情况</h3><p><strong>使用代码</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> largeObject <span class="token operator">=</span> LargeObject<span class="token punctuation">.</span><span class="token function">fromSize</span><span class="token punctuation">(</span><span class="token string">'100MB'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> anotherLargeObject <span class="token operator">=</span> LargeObject<span class="token punctuation">.</span><span class="token function">fromSize</span><span class="token punctuation">(</span><span class="token string">'100MB'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    largeObject<span class="token punctuation">;</span>
+    <span class="token keyword">debugger</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> inner <span class="token operator">=</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">inner</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p><strong>测试结果</strong></p>
+<ul>
+<li>JScript.dll - 不回收，内存无下降趋势。</li>
+<li>Chakra - 回收<code>anotherLargeObject</code>，内存会回到<code>outer</code>调用前并增加 100MB 左右。</li>
+<li>Carakan - 不回收，内存无下降趋势。</li>
+<li>V8 - 回收，访问<code>largeObject</code>能得到正确的值，访问<code>anotherLargeObject</code>抛出 ReferenceError。</li>
+<li>SpiderMonkey - 回收，访问<code>largeObject</code>能得到正确的值，访问<code>anotherLargeObject</code>得到<code>undefined</code>。</li>
+</ul>
+<p><strong>结论</strong></p>
+<p>当一个 LexicalEnvironment 上存在多个变量绑定时，Chakra、V8 和 SpiderMonkey 会针对不同的变量判断是否有被使用，该判断方法是扫描返回的函数<code>inner</code>的源码来实现的，随后会将没有被<code>inner</code>使用的变量从 LexicalEnvironment 中解除绑定（同样的，SpiderMonkey 不解除绑定，仅赋值为<code>undefined</code>），而剩下的变量继续保留。</p>
+<h3 id="eval-的影响"><a href="#eval-的影响" class="headerlink" title="eval 的影响"></a>eval 的影响</h3><p><strong>使用代码</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> largeObject <span class="token operator">=</span> LargeObject<span class="token punctuation">.</span><span class="token function">fromSize</span><span class="token punctuation">(</span><span class="token string">'100MB'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">eval</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">debugger</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> inner <span class="token operator">=</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">inner</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p><strong>测试结果</strong></p>
+<ul>
+<li>JScript.dll - 不回收，内存无下降趋势。</li>
+<li>Chakra - 不回收，内存无下降趋势。</li>
+<li>Carakan - 不回收，内存无下降趋势。</li>
+<li>V8 - 不回收，访问<code>largeObject</code>可得到正确的值。</li>
+<li>SpiderMonkey - 不回收，访问<code>largeObject</code>可得到正确的值。</li>
+</ul>
+<p><strong>结论</strong></p>
+<p>如果返回的<code>inner</code>函数中有使用<code>eval</code>函数，则不 LexicalEnvironment 中的任何变量进行解除绑定的操作，保留所有变量的绑定，以避免产生不可预期的结果。</p>
+<h3 id="间接调用-eval"><a href="#间接调用-eval" class="headerlink" title="间接调用 eval"></a>间接调用 eval</h3><p><strong>使用代码</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> largeObject <span class="token operator">=</span> LargeObject<span class="token punctuation">.</span><span class="token function">fromSize</span><span class="token punctuation">(</span><span class="token string">'100MB'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    window<span class="token punctuation">.</span><span class="token function">eval</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">debugger</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> inner <span class="token operator">=</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">inner</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p><strong>测试结果</strong></p>
+<ul>
+<li>JScript.dll - 不回收，内存无下降趋势。</li>
+<li>Chakra - 回收，内存会恢复到<code>outer</code>函数执行前的状态。</li>
+<li>Carakan - 不回收，内存无下降趋势。</li>
+<li>V8 - 回收，访问<code>largeObject</code>抛出 ReferenceError。</li>
+<li>SpiderMonkey - 回收，访问<code>largeObject</code>得到<code>undefined</code>。</li>
+</ul>
+<p><strong>结论</strong></p>
+<p>由于 ECMAScript 规定间接调用<code>eval</code>时，代码将在全局作用域下执行，是无法访问到<code>largeObject</code>变量的。因此对于间接调用<code>eval</code>的情况，各 javascript 引擎将按标准的方式进行处理，无视该间接调用<code>eval</code>的存在。</p>
+<p>同样的，对于<code>new Function(&#39;return largeObject;&#39;)</code>这种情形，由于标准规定<code>new Function</code>创建的函数的<code>[[Scope]]</code>是全局的 LexicalEnvironment，因此也无法访问到<code>largeObject</code>，所有引擎都参照间接调用<code>eval</code>的方式，选择无视<code>Function</code>构造函数的调用。</p>
+<h3 id="多个嵌套函数"><a href="#多个嵌套函数" class="headerlink" title="多个嵌套函数"></a>多个嵌套函数</h3><p><strong>使用代码</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> largeObject <span class="token operator">=</span> LargeObject<span class="token punctuation">.</span><span class="token function">fromSize</span><span class="token punctuation">(</span><span class="token string">'100MB'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">function</span> <span class="token function">help</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    largeObject<span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// eval('');</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">return</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">debugger</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> inner <span class="token operator">=</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">inner</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p><strong>测试结果</strong></p>
+<ul>
+<li>JScript.dll - 不回收，内存无下降趋势。</li>
+<li>Chakra - 不回收，内存无下降趋势。</li>
+<li>Carakan - 不回收，内存无下降趋势。</li>
+<li>V8 - 不回收，访问<code>largeObject</code>可得到正确的值。</li>
+<li>SpiderMonkey - 不回收，访问<code>largeObject</code>可得到正确的值。</li>
+</ul>
+<p><strong>结论</strong></p>
+<p>不仅仅是被返回的<code>inner</code>函数，如果在<code>outer</code>函数中定义的嵌套的<code>help</code>函数中使用了<code>largeObject</code>变量（或直接调用<code>eval</code>），也同样会造成<code>largeObject</code>变量无法回收。因此 javascript 引擎扫描的不仅仅是<code>inner</code>函数的源码，同样扫描了其他所有嵌套函数的源码，以判断是否可以解除某个特定变量的绑定。</p>
+<h3 id="使用with表达式"><a href="#使用with表达式" class="headerlink" title="使用with表达式"></a>使用<code>with</code>表达式</h3><p><strong>使用代码</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> largeObject <span class="token operator">=</span> LargeObject<span class="token punctuation">.</span><span class="token function">fromSize</span><span class="token punctuation">(</span><span class="token string">'100MB'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> scope <span class="token operator">=</span> <span class="token punctuation">{</span> o<span class="token punctuation">:</span> LargeObject<span class="token punctuation">.</span><span class="token function">fromSize</span><span class="token punctuation">(</span><span class="token string">'100MB'</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">with</span> <span class="token punctuation">(</span>scope<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">debugger</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> inner <span class="token operator">=</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">inner</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p><strong>测试结果</strong></p>
+<ul>
+<li>JScript.dll - 不回收，内存无下降趋势。</li>
+<li>Chakra - 回收<code>largeObject</code>，但不回收<code>scope.o</code>，内存恢复至 outer 函数被调用前并增加 100MB 左右（无法得知<code>scope</code>是否被回收）。</li>
+<li>Carakan - 不回收，内存无下降趋势。</li>
+<li>V8 - 不回收，访问<code>largeObject</code>和<code>scope</code>以及 o 均可得到正确的值。</li>
+<li>SpiderMonkey - 回收<code>largeObject</code>和<code>scope</code>，访问该 2 个变量均得到<code>undefined</code>，不回收<code>o</code>，可得到正确的值。</li>
+</ul>
+<p><strong>结论</strong></p>
+<p>当有<code>with</code>表达式时，V8 将会放弃所有变量的回收，保留 LexicalEnvironment 中所有变量的绑定。而 SpiderMonkey 则会保留由<code>with</code>表达式生成的新的 LexicalEnvironment 中的所有变量的绑定，而对于<code>outer</code>函数生成的 LexicalEnvironment，按标准的方式进行处理，尽可能解除其中的变量绑定。</p>
+<h3 id="使用-catch-表达式"><a href="#使用-catch-表达式" class="headerlink" title="使用 catch 表达式"></a>使用 catch 表达式</h3><p><strong>使用代码</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> largeObject <span class="token operator">=</span> LargeObject<span class="token punctuation">.</span><span class="token function">fromSize</span><span class="token punctuation">(</span><span class="token string">'100MB'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> <span class="token punctuation">{</span> o<span class="token punctuation">:</span> LargeObject<span class="token punctuation">.</span><span class="token function">fromSize</span><span class="token punctuation">(</span><span class="token string">'100MB'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">ex</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">debugger</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> inner <span class="token operator">=</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">inner</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p><strong>测试结果</strong></p>
+<ul>
+<li>JScript.dll – 不回收，内存无下降趋势。</li>
+<li>Chakra – 回收<code>largeObject</code>和<code>ex</code>，内存会恢复到<code>outer</code>函数被调用前的状态。</li>
+<li>Carakan – 不回收，内存无下降趋势。</li>
+<li>V8 – 仅回收<code>largeObject</code>，访问<code>largeObject</code>抛出 ReferenceError，但仍可访问到<code>ex</code>。</li>
+<li>SpiderMonkey – 仅回收<code>largeObject</code>，访问<code>largeObject</code>得到<code>undefined</code>，但仍可访问到<code>ex</code>。</li>
+</ul>
+<p><strong>结论</strong></p>
+<p><code>catch</code>表达式虽然会增加一个 LexicalEnvironment，但对闭包内变量的绑定解除算法几乎没有影响，这源于<code>catch</code>生成的 LexicalEnvironment 仅仅是追加了被 catch 的 Error 对象一个绑定，是可控的（相对的<code>with</code>则不可控），因此对变量回收的影响也可以控制和优化。但对于新生成并添加了 Error 对象的 LexicalEnvironment，V8 和 SpiderMonkey 均不会进一步优化回收，而 Chakra 则会对该 LexicalEnvironment 进行处理，如果其中的 Error 对象可以回收，则会解除其绑定。</p>
+<h3 id="嵌套函数中声明的同名变量"><a href="#嵌套函数中声明的同名变量" class="headerlink" title="嵌套函数中声明的同名变量"></a>嵌套函数中声明的同名变量</h3><p><strong>使用代码</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> largeObject <span class="token operator">=</span> LargeObject<span class="token punctuation">.</span><span class="token function">fromSize</span><span class="token punctuation">(</span><span class="token string">'100MB'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token keyword">function</span><span class="token punctuation">(</span>largeObject <span class="token comment" spellcheck="true">/* 或在函数体内声明 */</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// var largeObject;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">var</span> inner <span class="token operator">=</span> <span class="token function">outer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">inner</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p><strong>测试结果</strong></p>
+<ul>
+<li>JScript.dll – 不回收，内存无下降趋势。</li>
+<li>Chakra – 回收，内存会恢复到<code>outer</code>函数被调用前的状态。</li>
+<li>Carakan – 不回收，内存无下降趋势。</li>
+<li>V8 – 回收，内存会恢复到<code>outer</code>函数被调用前的状态。</li>
+<li>SpiderMonkey – 回收，内存会恢复到<code>outer</code>函数被调用前的状态。</li>
+</ul>
+<p><strong>结论</strong></p>
+<p>嵌套函数中有与外层函数同名的变量或参数时，不会影响到外层函数中该变量的回收优化。即 javascript 引擎会排除<strong>FormalParameterList</strong>和所有<strong>VariableDeclaration</strong>表达式中的<strong>Identifier</strong>，再扫描所有<strong>Identifier</strong>来分析变量的可回收性。</p>
+<h2 id="总体结论"><a href="#总体结论" class="headerlink" title="总体结论"></a>总体结论</h2><p>首先一个较为明确的结论是，以下内容会影响到闭包内变量的回收：</p>
+<ul>
+<li>嵌套的函数中是否有使用该变量。</li>
+<li>嵌套的函数中是否有直接调用<code>eval</code>。</li>
+<li>是否使用了<code>with</code>表达式。</li>
+</ul>
+<p>Chakra、V8 和 SpiderMonkey 将受以上因素的影响，表现出不尽相同又较为相似的回收策略，而 JScript.dll 和 Carakan 则完全没有这方面的优化，会完整保留整个 LexicalEnvironment 中的所有变量绑定，造成一定的内存消耗。</p>
+<p>由于对闭包内变量有回收优化策略的 Chakra、V8 和 SpiderMonkey 引擎的行为较为相似，因此可以总结如下，当返回一个函数<code>fn</code>时：</p>
+<ol>
+<li>如果<code>fn</code>的<code>[[Scope]]</code>是 ObjectEnvironment（<code>with</code>表达式生成 ObjectEnvironment，函数和<code>catch</code>表达式生成 DeclarativeEnvironment），则：</li>
+<li>如果是 V8 引擎，则退出全过程。</li>
+<li>如果是 SpiderMonkey，则处理该 ObjectEnvironment 的外层 LexicalEnvironment。</li>
+<li>获取当前 LexicalEnvironment 下的所有类型为 Function 的对象，对于每一个 Function 对象，分析其 FunctionBody：</li>
+<li>如果 FunctionBody 中含有<strong>直接调用 eval</strong>，则退出全过程。</li>
+<li>否则得到所有的 Identifier。</li>
+<li>对于每一个 Identifier，设其为<code>name</code>，根据查找变量引用的规则，从 LexicalEnvironment 中找出名称为<code>name</code>的绑定<code>binding</code>。</li>
+<li>对<code>binding</code>添加<code>notSwap</code>属性，其值为<code>true</code>。</li>
+<li>检查当前 LexicalEnvironment 中的每一个变量绑定，如果该绑定有<code>notSwap</code>属性且值为<code>true</code>，则：</li>
+<li>如果是 V8 引擎，删除该绑定。</li>
+<li>如果是 SpiderMonkey，将该绑定的值设为<code>undefined</code>，将删除<code>notSwap</code>属性。</li>
+<li>对于<strong>Chakra</strong>引擎，暂无法得知是按<strong>V8</strong>的模式还是按<strong>SpiderMonkey</strong>的模式进行。</li>
+</ol>
+<p>从以上测试及结论来看，V8 确实是一个优秀的 javascript 引擎，在这一方面的优化相当到位。而 SpiderMonkey 则采取一种更为友好的方式，不直接删除变量的绑定，而是将值赋为<code>undefined</code>，也许是 SpiderMonkey 团队考虑到有一些<strong>极端特殊</strong>的情况，依旧有可能导致使用到该变量，因此保证至少不会抛出 ReferenceError 打断代码的执行。而 IE9 的 Chakra 相比 IE8 的 JScript.dll 进步非常大，细节上的处理也很优秀。Opera 的 Carakan 在这一方面则相对落后，完全没有对闭包内的变量回收进行优化，选择了最为稳妥但略显浪费的方式。</p>
+<p>此外，所有带有优化策略的浏览器，都在内在开销和速度之间选择了一个平衡点，这也正是为什么“多个嵌套函数”这一测试用例中，虽然<code>inner</code>没有再使用<code>largeObject</code>对象，甚至在<code>inner</code>中的断点处，连<code>help</code>函数对象也已经解除绑定，却没有解除<code>largeObject</code>的绑定。基于这种现象，可以推测各引擎均只选择检查一层的关联性，即不去处理<code>inner -&gt; help -&gt; largeObject</code>这样深度的引用关系，只找<code>inner -&gt; largeObject</code>和<code>help -&gt; largeObject</code>并做一个合集来处理，以提高效率。也许这种方式依旧存在内存开销的浪费，但同时 CPU 资源也是非常贵重的，如何掌握这之间的平衡，便是 javascript 引擎的选择。</p>
+<p>此外，根据部分开发者的测试，Chakra 甚至有资格被称为现有<strong>最快速的 javascript 引擎</strong>，微软也一直在努力，而开发者更不应该一味地谩骂和嘲笑 IE。<br>我们可以嘲笑 IE6 的落后，可以看不到低版本的 IE 曾经为互联网的发展做过的贡献，可以在这些历史产品已经没落的今天无情地给予打击，却最最不应该将整个 IE 系列一视同仁，挂上“垃圾”的名号。客观地去看待，去评价，正是一个技术人员应该具备的最基本的准则和素养。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-12-20T08:38:00.000Z" itemprop="dateUpdated">2017-12-20 16:38:00</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/V8/">V8</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/技术杂谈/">技术杂谈</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/b709886a/&title=《关于闭包及变量回收问题》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/b709886a/&title=《关于闭包及变量回收问题》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/b709886a/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《关于闭包及变量回收问题》 — Sixin的小站&url=http://coder.liusixin.cn/posts/b709886a/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/b709886a/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/3fe3d9b9/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">canvas 特效整理</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/609ebfab/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">前端单元测试与自动化测试实践</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/b709886a/&title=《关于闭包及变量回收问题》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/b709886a/&title=《关于闭包及变量回收问题》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/b709886a/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《关于闭包及变量回收问题》 — Sixin的小站&url=http://coder.liusixin.cn/posts/b709886a/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/b709886a/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAAB0ElEQVR42u3aQW7DMAxEUd//0i5QZBGgsPKHtBgX+FoVjts8dUGIQx0HXufvunpy9en7In/ztiVXrtw291yuK1z6Tv99uXLlznPXheYE6++b65K3LoWXz+XKlfswbnq4IZuXK1fuf+fWDj18A3Llyn0at3Zw4e+vi92WXk2uXLkNbhqY7vh5Y74rV67ckHuGq1/4at/7+l25cuWOcMkAlYxa0ygk3V4w75UrV26bS15Kr1nUWhcUpsiVK3eQ24HymIPEJR++S65cuYNc0qKkoUan/F1uTK5cuSPcfqBZa5zWxA+XOeTKlTvCJccU/oTTeWhypH9Crly5bS6PMGpNDj8qoRhFrly5I9x08ElGKbWGqjhWkStX7gYuH5GmBa4/npErV+48t3Y0IUXtruZKrly581weet41UOkHKHLlyt3NTS9DpBew+D8CjVrlypU7yI3DyrC9Ic9RWyVXrtxBbhqVkjC08/yG8YlcuXIb3FrZSkPSWiDbKbJy5crtc9PixXdPthQXOLly5Q5y00CEhya161/xx3Llyv0Sl4xUeYErlki5cuU+npsWvrRNkitX7ne56ZWsWmPTCVbkypU7ya2NVHkBItc74nImV67cXdwfhRr8M43gLPoAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

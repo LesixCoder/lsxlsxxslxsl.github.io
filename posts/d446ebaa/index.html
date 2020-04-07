@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/d446ebaa/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/d446ebaa/">
+    
+    
+    <title>JS的变量、作用域和内存问题 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="javascript,编程笔记">
+    <meta name="description" content="基本类型和引用类型 在 ECMAScript 中，变量分为基本类型和引用类型两种。基本类型就是存储简单的数据段。而引用类型指的是那些可能由多个值构成的对象。在 ECMAScript 中，基本类型包括：Undefined、Null、Boolean、Number 和 String。这些基本类型的对象都是按值访问的。所以 js 中我们可以直接操作他们。但是引用类型如 Object 等，是按照引用来操作的">
+<meta name="keywords" content="javascript,编程笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS的变量、作用域和内存问题">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/d446ebaa/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="基本类型和引用类型 在 ECMAScript 中，变量分为基本类型和引用类型两种。基本类型就是存储简单的数据段。而引用类型指的是那些可能由多个值构成的对象。在 ECMAScript 中，基本类型包括：Undefined、Null、Boolean、Number 和 String。这些基本类型的对象都是按值访问的。所以 js 中我们可以直接操作他们。但是引用类型如 Object 等，是按照引用来操作的">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-10-11T13:39:19.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JS的变量、作用域和内存问题">
+<meta name="twitter:description" content="基本类型和引用类型 在 ECMAScript 中，变量分为基本类型和引用类型两种。基本类型就是存储简单的数据段。而引用类型指的是那些可能由多个值构成的对象。在 ECMAScript 中，基本类型包括：Undefined、Null、Boolean、Number 和 String。这些基本类型的对象都是按值访问的。所以 js 中我们可以直接操作他们。但是引用类型如 Object 等，是按照引用来操作的">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">JS的变量、作用域和内存问题</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">JS的变量、作用域和内存问题</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-10-11T13:39:19.000Z" itemprop="datePublished" class="page-time">
+  2017-10-11
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#基本类型和引用类型"><span class="post-toc-number">1.</span> <span class="post-toc-text">基本类型和引用类型</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#变量赋值和传参"><span class="post-toc-number">2.</span> <span class="post-toc-text">变量赋值和传参</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#执行环境及其作用域"><span class="post-toc-number">3.</span> <span class="post-toc-text">执行环境及其作用域</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#延长作用域链"><span class="post-toc-number">4.</span> <span class="post-toc-text">延长作用域链</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#垃圾收集"><span class="post-toc-number">5.</span> <span class="post-toc-text">垃圾收集</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/javascript/JS的变量、作用域和内存问题" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">JS的变量、作用域和内存问题</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-10-11 21:39:19" datetime="2017-10-11T13:39:19.000Z" itemprop="datePublished">2017-10-11</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h3 id="基本类型和引用类型"><a href="#基本类型和引用类型" class="headerlink" title="基本类型和引用类型"></a>基本类型和引用类型</h3><blockquote>
+<p>在 ECMAScript 中，变量分为基本类型和引用类型两种。基本类型就是存储简单的数据段。而引用类型指的是那些可能由多个值构成的对象。在 ECMAScript 中，基本类型包括：Undefined、Null、Boolean、Number 和 String。这些基本类型的对象都是按值访问的。所以 js 中我们可以直接操作他们。但是引用类型如 Object 等，是按照引用来操作的。并非直接操作其值。并且我们可以动态的为引用类型变量添加属性和方法。而基本类型则不可以。</p>
+</blockquote>
+<h3 id="变量赋值和传参"><a href="#变量赋值和传参" class="headerlink" title="变量赋值和传参"></a>变量赋值和传参</h3><p>主要说明引用类型</p>
+<p><strong>对于赋值</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">setName</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  obj<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token string">'Nicholas'</span><span class="token punctuation">;</span>
+  obj <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  obj<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token string">'sixin'</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>obj<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// sixin</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">const</span> person <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">setName</span><span class="token punctuation">(</span>person<span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>person<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// Nicholas</span>
+</code></pre>
+<ul>
+<li>引用类型在传参的时候，也是按照值传递的。</li>
+<li>即使在函数内部修改了参数的值。原始的引用依然不变。实际上，在重写 obj 的时候，这个变量的引用已经是一个局部变量了。只是在这儿函数运行完，这个对象被销毁了。</li>
+</ul>
+<p>如果不懂的话我们用直白的方式解释下这段代码是：</p>
+<p><code>person</code>这个<code>object</code>作为参数传递给<code>function</code>的时候，<code>function</code>内部的作用域可以找到<code>person</code>而且这时候<code>obj</code>的值指向的是<code>“堆内存中person所指向地址”</code>（<code>person</code>本身也是个指针，<code>obj</code>是<code>person</code>这个指针被作为参数传递后复制出来的副本）；然后下一步 new 出一个 Object 的时候，是在堆内存中新建了一个<code>Object()</code>，这个时候<code>obj</code>是指向这个新 new 出来的 Object 的指针，所以对这个 Object 新增一个叫 name 的属性并且在这个局部变量指针还未被销毁（即函数未执行完毕）之前打出 log，输出的是这个新 new 出来的 Object 里的 name 属性，是 sixin。需要注意的是，在<code>function</code>执行的这一个阶段里，对于原来的 Object 进行操作只有一次，即给它的 name 属性赋值为’Nicholas’，随即在这个函数里就没有指针再指向它了，所以在外部的输出就是”Nicholas”；</p>
+<h3 id="执行环境及其作用域"><a href="#执行环境及其作用域" class="headerlink" title="执行环境及其作用域"></a>执行环境及其作用域</h3><blockquote>
+<p>这大概是一个非常基础也是重要的部分，后续会在进阶里面详细展开。</p>
+</blockquote>
+<p>执行环境定义了变量或者函数有权访问的其他数据，决定了他们的行为。每一个执行环境都有一个与之关联的变量对象（如 global、window）。环境中定义的所有变量和函数都保存在这个对象中。</p>
+<p>某一个执行环境执行完毕后，该环境会被销毁。其中的所有的变量和函数也将随之销毁。全局执行环境知道应用程序退出才被销毁（如关闭网页等）</p>
+<p>当代码在一个环境中执行的时候，会创建变量对象的一个 ​​ 作用域链。作用域链的用途，是保证对执行环境有权访问的变量和函数的有序访问。作用域链的前端，始终是当前执行的代码所在的环境的变量对象。全局执行环境始终是作用域链的最后一个对象。</p>
+<p>标识符的解析也就是沿着作用域链一级一级的搜索的过程。搜索过程从作用域链的前端开始，然后逐级向后回溯。知道找到标识符为止。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">let</span> color <span class="token operator">=</span> <span class="token string">'red'</span><span class="token punctuation">;</span>
+<span class="token keyword">function</span> <span class="token function">changeColor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> anotherColor <span class="token operator">=</span> <span class="token string">'blue'</span><span class="token punctuation">;</span>
+  <span class="token keyword">function</span> <span class="token function">swapColors</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> tempColor <span class="token operator">=</span> anotherColor<span class="token punctuation">;</span>
+    anotherColor <span class="token operator">=</span> color<span class="token punctuation">;</span>
+    color <span class="token operator">=</span> tempColor<span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">// 这个执行环境中可以访问到tempColor color antherColor</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment" spellcheck="true">// 这里只能访问anotherColor color</span>
+  <span class="token function">swapColors</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token function">changeColor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 这里只能访问color</span>
+</code></pre>
+<p>所以从上面代码我们可以感受到：内部环境可以通过作用域链访问到外部环境的变量。反之不可。这些环境之间的联系都是线性、有次序的。</p>
+<h3 id="延长作用域链"><a href="#延长作用域链" class="headerlink" title="延长作用域链"></a>延长作用域链</h3><p>虽然执行环境的类型只有两种。局部的和全局的。但是还有一种方法可以延长作用域链。</p>
+<p>这是因为有些语句可以在作用域链的前端临时添加一个变量对象，改变量对象会在代码执行后被移除。</p>
+<ul>
+<li><code>try-catch</code> 语句中的 catch</li>
+<li><code>with</code>语句</li>
+</ul>
+<p>对于 with 语句而言，会将指定的对象添加到作用域链中。对于 catch 语句而言，会创建一个新的变量对象，其中包含被抛出的错误对象的申明。</p>
+<h3 id="垃圾收集"><a href="#垃圾收集" class="headerlink" title="垃圾收集"></a>垃圾收集</h3><p>局部变量只在函数执行过程中存在。而在这个过程中，会为局部变量在栈或者堆中分配相应的内存空间。然后函数执行时，用了这些变量。执行完后，则这些变量就没有用了，需清理释放内存空间。</p>
+<p>但是并非所有的情况下都这么容易的得出结论。垃圾收集器必须跟踪哪个变量用了哪个变量没用。对于不在利用的打上标记，已被将来收回其所占用的内存。</p>
+<p><strong>标记清除</strong></p>
+<p>这是最为常用一种清除方式。当一个变量进入到环境的时候，标记为’进入环境’，这个基本是不会被清除的，因为执行流进入到相应的环境的时候可能会用到。当变量离开环境的时候，标记为’离开环境’。</p>
+<p>可以使用任何方式来标记。我们要知道是如何标记不重要，重要的是采用什么策略。</p>
+<p>垃圾收集器在运行的时候会给存储在内存中的所有变量都加上标记。他会去掉环境中的变量以及被环境中的变量所引用的变量的标记。剩下的，则准备删除。因为环境中的变量已经无法访问到这些变量了。目前 IE、ff 、 opera 、 chrome 都是这种标记清除方式。</p>
+<p><strong>引用计数</strong></p>
+<blockquote>
+<p>因为不常用，简单说下</p>
+</blockquote>
+<p>引用计数的意思就是跟踪记录每一个值被引用的次数。当一个引用类型的变量复制给一个变量的时候，这个引用次数则+1，如果有别复制给另一个变量，则再+1，如果包含对这个值的引用的变量又被赋值了别的值。则这个值-1.</p>
+<p>当引用次数为 0 的时候，则当做垃圾回收。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> objectA <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> objectB <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  objectA<span class="token punctuation">.</span>someOtherObject <span class="token operator">=</span> objectB<span class="token punctuation">;</span>
+  objectB<span class="token punctuation">.</span>someOtherObject <span class="token operator">=</span> objectA<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><strong>对象 A 和对象 B 的属性互相引用。也就是说，这两个对象的引用次数永远都是 2.哪怕这个函数执行完咯，也没法清理的。</strong></p>
+<p>虽然垃圾回收机制帮我们做了很多事，但是电脑分配给浏览器的可用内存通常要比桌面应用的内存要小的多，毕竟是为了防止运行 js 的网页耗尽所有的内存而导致系统崩溃的问题发生。</p>
+<p>所以我们确保用最少的内存可以让页面获取最好的性能，最佳的执行方案就是执行中的代码都是有必要的数据。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">createPerson</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> localPerson <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  localPerson<span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+  <span class="token keyword">return</span> localPerson<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">const</span> neal <span class="token operator">=</span> <span class="token function">createPerson</span><span class="token punctuation">(</span><span class="token string">'Neal'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 主动清理垃圾</span>
+createPerson <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+</code></pre>
+<blockquote>
+<p><code>createPerson</code>设置为<code>null</code>，并没有立刻把他清除，只是释放了他的引用。让其脱离其执行环境，以便于垃圾收集器更快的将其回收。</p>
+</blockquote>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-10-11T13:39:19.000Z" itemprop="dateUpdated">2017-10-11 21:39:19</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程笔记/">编程笔记</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/d446ebaa/&title=《JS的变量、作用域和内存问题》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/d446ebaa/&title=《JS的变量、作用域和内存问题》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/d446ebaa/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JS的变量、作用域和内存问题》 — Sixin的小站&url=http://coder.liusixin.cn/posts/d446ebaa/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/d446ebaa/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/3d2ababd/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Javascript面向对象总结</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/8c1d1a9d/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">如何编写高质量javascript代码</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/d446ebaa/&title=《JS的变量、作用域和内存问题》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/d446ebaa/&title=《JS的变量、作用域和内存问题》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/d446ebaa/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JS的变量、作用域和内存问题》 — Sixin的小站&url=http://coder.liusixin.cn/posts/d446ebaa/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/d446ebaa/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABx0lEQVR42u3aQY6DMAwF0N7/0jPSbEcJ3zEJVHpZoZbCo4svx+bzidfP3xodj9b/80fXvHnh4uK2udVbzs9Mzl97bFxc3PPcJLyS6Kk+djnscHFxX8ZdoydXwMXF/V7uvKCZXycpg3Bxcd/GTUqTBJrE3PxXt+3VcHFxG9x+w7R/fLS/i4uL25hK9Fui+fnR3XFxcY9wR4FSbZTkjY+8hBrGHC4u7hFu3rxYi6S1EuriCri4uJu5eYFy1ysXSdNk+AkuLu4Rbn6D6nA0abMuPhguLu6j3Lw06Y9sC+NbXFzczdy8nZGj85jLSyhcXNw3cKsbofkw9baxKy4u7mZudThanWtU6Rfn4OLiHuF2ypp8G5O0VnFxcd/D7QRZoeMS/ykXQxpcXNwj3M6NkwIoD8f8IXFxcXdzqy9SVMeo1fi7iDZcXNyD3H0FzVqT5SLIcHFxj3DzlQ9Uqq9vFmY+uLi4m7nVQOkcr7VN1+IPFxe3z62+TtFvkrYCDhcX9yA3b3fOP48aHHFoFr7GxcV9iJtEWB5/i7UYLi7u67nVUqm6TcLFxX2WWy1QOs3WfGvUaovg4uI2uGsN0zyAkpe3ynGGi4u7i/sL4WdN1GOZu3EAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

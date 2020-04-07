@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/92e76411/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/92e76411/">
+    
+    
+    <title>网站性能优化实战——从12.67s到1.06s的故事 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="性能优化">
+    <meta name="description" content="作者：腾讯课堂 NEXT 学位 文章摘自：https://juejin.im/post/5b0b7d74518825158e173a0c  网站性能监测与优化策略0.引言作为互联网项目，最重要的便是用户体验。在举国“互联网+”的热潮中，用户至上也已经被大多数企业所接收，特别是在如今移动端快速发展的时代，我们的网页不仅只是呈现在用户的 PC 浏览器里，更多的时候，用户是通过移动产品浏览我们的网页。">
+<meta name="keywords" content="性能优化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网站性能优化实战——从12.67s到1.06s的故事">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/92e76411/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="作者：腾讯课堂 NEXT 学位 文章摘自：https://juejin.im/post/5b0b7d74518825158e173a0c  网站性能监测与优化策略0.引言作为互联网项目，最重要的便是用户体验。在举国“互联网+”的热潮中，用户至上也已经被大多数企业所接收，特别是在如今移动端快速发展的时代，我们的网页不仅只是呈现在用户的 PC 浏览器里，更多的时候，用户是通过移动产品浏览我们的网页。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d01fdc524f3.jpeg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d01fdd197b6.jpeg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d01fde62f77.jpg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d01fe069bbc.jpg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d01fdb72897.jpg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d01fde01d06.jpg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d01fdf5e86b.jpg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d01fe96a2e5.jpg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d01fee2951a.jpg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d01fed205f2.jpg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d01fefa618a.jpg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d01ff02c0c5.jpg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d01ff09ef40.jpg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d01ff8efb71.jpg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d02159fe9a1.jpg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d0216d4c88b.jpg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d0218b8bd8e.jpg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d021daae81d.jpg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d0222022935.jpg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d022999314a.jpg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d022bc55d45.jpg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d0231a2dec5.jpg">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163a4d0229e73075.jpg">
+<meta property="og:updated_time" content="2018-06-01T04:42:50.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网站性能优化实战——从12.67s到1.06s的故事">
+<meta name="twitter:description" content="作者：腾讯课堂 NEXT 学位 文章摘自：https://juejin.im/post/5b0b7d74518825158e173a0c  网站性能监测与优化策略0.引言作为互联网项目，最重要的便是用户体验。在举国“互联网+”的热潮中，用户至上也已经被大多数企业所接收，特别是在如今移动端快速发展的时代，我们的网页不仅只是呈现在用户的 PC 浏览器里，更多的时候，用户是通过移动产品浏览我们的网页。">
+<meta name="twitter:image" content="http://cdn-blog.liusixin.cn/163a4d01fdc524f3.jpeg">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">网站性能优化实战——从12.67s到1.06s的故事</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">网站性能优化实战——从12.67s到1.06s的故事</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-06-01T04:42:50.000Z" itemprop="datePublished" class="page-time">
+  2018-06-01
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#网站性能监测与优化策略"><span class="post-toc-number">1.</span> <span class="post-toc-text">网站性能监测与优化策略</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0-引言"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">0.引言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-网络传输性能优化"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">1.网络传输性能优化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-1-浏览器缓存"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">1.1.浏览器缓存</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-2-资源打包压缩"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">1.2.资源打包压缩</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-3-图片资源优化"><span class="post-toc-number">1.2.3.</span> <span class="post-toc-text">1.3.图片资源优化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-3-1-不要在-HTML-里缩放图像"><span class="post-toc-number">1.2.3.1.</span> <span class="post-toc-text">1.3.1.不要在 HTML 里缩放图像</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-3-2-使用雪碧图（CSS-Sprite）"><span class="post-toc-number">1.2.3.2.</span> <span class="post-toc-text">1.3.2.使用雪碧图（CSS Sprite）</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-3-3-使用字体图标（iconfont）"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">1.3.3.使用字体图标（iconfont）</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-3-4-使用-WebP"><span class="post-toc-number">1.3.0.1.</span> <span class="post-toc-text">1.3.4.使用 WebP</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-4-网络传输性能检测工具——Page-Speed"><span class="post-toc-number">1.3.1.</span> <span class="post-toc-text">1.4.网络传输性能检测工具——Page Speed</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-5-使用-CDN"><span class="post-toc-number">1.3.2.</span> <span class="post-toc-text">1.5.使用 CDN</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-页面渲染性能优化"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">2.页面渲染性能优化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-1-浏览器渲染过程（Webkit）"><span class="post-toc-number">1.4.1.</span> <span class="post-toc-text">2.1.浏览器渲染过程（Webkit）</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-2-DOM-渲染层与-GPU-硬件加速"><span class="post-toc-number">1.4.2.</span> <span class="post-toc-text">2.2.DOM 渲染层与 GPU 硬件加速</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-3-重排与重绘"><span class="post-toc-number">1.4.3.</span> <span class="post-toc-text">2.3 重排与重绘</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-4-优化策略"><span class="post-toc-number">1.4.4.</span> <span class="post-toc-text">2.4.优化策略</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3-JS-阻塞性能"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">3.JS 阻塞性能</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#4-【拓展】负载均衡"><span class="post-toc-number">1.6.</span> <span class="post-toc-text">4.【拓展】负载均衡</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-1-Node-js-处理-IO-密集型请求"><span class="post-toc-number">1.6.1.</span> <span class="post-toc-text">4.1.Node.js 处理 IO 密集型请求</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-2-pm2-实现-Node-js“多进程”"><span class="post-toc-number">1.6.2.</span> <span class="post-toc-text">4.2.pm2 实现 Node.js“多进程”</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-3-nginx-搭建反向代理"><span class="post-toc-number">1.6.3.</span> <span class="post-toc-text">4.3.nginx 搭建反向代理</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#4-3-1-upstream-配置信息"><span class="post-toc-number">1.6.3.1.</span> <span class="post-toc-text">4.3.1.upstream 配置信息</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#4-3-2-server-配置信息"><span class="post-toc-number">1.6.3.2.</span> <span class="post-toc-text">4.3.2.server 配置信息</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#5-拓展阅读"><span class="post-toc-number">1.7.</span> <span class="post-toc-text">5.拓展阅读</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/性能优化/网站性能优化实战——从12-67s到1-06s的故事" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">网站性能优化实战——从12.67s到1.06s的故事</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-06-01 12:42:50" datetime="2018-06-01T04:42:50.000Z" itemprop="datePublished">2018-06-01</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>作者：腾讯课堂 NEXT 学位</p>
+<p>文章摘自：<a href="https://juejin.im/post/5b0b7d74518825158e173a0c" rel="external nofollow noopener noreferrer" target="_blank">https://juejin.im/post/5b0b7d74518825158e173a0c</a></p>
+</blockquote>
+<h1 id="网站性能监测与优化策略"><a href="#网站性能监测与优化策略" class="headerlink" title="网站性能监测与优化策略"></a>网站性能监测与优化策略</h1><h2 id="0-引言"><a href="#0-引言" class="headerlink" title="0.引言"></a>0.引言</h2><p>作为互联网项目，最重要的便是用户体验。在举国“互联网+”的热潮中，用户至上也已经被大多数企业所接收，特别是在如今移动端快速发展的时代，我们的网页不仅只是呈现在用户的 PC 浏览器里，更多的时候，用户是通过移动产品浏览我们的网页。加之有越来越多的开发者投入到 Web APP 和 Hybrid APP 的开发队伍中，性能，又再一次成为了被程序员们重点关注的话题。我曾经看到过这样一句话：一个网站的体验，决定了用户是否愿意去了解网站的功能；而网站的功能，决定了用户是否会一票否决网站的体验。这是改版自网络上的一句流行语，但却把网站性能这件事说的十分透彻，特别是在网站这样的项目中，如果一个用户需要超过 5s 才能看见页面，他会毫不犹豫地关闭它。</p>
+<p>性能优化，作为工程师界的“上乘武功”，是我们在开发中老生常谈的话题，也是一名开发者从入门向资深进阶的必经阶段，虽然我们看到过很多的标准、军规，但在真正实践中，却常常力不从心，不知道落下了什么，不知道性能是否还有进一步优化的空间。</p>
+<p>对于网站的性能，在行业内有很多既定的指标，但就以我们 Front-Enders 而言，应该更加关注以下指标：白屏时间、首屏时间、整页时间、DNS 时间、CPU 占用率。而我之前自己搭建的一个网站（网址：<a href="https://link.juejin.im/?target=https%3A%2F%2Flink.zhihu.com%2F%3Ftarget%3Dhttp%253A%2F%2Fjerryonlyzrj.com%2Fresume%2F" rel="external nofollow noopener noreferrer" target="_blank">jerryonlyzrj.com/resume/</a> ，近日因域名备案无法打开，几日后即恢复正常），完全没做性能优化时，首屏时间是 12.67s，最后经过多方面优化，终于将其降低至 1.06s，并且还未配置 CDN 加速。其中过程我踩了很多坑，也翻了许多专业书籍，最后决定将这几日的努力整理成文，帮助前端爱好者们少走弯路。</p>
+<p>今天，我们将从性能优化的三大方面工作逐步展开介绍，其中包括网络传输性能、页面渲染性能以及 JS 阻塞性能，系统性地带着读者们体验性能优化的实践流程。</p>
+<h2 id="1-网络传输性能优化"><a href="#1-网络传输性能优化" class="headerlink" title="1.网络传输性能优化"></a>1.网络传输性能优化</h2><p>在开始介绍网络传输性能优化这项工作之前，我们需要了解浏览器处理用户请求的过程，那么就必须奉上这幅神图了：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d01fdc524f3.jpeg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>这是 navigation timing 监测指标图，从图中我们可以看出，浏览器在得到用户请求之后，经历了下面这些阶段：重定向 → 拉取缓存 →DNS 查询 → 建立 TCP 链接 → 发起请求 → 接收响应 → 处理 HTML 元素 → 元素加载完成。不着急，我们将对其中的细节一步步展开讨论：</p>
+<h3 id="1-1-浏览器缓存"><a href="#1-1-浏览器缓存" class="headerlink" title="1.1.浏览器缓存"></a>1.1.浏览器缓存</h3><p>我们都知道，浏览器在向服务器发起请求前，会先查询本地是否有相同的文件，如果有，就会直接拉取本地缓存，这和我们在后台部属的 Redis、Memcache 类似，都是起到了中间缓冲的作用，我们先看看浏览器处理缓存的策略：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d01fdd197b6.jpeg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>因为网上的图片太笼统了，而且我翻过很多讲缓存的文章，很少有将状态码还有什么时候将缓存存放在内存（memory）中什么时候将缓存在硬盘中（disk）系统地整理出来，所以我自己绘制了一张浏览器缓存机制流程图，结合这张图再更深入地说明浏览器的缓存机制。</p>
+<p>这里我们可以使用 chrome devtools 里的 network 面板查看网络传输的相关信息：</p>
+<p>（这里需要特别注意，在我们进行缓存调试时，需要去除 network 面板顶部的 <code>Disable cache</code> 勾选项，否则浏览器将始终不会从缓存中拉取数据）</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d01fde62f77.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>浏览器默认的缓存是放在内存内的，但我们知道，内存里的缓存会因为进程的结束或者说浏览器的关闭而被清除，而存在硬盘里的缓存才能够被长期保留下去。很多时候，我们在 network 面板中各请求的 size 项里，会看到两种不同的状态：<code>from memory cache</code> 和 <code>from disk cache</code>，前者指缓存来自内存，后者指缓存来自硬盘。而控制缓存存放位置的，不是别人，就是我们在服务器上设置的 Etag 字段。在浏览器接收到服务器响应后，会检测响应头部（Header），如果有 Etag 字段，那么浏览器就会将本次缓存写入硬盘中。</p>
+<p>之所以拉取缓存会出现 200、304 两种不同的状态码，取决于浏览器是否有向服务器发起验证请求。 只有向服务器发起验证请求并确认缓存未被更新，才会返回 304 状态码。</p>
+<p>这里我以 nginx 为例，谈谈如何配置缓存:</p>
+<p>首先，我们先进入 nginx 的配置文档</p>
+<pre class=" language-shell"><code class="language-shell">$ vim /etc/nginx/conf.d/nginx.conf
+</code></pre>
+<p>在配置文档内插入如下两项：</p>
+<pre class=" language-shell"><code class="language-shell">etag on;   # 开启etag验证
+expires 7d;    # 设置缓存过期时间为7天
+</code></pre>
+<p>打开我们的网站，在 chrome devtools 的 network 面板中观察我们的请求资源，如果在响应头部看见 Etag 和 Expires 字段，就说明我们的缓存配置成功了。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d01fe069bbc.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>【！！！特别注意！！！】在我们配置缓存时一定要切记，浏览器在处理用户请求时，如果命中强缓存，浏览器会直接拉取本地缓存，不会与服务器发生任何通信，也就是说，如果我们在服务器端更新了文件，并不会被浏览器得知，就无法替换失效的缓存。所以我们在构建阶段，需要为我们的静态资源添加 md5 hash 后缀，避免资源更新而引起的前后端文件无法同步的问题。</p>
+<h3 id="1-2-资源打包压缩"><a href="#1-2-资源打包压缩" class="headerlink" title="1.2.资源打包压缩"></a>1.2.资源打包压缩</h3><p>我们之前所作的浏览器缓存工作，只有在用户第二次访问我们的页面才能起到效果，如果要在用户首次打开页面就实现优良的性能，必须对资源进行优化。我们常将网络性能优化措施归结为三大方面：减少请求数、减小请求资源体积、提升网络传输速率。现在，让我们逐个击破：</p>
+<p>结合前端工程化思想，我们在对上线文件进行自动化打包编译时，通常都需要打包工具的协助，这里我推荐 webpack，我通常都使用 Gulp 和 Grunt 来编译 node，Parcel 太新，而且 webpack 也一直在自身的特性上向 Parcel 靠拢。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d01fdb72897.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>在对 webpack 进行上线配置时，我们要特别注意以下几点：</p>
+<p><strong>①JS 压缩：</strong>（这点应该算是耳熟能详了，就不多介绍了）</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">new</span> <span class="token class-name">webpack<span class="token punctuation">.</span>optimize<span class="token punctuation">.</span>UglifyJsPlugin</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<p><strong>②HTML 压缩：</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">new</span> <span class="token class-name">HtmlWebpackPlugin</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  template<span class="token punctuation">:</span> __dirname <span class="token operator">+</span> <span class="token string">'/views/index.html'</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true">// new 一个这个插件的实例，并传入相关的参数</span>
+  filename<span class="token punctuation">:</span> <span class="token string">'../index.html'</span><span class="token punctuation">,</span>
+  minify<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    removeComments<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    collapseWhitespace<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    removeRedundantAttributes<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    useShortDoctype<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    removeEmptyAttributes<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    removeStyleLinkTypeAttributes<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    keepClosingSlash<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    minifyJS<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    minifyCSS<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    minifyURLs<span class="token punctuation">:</span> <span class="token boolean">true</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  chunksSortMode<span class="token punctuation">:</span> <span class="token string">'dependency'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>我们在使用 <code>html-webpack-plugin</code> 自动化注入 JS、CSS 打包 HTML 文件时，很少会为其添加配置项，这里我给出样例，大家直接复制就行。</p>
+<p>PS：这里有一个技巧，在我们书写 HTML 元素的 src 或 href 属性时，可以省略协议部分，这样也能简单起到节省资源的目的。</p>
+<p><strong>③ 提取公共资源：</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">new</span> <span class="token class-name">webpack<span class="token punctuation">.</span>optimize<span class="token punctuation">.</span>CommonsChunkPlugin</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  name<span class="token punctuation">:</span> <span class="token string">'vendor'</span><span class="token punctuation">,</span>
+  filename<span class="token punctuation">:</span> <span class="token string">'scripts/common/vendor-[hash:5].js'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<blockquote>
+<p>PS:这里是 webpack3 的语法，在 webpack4 中已作更改，希望大家注意</p>
+</blockquote>
+<p><strong>④ 提取 css 并压缩：</strong></p>
+<p>在使用 webpack 的过程中，我们通常会以模块的形式引入 css 文件（webpack 的思想不就是万物皆模块嘛），但是在上线的时候，我们还需要将这些 css 提取出来，并且压缩，这些看似复杂的过程只需要简单的几行配置就行：</p>
+<blockquote>
+<p>我们需要用到 <code>extract-text-webpack-plugin</code> ，所以还得大家自行 <code>npm install</code></p>
+</blockquote>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">const</span> ExtractTextPlugin <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'extract-text-webpack-plugin'</span><span class="token punctuation">)</span>
+module<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+  rules<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+    <span class="token operator">...</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      test<span class="token punctuation">:</span> <span class="token regex">/\.css$/</span><span class="token punctuation">,</span>
+      use<span class="token punctuation">:</span> ExtractTextPlugin<span class="token punctuation">.</span><span class="token function">extract</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        fallback<span class="token punctuation">:</span> <span class="token string">'style-loader'</span><span class="token punctuation">,</span>
+        use<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+          loader<span class="token punctuation">:</span> <span class="token string">'css-loader'</span><span class="token punctuation">,</span>
+          options<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+            minimize<span class="token punctuation">:</span> <span class="token boolean">true</span>
+          <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><strong>⑤ 使用 webpack3 的新特性：ModuleConcatenationPlugin</strong></p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">new</span> <span class="token class-name">webpack<span class="token punctuation">.</span>optimize<span class="token punctuation">.</span>ModuleConcatenationPlugin</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<p>如果你能按照上述五点将 webpack 上线配置完整配置出来，基本能将文件资源体积压缩到极致了，如有疏漏，还希望大家能加以补充。</p>
+<p>给大家上一份我的 webpack 上线配置文档，欢迎参考：</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// webpack.pro.js</span>
+<span class="token keyword">const</span> webpack <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'webpack'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> HtmlWebpackPlugin <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'html-webpack-plugin'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> ExtractTextPlugin <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'extract-text-webpack-plugin'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> CleanWebpackPlugin <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'clean-webpack-plugin'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> CopyWebpackPlugin <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'copy-webpack-plugin'</span><span class="token punctuation">)</span>
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">{</span>
+  entry<span class="token punctuation">:</span> __dirname <span class="token operator">+</span> <span class="token string">'/public/scripts/index.js'</span><span class="token punctuation">,</span>
+  output<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    path<span class="token punctuation">:</span> __dirname <span class="token operator">+</span> <span class="token string">'/build/static'</span><span class="token punctuation">,</span> <span class="token comment" spellcheck="true">// 打包后的文件存放的地方</span>
+    filename<span class="token punctuation">:</span> <span class="token string">'scripts/[name]-[hash:5].js'</span> <span class="token comment" spellcheck="true">// 打包后输出文件的文件名,带有md5 hash戳</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  resolve<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    extensions<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'.jsx'</span><span class="token punctuation">,</span> <span class="token string">'.js'</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  module<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    rules<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+      test<span class="token punctuation">:</span> <span class="token regex">/(\.jsx|\.js)$/</span><span class="token punctuation">,</span>
+      use<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+        loader<span class="token punctuation">:</span> <span class="token string">'babel-loader'</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      exclude<span class="token punctuation">:</span> <span class="token operator">/</span>node_modules<span class="token operator">/</span> <span class="token comment" spellcheck="true">// 不进行编译的目录</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+      test<span class="token punctuation">:</span> <span class="token regex">/\.css$/</span><span class="token punctuation">,</span>
+      use<span class="token punctuation">:</span> ExtractTextPlugin<span class="token punctuation">.</span><span class="token function">extract</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        fallback<span class="token punctuation">:</span> <span class="token string">'style-loader'</span><span class="token punctuation">,</span>
+        use<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+          loader<span class="token punctuation">:</span> <span class="token string">'css-loader'</span><span class="token punctuation">,</span>
+          options<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+            minimize<span class="token punctuation">:</span> <span class="token boolean">true</span>
+          <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  plugins<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+    <span class="token keyword">new</span> <span class="token class-name">HtmlWebpackPlugin</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      template<span class="token punctuation">:</span> __dirname <span class="token operator">+</span> <span class="token string">'/views/index.html'</span><span class="token punctuation">,</span>
+      filename<span class="token punctuation">:</span> <span class="token string">'../index.html'</span><span class="token punctuation">,</span>
+      minify<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+        removeComments<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+        collapseWhitespace<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+        removeRedundantAttributes<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+        useShortDoctype<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+        removeEmptyAttributes<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+        removeStyleLinkTypeAttributes<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+        keepClosingSlash<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+        minifyJS<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+        minifyCSS<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+        minifyURLs<span class="token punctuation">:</span> <span class="token boolean">true</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      chunksSortMode<span class="token punctuation">:</span> <span class="token string">'dependency'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token keyword">new</span> <span class="token class-name">ExtractTextPlugin</span><span class="token punctuation">(</span><span class="token string">'styles/style-[hash:5].css'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token keyword">new</span> <span class="token class-name">CleanWebpackPlugin</span><span class="token punctuation">(</span><span class="token string">'build/*'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+      root<span class="token punctuation">:</span> __dirname<span class="token punctuation">,</span>
+      verbose<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+      dry<span class="token punctuation">:</span> <span class="token boolean">false</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token keyword">new</span> <span class="token class-name">webpack<span class="token punctuation">.</span>optimize<span class="token punctuation">.</span>UglifyJsPlugin</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token keyword">new</span> <span class="token class-name">CopyWebpackPlugin</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">{</span>
+      <span class="token keyword">from</span><span class="token punctuation">:</span> __dirname <span class="token operator">+</span> <span class="token string">'/public/images'</span><span class="token punctuation">,</span>
+      to<span class="token punctuation">:</span> __dirname <span class="token operator">+</span> <span class="token string">'/build/static/images'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+      <span class="token keyword">from</span><span class="token punctuation">:</span> __dirname <span class="token operator">+</span> <span class="token string">'/public/scripts/vector.js'</span><span class="token punctuation">,</span>
+      to<span class="token punctuation">:</span> __dirname <span class="token operator">+</span> <span class="token string">'/build/static/scripts/vector.js'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token keyword">new</span> <span class="token class-name">webpack<span class="token punctuation">.</span>optimize<span class="token punctuation">.</span>ModuleConcatenationPlugin</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token keyword">new</span> <span class="token class-name">webpack<span class="token punctuation">.</span>optimize<span class="token punctuation">.</span>CommonsChunkPlugin</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      name<span class="token punctuation">:</span> <span class="token string">'vendor'</span><span class="token punctuation">,</span>
+      filename<span class="token punctuation">:</span> <span class="token string">'scripts/common/vendor-[hash:5].js'</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>最后，我们还应该在服务器上开启 Gzip 传输压缩，它能将我们的文本类文件体积压缩至原先的四分之一，效果立竿见影，还是切换到我们的 nginx 配置文档，添加如下两项配置项目：</p>
+<pre class=" language-shell"><code class="language-shell">gzip on;
+gzip_types text/plain application/javascriptapplication/x-javascripttext/css application/xml text/javascriptapplication/x-httpd-php application/vnd.ms-fontobject font/ttf font/opentype font/x-woff image/svg+xml;
+</code></pre>
+<p>如果你在网站请求的响应头里看到这样的字段，那么就说明咱们的 Gzip 压缩配置成功啦：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d01fde01d06.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>【！！！特别注意！！！】不要对图片文件进行 Gzip 压缩！不要对图片文件进行 Gzip 压缩！不要对图片文件进行 Gzip 压缩！我只会告诉你效果适得其反，至于具体原因，还得考虑服务器压缩过程中的 CPU 占用还有压缩率等指标，对图片进行压缩不但会占用后台大量资源，压缩效果其实并不可观，可以说是“弊大于利”，所以请在 <code>gzip_types</code> 把图片的相关项去掉。针对图片的相关处理，我们接下来会更加具体地介绍。</p>
+<h3 id="1-3-图片资源优化"><a href="#1-3-图片资源优化" class="headerlink" title="1.3.图片资源优化"></a>1.3.图片资源优化</h3><p>刚刚我们介绍了资源打包压缩，只是停留在了代码层面，而在我们实际开发中，真正占用了大量网络传输资源的，并不是这些文件，而是图片，如果你对图片进行了优化工作，你能立刻看见明显的效果。</p>
+<h4 id="1-3-1-不要在-HTML-里缩放图像"><a href="#1-3-1-不要在-HTML-里缩放图像" class="headerlink" title="1.3.1.不要在 HTML 里缩放图像"></a>1.3.1.不要在 HTML 里缩放图像</h4><p>很多开发者可能会有这样的错觉（其实我曾经也是这样），比如我们会为了方便在一个 200✖200 的图片容器内直接使用一张 400✖400 的图片，我们甚至认为这样能让用户觉得图片更加清晰，其实不然，在普通的显示器上，用户并不会感到缩放后的大图更加清晰，但这一切却导致网页加速速度下降，同时照成带宽浪费，你可能不知道，一张 200KB 的图片和 2M 的图片的传输时间会是 200ms 和 12s 的差距（亲身经历，深受其害(┬＿┬)）。所以，当你需要用多大的图片时，就在服务器上准备好多大的图片，尽量固定图片尺寸。</p>
+<h4 id="1-3-2-使用雪碧图（CSS-Sprite）"><a href="#1-3-2-使用雪碧图（CSS-Sprite）" class="headerlink" title="1.3.2.使用雪碧图（CSS Sprite）"></a>1.3.2.使用雪碧图（CSS Sprite）</h4><p>雪碧图的概念大家一定在开发中经常听见，其实雪碧图是减小请求数的示范性代表。而且很奇妙的是，多张图片拼在一块后，总体积会比之前所有图片的体积之和小（你可以亲自试试）。这里给大家推荐一个自动化生成雪碧图的工具：<a href="https://www.toptal.com/developers/css/sprite-generator" rel="external nofollow noopener noreferrer" target="_blank">www.toptal.com/developers/…</a> （图片来自官网首页）</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d01fdf5e86b.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>只要你添加相关资源文件，他就会自动帮你生成雪碧图以及对应的 CSS 样式，你要做的，只是 download 和 copy。</p>
+<h2 id="1-3-3-使用字体图标（iconfont）"><a href="#1-3-3-使用字体图标（iconfont）" class="headerlink" title="1.3.3.使用字体图标（iconfont）"></a>1.3.3.使用字体图标（iconfont）</h2><p>不论是压缩后的图片，还是雪碧图，终归还是图片，只要是图片，就还是会占用大量网络传输资源。但是字体图标的出现，却让前端开发者看到了另外一个神奇的世界。</p>
+<p>我最喜欢用的是阿里矢量图标库（网址：<a href="www.iconfont.cn/">www.iconfont.cn/</a> ） ，里面有大量的矢量图资源，而且你只需要像在淘宝采购一样把他们添加至购物车就能把它们带回家，整理完资源后还能自动生成 CDN 链接，可以说是完美的一条龙服务了。（图片来自官网首页）<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d01fe96a2e5.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure></p>
+<p>图片能做的很多事情，矢量图都能作，而且它只是往 HTML 里插入字符和 CSS 样式而已，和图片请求比起来，在网络传输资源的占用上它们完全不在一个数量级，如果你的项目里有大量的小图标，就用矢量图吧。</p>
+<h4 id="1-3-4-使用-WebP"><a href="#1-3-4-使用-WebP" class="headerlink" title="1.3.4.使用 WebP"></a>1.3.4.使用 WebP</h4><p>WebP 格式，是谷歌公司开发的一种旨在加快图片加载速度的图片格式。图片压缩体积大约只有 JPEG 的 2/3，并能节省大量的服务器带宽资源和数据空间。Facebook、Ebay 等知名网站已经开始测试并使用 WebP 格式。</p>
+<p>我们可以使用官网提供的 Linux 命令行工具对项目中的图片进行 WebP 编码，也可以使用我们的线上服务，这里我推荐叉拍云（网址：<a href="https://www.upyun.com/webp" rel="external nofollow noopener noreferrer" target="_blank">www.upyun.com/webp</a> ）。但是在实际的上线工作中，我们还是得编写 Shell 脚本使用命令行工具进行批量编码，不过测试阶段我们用线上服务就足够了，方便快捷。（图片来自叉拍云官网）<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d01fee2951a.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure></p>
+<h3 id="1-4-网络传输性能检测工具——Page-Speed"><a href="#1-4-网络传输性能检测工具——Page-Speed" class="headerlink" title="1.4.网络传输性能检测工具——Page Speed"></a>1.4.网络传输性能检测工具——Page Speed</h3><p>除了 network 版块，其实 chrome 还为我们准备好了一款监测网络传输性能的插件——Page Speed，咱们的文章封面，就是用的 Page Speed 的官方宣传图（因为我觉得这张图再合适不过了）。我们只需要通过下面步骤安装，就可以在 chrome devtools 里找到它了：chrome 菜单 → 更多工具 → 拓展程序 →chrome 网上应用商店 → 搜索 pagespeed 后安转即可。</p>
+<p>（PS：使用 chrome 应用商店需要翻墙，怎么翻墙我就不便多说了）</p>
+<p>这就是 Page Speed 的功能界面：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d01fed205f2.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>我们只需要打开待测试的网页，然后点击 Page Speed 里的 Start analyzing 按钮，它就会自动帮我们测试网络传输性能了，这是我的网站测试结果：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d01fefa618a.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>Page Speed 最人性化的地方，便是它会对测试网站的性能瓶颈提出完整的建议，我们可以根据它的提示进行优化工作。这里我的网站已经优化到最好指标了(•́⌄•́๑)૭✧，Page Speed Score 表示你的性能测试得分，100/100 表示已经没有需要优化的地方。</p>
+<p>优化完毕后再使用 chorme devtools 的 network 版块测量一下我们网页的白屏时间还有首屏时间，是不是得到了很大的提升？</p>
+<h3 id="1-5-使用-CDN"><a href="#1-5-使用-CDN" class="headerlink" title="1.5.使用 CDN"></a>1.5.使用 CDN</h3><p>Last but not least，</p>
+<p>再好的性能优化实例，也必须在 CDN 的支撑下才能到达极致。</p>
+<p>如果我们在 Linux 下使用命令 <code>$ traceroute targetIp</code> 或者在 Windows 下使用批处理 <code>&gt; tracert targetIp</code>，都可以定位用户与目标计算机之间经过的所有路由器，不言而喻，用户和服务器之间距离越远，经过的路由器越多，延迟也就越高。使用 CDN 的目的之一便是解决这一问题，当然不仅仅如此，CDN 还可以分担 IDC 压力。</p>
+<p>当然，凭着我们单个人的资金实力（除非你是王思聪）是必定搭建不起来 CDN 的，不过我们可以使用各大企业提供的服务，诸如腾讯云等，配置也十分简单，这里就请大家自行去推敲啦。</p>
+<p>其实我们的 CDN 域名一般是和我们的网站主域名不同的，大家可以看看淘宝、腾讯的官方网站，看看他们存放静态资源的 CDN 域名，都是和主域名不一样的。为什么要这么做？主要有两个原因：[内容摘选自：<a href="https://bbs.aliyun.com/simple/t116453.html" rel="external nofollow noopener noreferrer" target="_blank">bbs.aliyun.com/simple/t116…</a> ]</p>
+<ul>
+<li><p>便于 CDN 业务独立，能够独立配置缓存。</p>
+<ul>
+<li>为了降低 web 压力，CDN 系统会遵循 Cache-Control 和 Expires HTTP 头标准对改请求返回的内容进行缓存，便于后面的请求不在回源，起到加速功能。而传统 CDN（Web 与 CDN 共用域名）的方式，需要对不同类型的文件设置相应的 Cache 规则或者遵循后端的 HTTP 头，但这样难以发挥 CDN 的最大优势，因为动态请求回源的概率非常之大，如果访客与源站的线路并不慢，通过 CDN 的请求未必快于直接请求源站的。 大型网站为了提升 web 性能到极致，通常缓存头设置比较大，像谷歌 JS 设置一年缓存，百度首页 logo 设置十年缓存，如果将静态元素抽取出来，就可以很方便的对所有静态元素部署规则，而不用考虑动态请求。减少规则的条数可以提升 CDN 的效率。</li>
+</ul>
+</li>
+<li><p>抛开无用 cookie，减小带宽占用。</p>
+<ul>
+<li>我们都知道 HTTP 协议每次发送请求都会自动带上该域名及父级域名下的 cookie，但对于 CSS，JS 还有图片资源，这些 cookie 是没用的，反而会浪费访客带宽和服务器入带宽。而我们的主站，为了保持会话或者做其他缓存，都会存放着大量的 cookie，所以如果将 CDN 与主站域名分离，就能解决这一问题。</li>
+<li>不过这样一来，新的问题就出现了：CDN 域名与主站域名不同，DNS 解析 CDN 域名还需要花费额外的时间，增加网络延迟。不过这难不住我们伟大的程序员前辈，DNS Prefetch 闪亮登场。</li>
+</ul>
+</li>
+</ul>
+<p>如果大家翻看大型网站的 HTML 源代码，都会在头部发现这样的 link 链接：（这里以淘宝首页为例）</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d01ff02c0c5.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>这就是 DNS Prefetch。DNS Prefetch 是一种 DNS 预解析技术，当我们浏览网页时，浏览器会在加载网页时对网页中的域名进行预解析并缓存，这样在浏览器加载网页中的链接时，就无需进行 DNS 解析，减少用户的等待时间，提高用户体验。DNS Prefetch 现已被主流浏览器支持，大多数浏览器针对 DNS 解析都进行了优化，典型的一次 DNS 解析会耗费 20~120ms，减少 DNS 解析时间和次数是个很好的优化措施。这里附上一张 Can I use it 官网上的 DNS Prefetch 支持情况图：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d01ff09ef40.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>所以，放心大胆地去使用它吧。</p>
+<h2 id="2-页面渲染性能优化"><a href="#2-页面渲染性能优化" class="headerlink" title="2.页面渲染性能优化"></a>2.页面渲染性能优化</h2><h3 id="2-1-浏览器渲染过程（Webkit）"><a href="#2-1-浏览器渲染过程（Webkit）" class="headerlink" title="2.1.浏览器渲染过程（Webkit）"></a>2.1.浏览器渲染过程（Webkit）</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d01ff8efb71.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>其实大家应该对浏览器的 HTML 渲染机制比较熟悉了，基本流程同上图所述，大家在入门的时候，你的导师或者前辈可能会告诉你，在渲染方面我们要减少重排和重绘，因为他们会影响浏览器性能。不过你一定不知道其中原理是什么，对吧。今天我们就结合《Webkit 技术内幕》（这本书我还是很推荐大家买来看看，好歹作为一名前端工程师，你得知道我们天天接触的浏览器内核是怎样工作的）的相关知识，给大家普及普及那些深层次的概念。</p>
+<p>PS：这里提到了 Webkit 内核，我顺带提一下浏览器内部的渲染引擎、解释器等组件的关系，因为经常有师弟或者一些前端爱好者向我问这方面的知识，分不清他们的关系，我就拿一张图来说明：（这部分内容与本文无关，如果你对此不感兴趣，可以直接跳过）</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d02159fe9a1.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>浏览器的解释器，是包括在渲染引擎内的，我们常说的 Chrome（现在使用的是 Blink 引擎）和 Safari 使用的 Webkit 引擎，Firefox 使用的 Gecko 引擎，指的就是渲染引擎。而在渲染引擎内，还包括着我们的 HTML 解释器（渲染时用于构造 DOM 树）、CSS 解释器（渲染时用于合成 CSS 规则）还有我们的 JS 解释器。不过后来，由于 JS 的使用越来越重要，工作越来越繁杂，所以 JS 解释器也渐渐独立出来，成为了单独的 JS 引擎，就像众所周知的 V8 引擎，我们经常接触的 Node.js 也是用的它。</p>
+<h3 id="2-2-DOM-渲染层与-GPU-硬件加速"><a href="#2-2-DOM-渲染层与-GPU-硬件加速" class="headerlink" title="2.2.DOM 渲染层与 GPU 硬件加速"></a>2.2.DOM 渲染层与 GPU 硬件加速</h3><p>如果我告诉你，一个页面是由许多许多层级组成的，他们就像千层面那样，你能想象出这个页面实际的样子吗？这里为了便于大家想象，我附上一张之前 Firefox 提供的 3D View 插件的页面 Layers 层级图：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d0216d4c88b.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>对，你没看错，页面的真实样子就是这样，是由多个 DOM 元素渲染层（Layers）组成的，实际上一个页面在构建完 Render Tree 之后，是经历了这样的流程才最终呈现在我们面前的：</p>
+<ol>
+<li><p>浏览器会先获取 DOM 树并依据样式将其分割成多个独立的渲染层</p>
+</li>
+<li><p>CPU 将每个层绘制进绘图中</p>
+</li>
+<li><p>将位图作为纹理上传至 GPU（显卡）绘制</p>
+</li>
+<li><p>GPU 将所有的渲染层缓存（如果下次上传的渲染层没有发生变化，GPU 就不需要对其进行重绘）并复合多个渲染层最终形成我们的图像</p>
+</li>
+</ol>
+<p>从上面的步骤我们可以知道，布局是由 CPU 处理的，而绘制则是由 GPU 完成的。</p>
+<p>其实在 chrome 中，也为我们提供了相关插件供我们查看页面渲染层的分布情况以及 GPU 的占用率：（所以说，平时我们得多去尝试尝试 chrome 的那些莫名其妙的插件，真的会发现好多东西都是神器）</p>
+<p>chrome 开发者工具菜单 →more tools→Layers（<strong>开启渲染层功能模块</strong>）</p>
+<p>chrome 开发者工具菜单 →more tools→rendering（<strong>开启渲染性能监测工具</strong>）</p>
+<p>执行上面的操作后，你会在浏览器里看到这样的效果：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d0218b8bd8e.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>太多东西了，分模块讲吧：</p>
+<ol>
+<li><p>最先是页面右上方的小黑窗：其实提示已经说的很清楚了，它显示的就是我们的 GPU 占用率，能够让我们清楚地知道页面是否发生了大量的重绘。</p>
+</li>
+<li><p>Layers 版块：这就是用于显示我们刚提到的 DOM 渲染层的工具了，左侧的列表里将会列出页面里存在哪些渲染层，还有这些渲染层的详细信息。</p>
+</li>
+<li><p>Rendering 版块：这个版块和我们的控制台在同一个地方，大家可别找不到它。前三个勾选项是我们最常使用的，让我来给大家解释一下他们的功能（充当一次免费翻译）</p>
+</li>
+</ol>
+<p>①Paint flashing：勾选之后会对页面中发生重绘的元素高亮显示</p>
+<p>②Layer borders：和我们的 Layer 版块功能类似，它会用高亮边界突出我们页面中的各个渲染层</p>
+<p>③FPS meter：就是开启我们在（一）中提到的小黑窗，用于观察我们的 GPU 占用率</p>
+<p>可能大家会问我，提到 DOM 渲染层这么深的概念有什么用啊，好像跟性能优化没一点关系啊？大家应该还记得我刚说到 GPU 会对我们的渲染层作缓存对吧，那么大家试想一下，如果我们把那些一直发生大量重排重绘的元素提取出来，单独触发一个渲染层，那样这个元素不就不会“连累”其他元素一块重绘了对吧。</p>
+<p>那么问题来了，什么情况下会触发渲染层呢？大家只要记住：</p>
+<p>Video 元素、WebGL、Canvas、CSS3 3D、CSS 滤镜、z-index 大于某个相邻节点的元素都会触发新的 Layer，其实我们最常用的方法，就是给某个元素加上下面的样式：</p>
+<pre class=" language-css"><code class="language-css"><span class="token property">transform</span><span class="token punctuation">:</span> <span class="token function">translateZ</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token property">backface-visibility</span><span class="token punctuation">:</span> hidden<span class="token punctuation">;</span>
+</code></pre>
+<p>这样就可以触发渲染层啦。</p>
+<p>我们把容易触发重排重绘的元素单独触发渲染层，让它与那些“静态”元素隔离，让 GPU 分担更多的渲染工作，我们通常把这样的措施成为硬件加速，或者是 GPU 加速。大家之前肯定听过这个说法，现在完全清楚它的原理了吧。</p>
+<h3 id="2-3-重排与重绘"><a href="#2-3-重排与重绘" class="headerlink" title="2.3 重排与重绘"></a>2.3 重排与重绘</h3><p>现在到我们的重头戏了，重排和重绘。先抛出概念：</p>
+<ol>
+<li><p>重排（reflow）：渲染层内的元素布局发生修改，都会导致页面重新排列，比如窗口的尺寸发生变化、删除或添加 DOM 元素，修改了影响元素盒子大小的 CSS 属性（诸如：width、height、padding）。</p>
+</li>
+<li><p>重绘（repaint）：绘制，即渲染上色，所有对元素的视觉表现属性的修改，都会引发重绘。</p>
+</li>
+</ol>
+<p>我们习惯使用 chrome devtools 中的 performance 版块来测量页面重排重绘所占据的时间：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d021daae81d.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>① 蓝色部分：HTML 解析和网络通信占用的时间</p>
+<p>② 黄色部分：JavaScript 语句执行所占用时间</p>
+<p>③ 紫色部分：重排占用时间</p>
+<p>④ 绿色部分：重绘占用时间</p>
+<p>不论是重排还是重绘，都会阻塞浏览器。要提高网页性能，就要降低重排和重绘的频率和成本，近可能少地触发重新渲染。正如我们在 2.3 中提到的，重排是由 CPU 处理的，而重绘是由 GPU 处理的，CPU 的处理效率远不及 GPU，并且重排一定会引发重绘，而重绘不一定会引发重排。所以在性能优化工作中，我们更应当着重减少重排的发生。</p>
+<p>这里给大家推荐一个网站，里面详细列出了哪些 CSS 属性在不同的渲染引擎中是否会触发重排或重绘：</p>
+<p><a href="https://csstriggers.com" rel="external nofollow noopener noreferrer" target="_blank">csstriggers.com/</a> （图片来自官网）</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d0222022935.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<h3 id="2-4-优化策略"><a href="#2-4-优化策略" class="headerlink" title="2.4.优化策略"></a>2.4.优化策略</h3><p>谈了那么多理论，最实际不过的，就是解决方案，大家一定都等着急了吧，做好准备，一大波干货来袭：</p>
+<ol>
+<li><p>CSS 属性读写分离：浏览器每次对元素样式进行读操作时，都必须进行一次重新渲染（重排 + 重绘），所以我们在使用 JS 对元素样式进行读写操作时，最好将两者分离开，先读后写，避免出现两者交叉使用的情况。最最最客观的解决方案，就是不用 JS 去操作元素样式，这也是我最推荐的。</p>
+</li>
+<li><p>通过切换 class 或者使用元素的 style.csstext 属性去批量操作元素样式。</p>
+</li>
+<li><p>DOM 元素离线更新：当对 DOM 进行相关操作时，例、appendChild 等都可以使用 Document Fragment 对象进行离线操作，带元素“组装”完成后再一次插入页面，或者使用 <code>display:none</code> 对元素隐藏，在元素“消失”后进行相关操作。</p>
+</li>
+<li><p>将没用的元素设为不可见：<code>visibility: hidden</code>，这样可以减小重绘的压力，必要的时候再将元素显示。</p>
+</li>
+<li><p>压缩 DOM 的深度，一个渲染层内不要有过深的子元素，少用 DOM 完成页面样式，多使用伪元素或者 box-shadow 取代。</p>
+</li>
+<li><p>图片在渲染前指定大小：因为 img 元素是内联元素，所以在加载图片后会改变宽高，严重的情况会导致整个页面重排，所以最好在渲染前就指定其大小，或者让其脱离文档流。</p>
+</li>
+<li><p>对页面中可能发生大量重排重绘的元素单独触发渲染层，使用 GPU 分担 CPU 压力。（这项策略需要慎用，得着重考量以牺牲 GPU 占用率为代价能否换来可期的性能优化，毕竟页面中存在太多的渲染层对于 GPU 而言也是一种不必要的压力，通常情况下，我们会对动画元素采取硬件加速。</p>
+</li>
+</ol>
+<h2 id="3-JS-阻塞性能"><a href="#3-JS-阻塞性能" class="headerlink" title="3.JS 阻塞性能"></a>3.JS 阻塞性能</h2><p>JavaScript 在网站开发中几乎已经确定了垄断地位，哪怕是一个再简单不过的静态页面，你都可能看到 JS 的存在，可以说，没有 JS，网站就基本告别用户交互了。然而，脚本带来的问题就是他会阻塞页面的平行下载，还会提高进程的 CPU 占用率。更有甚者，现在 node.js 已经在前端开发中普及，稍有不慎，我们引发了内存泄漏，或者在代码中误写了死循环，会直接造成我们的服务器崩溃。在如今这个 JS 已经遍布前后端的时代，性能的瓶颈不单单只是停留在影响用户体验上，还会有更多更为严重的问题，对 JS 的性能优化工作不可小觑。</p>
+<p>在编程的过程中，如果我们使用了闭包后未将相关资源加以释放，或者引用了外链后未将其置空（比如给某 DOM 元素绑定了事件回调，后来却 remove 了该元素），都会造成内存泄漏的情况发生，进而大量占用用户的 CPU，造成卡顿或死机。我们可以使用 chrome 提供的 JavaScript Profile 版块，开启方式同 Layers 等版块，这里我就不再多说了，直接上效果图：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d022999314a.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>我们可以清楚看见 JS 执行时各函数的执行时间以及 CPU 占用情况，如果我在代码里增加一行 <code>while(true){}</code>, 那么它的占用率一定会飙升到一个异常的指标（亲测 93.26%）。</p>
+<p>其实浏览器强大的内存回收机制在大多数时候避免了这一情况的发生，即便用户发生了死机，他只要结束相关进程（或关闭浏览器）就可以解决这一问题，但我们要知道，同样的情况还会发生在我们的服务器端，也就是我们的 node 中，严重的情况，会直接造成我们的服务器宕机，网站崩溃。所以更多时候，我们都使用 JavaScript Profile 版块来对我们的 node 服务进行压力测试，搭配 <code>node-inspector</code> 插件，我们能更有效地检测 JS 执行时各函数的 CPU 占用率，针对性地进行优化。</p>
+<blockquote>
+<p>PS：所以没修炼到一定水平，千万别在服务端使用闭包，一个是真没啥用，我们会有更多优良的解决办法，二是真的很容易内存泄漏，造成的后果是你无法预期的</p>
+</blockquote>
+<h2 id="4-【拓展】负载均衡"><a href="#4-【拓展】负载均衡" class="headerlink" title="4.【拓展】负载均衡"></a>4.【拓展】负载均衡</h2><p>之所以将负载均衡作为拓展内容，是因为如果是你自己搭建的个人网站，或者中小型网站，其实并不需要考虑多大的并发量，但是如果你搭建的是大型网站，负载均衡便是开发过程不可或缺的步骤。</p>
+<h3 id="4-1-Node-js-处理-IO-密集型请求"><a href="#4-1-Node-js-处理-IO-密集型请求" class="headerlink" title="4.1.Node.js 处理 IO 密集型请求"></a>4.1.Node.js 处理 IO 密集型请求</h3><p>现在的开发流程都注重前后端分离，也就是软件工程中常提到的“高内聚低耦合”的思想，你也可以用模块化的思想去理解，前后解耦就相当与把一个项目分成了前端和后端两个大模块，中间通过接口联系起来，分别进行开发。这样做有什么好处？我就举最有实际效果的一点：“异步编程”。这是我自己想的名字，因为我觉得前后解耦的形式很像我们 JS 中的异步队列，传统的开发模式是“同步”的，前端需要等后端封装好接口，知道了能拿什么数据，再去开发，时间短，工程大。而解耦之后，我们只需要提前约定好接口，前后两端就可以同时开发，不仅高效而且省时。</p>
+<p>我们都知道 node 的核心是事件驱动，通过 Event Loop 去异步处理用户请求，相比于传统的后端服务，它们都是将用户的每个请求分配一个进程进行处理，推荐大家去看这样一篇博文：<a href="https://mp.weixin.qq.com/s?__biz=MzAxOTc0NzExNg==&amp;mid=2665513044&amp;idx=1&amp;sn=9b8526e9d641b970ee5ddac02dae3c57&amp;scene=21#wechat_redirect" rel="external nofollow noopener noreferrer" target="_blank">mp.weixin.qq.com/s?__biz=MzA…</a> 。特别生动地讲解了事件驱动的运行机制，通俗易懂。事件驱动的最大优势是什么？就是在高并发 IO 时，不会造成堵塞，对于直播类网站，这点是至关重要的，我们有成功的先例——快手，快手强大的 IO 高并发究其本质一定能追溯到 node。</p>
+<p>其实现在的企业级网站，都会搭建一层 node 作为中间层。大概的网站框架如图所示：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d022bc55d45.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<h3 id="4-2-pm2-实现-Node-js“多进程”"><a href="#4-2-pm2-实现-Node-js“多进程”" class="headerlink" title="4.2.pm2 实现 Node.js“多进程”"></a>4.2.pm2 实现 Node.js“多进程”</h3><p>我们都知道 node 的优劣，这里分享一份链接，找了挺久写的还算详细：<a href="https://www.zhihu.com/question/19653241/answer/15993549" rel="external nofollow noopener noreferrer" target="_blank">www.zhihu.com/question/19…</a> 。其实很多都是老套路，那些说 node 不行的都是指着 node 是单进程这一个软肋开撕，告诉你，我们有解决方案了——pm2。这是它的官网：<a href="http://pm2.keymetrics.io" rel="external nofollow noopener noreferrer" target="_blank">pm2.keymetrics.io/</a> 。它是一款 node.js 进程管理器，具体的功能，就是能在你的计算机里的每一个内核都启动一个 node.js 服务，也就是说如果你的电脑或者服务器是多核处理器（现在也少见单核了吧），它就能启动多个 node.js 服务，并且它能够自动控制负载均衡，会自动将用户的请求分发至压力小的服务进程上处理。听起来这东西简直就是神器啊！而且它的功能远远不止这些，这里我就不作过多介绍了，大家知道我们在上线的时候需要用到它就行了，安装的方法也很简单，直接用 npm 下到全局就可以了 <code>$ npm i pm2 -g</code> 具体的使用方法还有相关特性可以参照官网。</p>
+<p>下面是 pm2 启动后的效果图：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d0231a2dec5.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<h3 id="4-3-nginx-搭建反向代理"><a href="#4-3-nginx-搭建反向代理" class="headerlink" title="4.3.nginx 搭建反向代理"></a>4.3.nginx 搭建反向代理</h3><p>在开始搭建工作之前，首先得知道什么是反向代理。可能大家对这个名词比较陌生，先上一张图：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163a4d0229e73075.jpg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>所谓代理就是我们通常所说的中介，网站的反向代理就是指那台介于用户和我们真实服务器之间的服务器（说的我都拗口了），它的作用便是能够将用户的请求分配到压力较小的服务器上，其机制是轮询。听完这句话是不是感觉很耳熟，没错，在我介绍 pm2 的时候也说过同样的话，反向代理起到的作用同 pm2 一样也是实现负载均衡，你现在应该也明白了两者之间的差异，反向代理是对服务器实现负载均衡，而 pm2 是对进程实现负载均衡。大家如果想深入了解反向代理的相关知识，我推荐知乎的一个贴子：<a href="https://www.zhihu.com/question/24723688" rel="external nofollow noopener noreferrer" target="_blank">www.zhihu.com/question/24…</a> 。但是大家会想到，配服务器是运维的事情啊，和我们前端有什么关系呢？的确，在这部分，我们的工作只有一些，只需要向运维提供一份配置文档即可。</p>
+<pre class=" language-shell"><code class="language-shell">http {
+    upstream video {
+        ip_hash;
+        server localhost:3000;
+    }
+    server {
+        listen: 8080;
+        location / {
+            proxy_pass: http://video
+        }
+    }
+}
+</code></pre>
+<p>也就是说，在和运维对接的时候，我们只需要将上面这几行代码改为我们配置好的文档发送给他就行了，其他的事情，运维小哥会明白的，不用多说，都在酒里。</p>
+<p>但是，这几行代码该怎么去改呢？首先我们得知道，在 nginx 中，模块被分为三大类：handler、filter 和 upstream。而其中的 upstream 模块，负责完成完成网络数据的接收、处理和转发，也是我们需要在反向代理中用到的模块。接下来我们将介绍配置代码里的内容所表示的含义：</p>
+<h4 id="4-3-1-upstream-配置信息"><a href="#4-3-1-upstream-配置信息" class="headerlink" title="4.3.1.upstream 配置信息"></a>4.3.1.upstream 配置信息</h4><p>upstream 关键字后紧跟的标识符是我们自定义的项目名称，通过一对花括号在其中增添我们的配置信息。</p>
+<ul>
+<li><p><code>ip_hash</code> 关键字：控制用户再次访问时是否连接到前一次连接的服务器</p>
+</li>
+<li><p><code>server</code> 关键字：我们真实服务器的地址，这里的内容肯定是需要我们去填写的，不然运维怎么知道你把项目放在那个服务器上了，也不知道你封装了一层 node 而得去监听 3000 端口。</p>
+</li>
+</ul>
+<h4 id="4-3-2-server-配置信息"><a href="#4-3-2-server-配置信息" class="headerlink" title="4.3.2.server 配置信息"></a>4.3.2.server 配置信息</h4><p>server 是 nginx 的基本配置，我们需要通过 server 将我们定义的 upstream 应用到服务器上。</p>
+<ul>
+<li><p><code>listen</code> 关键字：服务器监听的端口</p>
+</li>
+<li><p><code>location</code> 关键字：和我们之前在 node 层说到的路由是起同样的功能，这里是把用户的请求分配到对应的 upstream 上</p>
+</li>
+</ul>
+<h2 id="5-拓展阅读"><a href="#5-拓展阅读" class="headerlink" title="5.拓展阅读"></a>5.拓展阅读</h2><p>网站的性能与监测是一项复杂的工程，还有很多很多后续的工作，我之前所提到的这些，也只能算是冰山一角，在熟悉开发规范的同时，也需要实践经验的积累。</p>
+<p>在翻阅了许多与网站性能相关的书籍后，我还是更钟情于唐文前辈编著的《大型网站性能监测、分析与优化》，里面的知识较新，切合实际，至少我读完一遍后很有收获、醍醐灌顶，我也希望对性能感兴趣的读者在看完我的文章后能去翻翻这本著作。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-06-01T04:42:50.000Z" itemprop="dateUpdated">2018-06-01 12:42:50</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能优化/">性能优化</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/92e76411/&title=《网站性能优化实战——从12.67s到1.06s的故事》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/92e76411/&title=《网站性能优化实战——从12.67s到1.06s的故事》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/92e76411/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《网站性能优化实战——从12.67s到1.06s的故事》 — Sixin的小站&url=http://coder.liusixin.cn/posts/92e76411/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/92e76411/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/7189c795/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">JTalk 第八期 前端安全大起底 总结</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/a4336408/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">HTTP 相关知识了解一下</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/92e76411/&title=《网站性能优化实战——从12.67s到1.06s的故事》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/92e76411/&title=《网站性能优化实战——从12.67s到1.06s的故事》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/92e76411/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《网站性能优化实战——从12.67s到1.06s的故事》 — Sixin的小站&url=http://coder.liusixin.cn/posts/92e76411/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/92e76411/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAAByUlEQVR42u3ay4rDMAwF0P7/T2e2hVL3SnZEOxyvhiE4J10IvR6P+FxP5/k/r8+8Pv/65Lsbjh1cXNxt7rU869fnH5Dcszbg4uLOc9eBZh108k+t3o+Li/sr3F7isr4BFxf3f3CT0mh9My4u7vdzkzQlL2x20qBjtRouLu4GN+9S3vf3Lf1dXFzcFvcqnjxNydOXwttxcXFHuHlASZqe+7dFT+Li4t7MrQ458lZptXSJVjdwcXFHuPkV1VFrtUlaTbBwcXFnuL21ifz/SSlVGLTg4uLexs0jXLVcyVOlwvgWFxd3hNuLeWdXMfIPxsXFneHmAaUX2pI1i0J7BRcXd5CbDz7z4idZwKqGQlxc3G/grj+j1zDt/TS4uLiT3Gp501u3emycD7UaLi7uOLcaknaKpUJwxMXFHeT2UpBqCZQPXKO2KS4u7iC39wH5AKac1uzsieDi4ha5V/GcDVvlMgkXF3eEW21PJK88thXSWt3AxcU9xd1JWZLne+OZwnoWLi7ubdw80FRLo2oEjWo1XFzcL+Pmo9m8MVpIlXBxcX+Qe2ok8/ZduLi4g9z9BKXXbC0vgeHi4o5wD8xpWxlI8qNs9XdxcXE73D/sUXuKOmY6mwAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

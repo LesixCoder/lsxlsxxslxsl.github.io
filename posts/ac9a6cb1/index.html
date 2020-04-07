@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/ac9a6cb1/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/ac9a6cb1/">
+    
+    
+    <title>JavaScript设计模式--行为型设计模式 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="javascript,编程笔记,设计模式">
+    <meta name="description" content="该系列参考自 《JavaScript 设计模式》   以及 汤姆大叔的博文 深入理解 JavaScript 系列  前言 模板方法模式 观察者模式 状态模式 策略模式 职责链模式 命令模式 访问者模式 中介者模式 备忘录模式 迭代器模式 解释器模式  一. 模板方法模式 父类中定义一组算法操作骨架，而将一些实现步骤延伸到子类中，使得子类在不改变父类算法结构的同时可重新定义算法某些实现步骤。  模">
+<meta name="keywords" content="javascript,编程笔记,设计模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript设计模式--行为型设计模式">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/ac9a6cb1/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="该系列参考自 《JavaScript 设计模式》   以及 汤姆大叔的博文 深入理解 JavaScript 系列  前言 模板方法模式 观察者模式 状态模式 策略模式 职责链模式 命令模式 访问者模式 中介者模式 备忘录模式 迭代器模式 解释器模式  一. 模板方法模式 父类中定义一组算法操作骨架，而将一些实现步骤延伸到子类中，使得子类在不改变父类算法结构的同时可重新定义算法某些实现步骤。  模">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-12-10T14:58:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript设计模式--行为型设计模式">
+<meta name="twitter:description" content="该系列参考自 《JavaScript 设计模式》   以及 汤姆大叔的博文 深入理解 JavaScript 系列  前言 模板方法模式 观察者模式 状态模式 策略模式 职责链模式 命令模式 访问者模式 中介者模式 备忘录模式 迭代器模式 解释器模式  一. 模板方法模式 父类中定义一组算法操作骨架，而将一些实现步骤延伸到子类中，使得子类在不改变父类算法结构的同时可重新定义算法某些实现步骤。  模">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">JavaScript设计模式--行为型设计模式</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">JavaScript设计模式--行为型设计模式</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-12-10T14:58:42.000Z" itemprop="datePublished" class="page-time">
+  2017-12-10
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Javascript设计模式系列/">Javascript设计模式系列</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#一-模板方法模式"><span class="post-toc-number">2.</span> <span class="post-toc-text">一. 模板方法模式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#演示"><span class="post-toc-number">2.0.1.</span> <span class="post-toc-text">演示</span></a></li></ol></li></ol><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二-观察者模式"><span class="post-toc-number">3.</span> <span class="post-toc-text">二. 观察者模式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#演示-1"><span class="post-toc-number">3.0.1.</span> <span class="post-toc-text">演示</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#三-状态模式"><span class="post-toc-number">4.</span> <span class="post-toc-text">三. 状态模式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#演示-2"><span class="post-toc-number">4.0.1.</span> <span class="post-toc-text">演示</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#四-策略模式"><span class="post-toc-number">5.</span> <span class="post-toc-text">四. 策略模式</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#五-职责链模式"><span class="post-toc-number">6.</span> <span class="post-toc-text">五. 职责链模式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#场景"><span class="post-toc-number">6.1.</span> <span class="post-toc-text">场景</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#六-命令模式"><span class="post-toc-number">7.</span> <span class="post-toc-text">六. 命令模式</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#七-访问者模式"><span class="post-toc-number">8.</span> <span class="post-toc-text">七. 访问者模式</span></a></li>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/Javascript设计模式/JavaScript设计模式-行为型设计模式" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">JavaScript设计模式--行为型设计模式</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-12-10 22:58:42" datetime="2017-12-10T14:58:42.000Z" itemprop="datePublished">2017-12-10</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Javascript设计模式系列/">Javascript设计模式系列</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>该系列参考自 《JavaScript 设计模式》</p>
+</blockquote>
+<blockquote>
+<p>以及 汤姆大叔的博文 <a href="https://www.cnblogs.com/TomXu/archive/2011/12/15/2288411.html" rel="external nofollow noopener noreferrer" target="_blank">深入理解 JavaScript 系列</a></p>
+</blockquote>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><ul>
+<li>模板方法模式</li>
+<li>观察者模式</li>
+<li>状态模式</li>
+<li>策略模式</li>
+<li>职责链模式</li>
+<li>命令模式</li>
+<li>访问者模式</li>
+<li>中介者模式</li>
+<li>备忘录模式</li>
+<li>迭代器模式</li>
+<li>解释器模式</li>
+</ul>
+<h1 id="一-模板方法模式"><a href="#一-模板方法模式" class="headerlink" title="一. 模板方法模式"></a>一. 模板方法模式</h1><blockquote>
+<p>父类中定义一组算法操作骨架，而将一些实现步骤延伸到子类中，使得子类在不改变父类算法结构的同时可重新定义算法某些实现步骤。</p>
+</blockquote>
+<p>模板方法模式主要由两部分组成：</p>
+<ul>
+<li>抽象父类</li>
+<li>具体实现子类</li>
+</ul>
+<h3 id="演示"><a href="#演示" class="headerlink" title="演示"></a>演示</h3><p>这里我们直接拿网上最常用的例子来举例说明</p>
+<p>Coffee or Tea</p>
+<ul>
+<li>把水煮沸</li>
+<li>用沸水浸泡茶叶</li>
+<li>把茶水倒进杯子</li>
+<li>加柠檬</li>
+</ul>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">/* 抽象父类：饮料 */</span>
+<span class="token keyword">var</span> Beverage <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// (1) 把水煮沸</span>
+Beverage<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>boilWater <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'把水煮沸'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// (2) 沸水浸泡</span>
+Beverage<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>brew <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">'子类必须重写brew方法'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// (3) 倒进杯子</span>
+Beverage<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>pourInCup <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">'子类必须重写pourInCup方法'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// (4) 加调料</span>
+Beverage<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>addCondiments <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">'子类必须重写addCondiments方法'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">/* 模板方法 */</span>
+Beverage<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>init <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">boilWater</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">brew</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">pourInCup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">addCondiments</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">/* 实现子类 Coffee*/</span>
+<span class="token keyword">var</span> Coffee <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+Coffee<span class="token punctuation">.</span>prototype <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Beverage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// 重写非公有方法</span>
+Coffee<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>brew <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'用沸水冲泡咖啡'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+Coffee<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>pourInCup <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'把咖啡倒进杯子'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+Coffee<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>addCondiments <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'加牛奶'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> coffee <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Coffee</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+coffee<span class="token punctuation">.</span><span class="token function">init</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>通过模板方法模式，在父类中封装了子类的算法框架。这些算法框架在正常状态下是适用大多数子类的，但也会出现“个性”子类。</p>
+<p>如上述流程，加调料是可选的。</p>
+<p>钩子方法可以解决这个问题，放置钩子是隔离变化的一种常见手段。</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">/* 添加钩子方法 */</span>
+Beverage<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>customerWantsCondiments <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+Beverage<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>init <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">boilWater</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">brew</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">pourInCup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">customerWantsCondiments</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">addCondiments</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">/* 实现子类 Tea*/</span>
+<span class="token keyword">var</span> Tea <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+Tea<span class="token punctuation">.</span>prototype <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Beverage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// 重写非公有方法</span>
+Tea<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>brew <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'用沸水冲泡茶'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+Tea<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>pourInCup <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'把茶倒进杯子'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+Tea<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>addCondiments <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'加牛奶'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+Tea<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>customerWantsCondiments <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> window<span class="token punctuation">.</span><span class="token function">confirm</span><span class="token punctuation">(</span><span class="token string">'需要添加调料吗？'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> tea <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Tea</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+tea<span class="token punctuation">.</span><span class="token function">init</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<h1 id="二-观察者模式"><a href="#二-观察者模式" class="headerlink" title="二. 观察者模式"></a>二. 观察者模式</h1><blockquote>
+<p>又被称为发布订阅模式，或者消息机制。定义了一种依赖关系，解决了主体对象和观察者之间功能的耦合</p>
+</blockquote>
+<p>其实他就是定义了一种一对多的关系，让多个观察者对象同时监听某一个主体对象，这个主体对象的状态发生变化时，就会通知所有的观察者对象，使得他们能够自动更新自己。</p>
+<p>观察者对象的好处：</p>
+<ul>
+<li>支持简单的广播通信，自动通知所有已经订阅过的对象。</li>
+<li>页面载入后目标对象很容易与观察者存在一种动态关联，增加了灵活性。</li>
+<li>目标对象与观察者之间的抽象耦合关系能够单独扩展以及重用。</li>
+</ul>
+<h3 id="演示-1"><a href="#演示-1" class="headerlink" title="演示"></a>演示</h3><p>js 通过对观察者模式的实现是通过回调函数的方式</p>
+<p>我们来先定义一个 pubsub 对象，其内部包含了 3 个方法：订阅、退订、发布</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// 创建一个观察者</span>
+<span class="token keyword">var</span> Observe <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> _message <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token punctuation">{</span>
+    register<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>type<span class="token punctuation">,</span> fn<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">//注册信息接口</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> _message<span class="token punctuation">[</span>type<span class="token punctuation">]</span> <span class="token operator">===</span> <span class="token string">'undefined'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        _message<span class="token punctuation">[</span>type<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span>fn<span class="token punctuation">]</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        _message<span class="token punctuation">[</span>type<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>fn<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    fire<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>type<span class="token punctuation">,</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">//发布消息接口</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>_message<span class="token punctuation">[</span>type<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token keyword">return</span><span class="token punctuation">;</span>
+      <span class="token comment" spellcheck="true">//消息信息</span>
+      <span class="token keyword">var</span> event <span class="token operator">=</span> <span class="token punctuation">{</span>
+          type<span class="token punctuation">:</span> type<span class="token punctuation">,</span>
+          args<span class="token punctuation">:</span> args <span class="token operator">||</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span>
+        len <span class="token operator">=</span> _message<span class="token punctuation">[</span>type<span class="token punctuation">]</span><span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+      <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> len<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">//一次执行注册过的方法</span>
+        _message<span class="token punctuation">[</span>type<span class="token punctuation">]</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> event<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    remove<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>type<span class="token punctuation">,</span> fn<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">//移除消息接口</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>_message<span class="token punctuation">[</span>type<span class="token punctuation">]</span> <span class="token keyword">instanceof</span> <span class="token class-name">Array</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> i <span class="token operator">=</span> _message<span class="token punctuation">[</span>type<span class="token punctuation">]</span><span class="token punctuation">.</span>length <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token punctuation">;</span> i <span class="token operator">></span> <span class="token operator">-</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">--</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          _message<span class="token punctuation">[</span>type<span class="token punctuation">]</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">===</span> fn <span class="token operator">&amp;&amp;</span> _message<span class="token punctuation">[</span>type<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">splice</span><span class="token punctuation">(</span>i<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+Observe<span class="token punctuation">.</span><span class="token function">register</span><span class="token punctuation">(</span><span class="token string">'test'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>type<span class="token punctuation">,</span> e<span class="token punctuation">.</span>args<span class="token punctuation">.</span>msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+Observe<span class="token punctuation">.</span><span class="token function">register</span><span class="token punctuation">(</span><span class="token string">'test'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>type<span class="token punctuation">,</span> <span class="token string">'Liusixin'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+Observe<span class="token punctuation">.</span><span class="token function">fire</span><span class="token punctuation">(</span><span class="token string">'test'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  msg<span class="token punctuation">:</span> <span class="token string">'test test'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<h1 id="三-状态模式"><a href="#三-状态模式" class="headerlink" title="三. 状态模式"></a>三. 状态模式</h1><blockquote>
+<p>当一个对象内部状态发生变化的时候，会导致起行为变化，看起来就像改变了对象</p>
+</blockquote>
+<p>状态模式定义了一个对象，这个对象可以通过管理其内部状态从而是其行为发生变化。状态模式是一个非常出色的设计模式，主要由两个角色构成</p>
+<ul>
+<li>环境类：拥有一个状态成员，可以修改其状态并做出反应</li>
+<li>状态类：表示一种状态，包含相应的处理方法</li>
+</ul>
+<h3 id="演示-2"><a href="#演示-2" class="headerlink" title="演示"></a>演示</h3><p>一个简单的例子，我们可以将不同的判断结构封装在一个状态对象内，然后该状态对象返回一个可被调用的状态方法，用于调用对象内部某个方法。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> ResultState <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> States <span class="token operator">=</span> <span class="token punctuation">{</span>
+    state0<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'这是第一种结果'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    state1<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'这是第二种结果'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    state2<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'这是第三种结果'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    state3<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'这是第四种结果'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">//获取某一种状态并执行相应的方法</span>
+  <span class="token keyword">function</span> <span class="token function">show</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    States<span class="token punctuation">[</span><span class="token string">'state'</span> <span class="token operator">+</span> result<span class="token punctuation">]</span> <span class="token operator">&amp;&amp;</span> States<span class="token punctuation">[</span><span class="token string">'state'</span> <span class="token operator">+</span> result<span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">return</span> <span class="token punctuation">{</span>
+    show<span class="token punctuation">:</span> show
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+ResultState<span class="token punctuation">.</span><span class="token function">show</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>上面代码只是一个雏形，对于状态模式主要目的就是将条件判断的不同结构，转化为状态对象的内部状态，既然是状态对象的内部状态，所以一般是作为状态对象的私有变量，然后提供一个能够调用状态对象内部状态的接口方法对象</p>
+<h1 id="四-策略模式"><a href="#四-策略模式" class="headerlink" title="四. 策略模式"></a>四. 策略模式</h1><blockquote>
+<p>将定义的一组算法封装起来，使其相互之间可以替代。封装的算法具有一定的独立性，不会随着客户端变化而变化</p>
+</blockquote>
+<p>从结构上看，他和状态模式非常的相似，也是在内部封装一个对象，然后通过返回的借口对象实现对内部对象的调用，不同的是，策略模式不需要管理状态，状态之间没有依赖关系，策略之间可以相互替换，在策略对象内部保存的是一些相对独立的一些算法。</p>
+<h1 id="五-职责链模式"><a href="#五-职责链模式" class="headerlink" title="五. 职责链模式"></a>五. 职责链模式</h1><blockquote>
+<p>解决请求发送者和接受者之间的耦合，通过职责链上多个对象分解请求流程，实现请求在多个对象之间的传递，直到最后一个对象完成请求的处理。</p>
+</blockquote>
+<p>职责链模式的优点是：请求发送者只需要直到链中的第一个节点，从而解耦了发送者和一组接收者之间的强联系。此外，使用了职责链模式之后，链中的节点对象可以灵活地拆分重组，增加或者删除 一个节点，以及改变节点在链中的位置都是轻而易举的。</p>
+<p>职责链模式的缺点是：首先不能保证某个请求一定会被链中的某个节点处理，这种情况系下可以在链尾增加一个保底的接受者节点来处理这种即将离开链尾的请求。其次，职责链模式使得程序中多了一些节点对象，可能在某一次的请求传递过程中，大部分的节点并没有起到实质性的作用，从性能的角度考虑，应当避免过长的职责链带来的性能损耗。</p>
+<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>假设有这么一种场景：一个售卖手机的电商网站，经过分别交纳 500 元定金和 200 元定金的两轮预订之后（订单在此时已经生成），现在进入了正式购买阶段。</p>
+<p>公司针对支付过定金的客户有一定的优惠，正式购买之后，已经支付过 500 元定金的用户会收到 100 元优惠券，200 元定金的用户可以收到 50 元优惠券，没有支付过定金的只能进入普通购买方式，也就是没有优惠券。相关的字段有这么几种：</p>
+<ul>
+<li><code>oederType</code>: 订单类型，为 1 代表 500 元定金用户，2 代表 200 元定金用户，3 为普通购买用户；</li>
+</ul>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">//职责链模式</span>
+<span class="token keyword">var</span> order500 <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>orderType<span class="token punctuation">,</span> pay<span class="token punctuation">,</span> stock<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>orderType <span class="token operator">==</span> <span class="token number">1</span> <span class="token operator">&amp;&amp;</span> pay <span class="token operator">===</span> <span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'500元定金预约，得到100元优惠券'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token string">'nextSuccessor'</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> order200 <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>orderType<span class="token punctuation">,</span> pay<span class="token punctuation">,</span> stock<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>orderType <span class="token operator">===</span> <span class="token number">2</span> <span class="token operator">&amp;&amp;</span> pay <span class="token operator">===</span> <span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'200元定金预约，得到50优惠券'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token string">'nextSuccessor'</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">var</span> orderNormal <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>orderType<span class="token punctuation">,</span> pay<span class="token punctuation">,</span> stock<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>stock <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'普通购买，无优惠券'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token string">'nextSuccessor'</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>接下来需要把函数包装进职责链节点：</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">//职责链包装</span>
+
+<span class="token keyword">var</span> Chain <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>fn<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>fn <span class="token operator">=</span> fn<span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>nextSuccessor <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+Chain<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>setNextSuccessor <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>successor<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>nextSuccessor <span class="token operator">=</span> successor<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+Chain<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>passRequest <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> ret <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>fn<span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> arguments<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>ret <span class="token operator">==</span> <span class="token string">'nextSuccessor'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">//console.log(this.nextSuccessor.fn.name);</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>nextSuccessor <span class="token operator">&amp;&amp;</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>nextSuccessor<span class="token punctuation">.</span>passRequest<span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>nextSuccessor<span class="token punctuation">,</span> arguments<span class="token punctuation">)</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//启动这一步启动递归了</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> ret<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">//测试</span>
+<span class="token keyword">var</span> chainOrder500 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Chain</span><span class="token punctuation">(</span>order500<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> chainOrder200 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Chain</span><span class="token punctuation">(</span>order200<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> chainOrderNormal <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Chain</span><span class="token punctuation">(</span>orderNormal<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+chainOrder500<span class="token punctuation">.</span><span class="token function">setNextSuccessor</span><span class="token punctuation">(</span>chainOrder200<span class="token punctuation">)</span><span class="token punctuation">;</span>
+chainOrder200<span class="token punctuation">.</span><span class="token function">setNextSuccessor</span><span class="token punctuation">(</span>chainOrderNormal<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">//将请求传递给第一个节点即可</span>
+chainOrder500<span class="token punctuation">.</span><span class="token function">passRequest</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//输出 500元定金，得到100元优惠券</span>
+chainOrder500<span class="token punctuation">.</span><span class="token function">passRequest</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//输出200元定金，得到50元优惠券</span>
+chainOrder500<span class="token punctuation">.</span><span class="token function">passRequest</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//输出 手机库存不足</span>
+</code></pre>
+<h1 id="六-命令模式"><a href="#六-命令模式" class="headerlink" title="六. 命令模式"></a>六. 命令模式</h1><blockquote>
+<p>用来对方法调用进行参数化处理和传送，经过这样处理过的方法调用可以在任何需要的时候执行。也就是说该模式旨在将函数的调用、请求和操作封装成一个单一的对象，然后对这个对象进行一些列的处理。他也可以用来消除调用操作的对象和实现操作的对象之间的耦合。这为各种具体的类的更换带来了极大的灵活性。</p>
+</blockquote>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">//1.一个连有炮兵和步兵，司令可以下命令调动军队打仗</span>
+<span class="token keyword">var</span> lian <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+lian<span class="token punctuation">.</span>paobing <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>pao_num<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>pao_num <span class="token operator">+</span> <span class="token string">'门炮准备战斗'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+lian<span class="token punctuation">.</span>bubing <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>bubing_num<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>bubing_num <span class="token operator">+</span> <span class="token string">'人准备战斗'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+lian<span class="token punctuation">.</span>lianzhang <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>mingling<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  lian<span class="token punctuation">[</span>mingling<span class="token punctuation">.</span>type<span class="token punctuation">]</span><span class="token punctuation">(</span>mingling<span class="token punctuation">.</span>num<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">//司令下命令</span>
+lian<span class="token punctuation">.</span><span class="token function">lianzhang</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  type<span class="token punctuation">:</span> <span class="token string">'paobing'</span><span class="token punctuation">,</span>
+  num<span class="token punctuation">:</span> <span class="token number">10</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+lian<span class="token punctuation">.</span><span class="token function">lianzhang</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  type<span class="token punctuation">:</span> <span class="token string">'bubing'</span><span class="token punctuation">,</span>
+  num<span class="token punctuation">:</span> <span class="token number">100</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<h1 id="七-访问者模式"><a href="#七-访问者模式" class="headerlink" title="七. 访问者模式"></a>七. 访问者模式</h1><blockquote>
+<p>针对于对象结构中的元素，定义在不改变对象的前提下访问结构中元素的方法</p>
+</blockquote>
+<p>在访问者模式中，主要包括下面几个角色</p>
+<ol>
+<li>抽象访问者：抽象类或者接口，声明访问者可以访问哪些元素，具体到程序中就是 visit 方法中的参数定义哪些对象是可以被访问的。</li>
+<li>访问者：实现抽象访问者所声明的方法，它影响到访问者访问到一个类后该干什么，要做什么事情。</li>
+<li>抽象元素类：接口或者抽象类，声明接受哪一类访问者访问，程序上是通过 accept 方法中的参数来定义的。抽象元素一般有两类方法，一部分是本身的业务逻辑，另外就是允许接收哪类访问者来访问。</li>
+<li>元素类：实现抽象元素类所声明的 accept 方法，通常都是<code>visitor.visit(this)</code>，基本上已经形成一种定式了。</li>
+<li>结构对象：一个元素的容器，一般包含一个容纳多个不同类、不同接口的容器，如 List、Set、Map 等，在项目中一般很少抽象出这个角色。</li>
+</ol>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// 访问者</span>
+<span class="token keyword">function</span> <span class="token function">Visitor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>visit <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>concreteElement<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    concreteElement<span class="token punctuation">.</span><span class="token function">doSomething</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">// 元素类</span>
+<span class="token keyword">function</span> <span class="token function">ConceteElement</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>doSomething <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'这是一个具体元素'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>accept <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>visitor<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    visitor<span class="token punctuation">.</span><span class="token function">visit</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">// Client</span>
+<span class="token keyword">var</span> ele <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ConceteElement</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> v <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Visitor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ele<span class="token punctuation">.</span><span class="token function">accept</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-12-10T14:58:42.000Z" itemprop="dateUpdated">2017-12-10 22:58:42</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程笔记/">编程笔记</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/ac9a6cb1/&title=《JavaScript设计模式--行为型设计模式》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/ac9a6cb1/&title=《JavaScript设计模式--行为型设计模式》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/ac9a6cb1/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JavaScript设计模式--行为型设计模式》 — Sixin的小站&url=http://coder.liusixin.cn/posts/ac9a6cb1/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/ac9a6cb1/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/1bc12c23/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">用评论消息框讲解状态模式</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/336c09e/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">JS你所不知道的奇淫技巧</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/ac9a6cb1/&title=《JavaScript设计模式--行为型设计模式》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/ac9a6cb1/&title=《JavaScript设计模式--行为型设计模式》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/ac9a6cb1/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JavaScript设计模式--行为型设计模式》 — Sixin的小站&url=http://coder.liusixin.cn/posts/ac9a6cb1/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/ac9a6cb1/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABvklEQVR42u3aQY7DIBAEQP//09lrpMjebjBkvSpOkYNM+YKGHo4jHq+38f7k89/rmZ/vPFYMXFzcae7rcpzNuX7bGSh//+lauLi4G7ljCyfzzxYe3OxwcXEfwk2KlesPwMXF/a/cqEDBxcV9FDePNvLDT7LKwrMaLi7uBDdPKdf9XpLv4uLiDnFf5ZiJQW9YHRcXdwu3DTVyel7utM1dXFzc73LbFshM+VI0dHFxcTdy86CzXiAISesSBxcXdzE3OdLkS7ZR7GALFhcXdzG3hSYLt03ZXIKLi7ua2zY+88Jlpl36yxaGi4u7mNuGmMkmNRV5BOUOLi7uam7yHW2jtG275gUWLi7uHu5YUZIUNHeFJkW+i4uLeyt3bHvKn9x1VRQXF3cnN9mw6rNUmWMUV0BwcXE3cvMxcy1jrBmDi4v7XW69rQQXOIraKpmJi4u7mDu2ha1+XpzJcHFxF3DbeCIvZe66ZjH4Mbi4uNPcfPMaa4smh5yiPMLFxd3IbTeaPP4Yi1brv3Fxcf8Yt72WkR+9cHFxn8htDzDzxyRcXNyd3JmQNMGNRS24uLjf4o6Fm+3r2ubKDfkuLi7uCPcHoSxxsNkXJZMAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

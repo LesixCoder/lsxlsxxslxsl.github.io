@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/e2c95240/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/e2c95240/">
+    
+    
+    <title>记一次工作中的 js 控制 cookie 的实践 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="javascript,项目实践,Cookie">
+    <meta name="description" content="概述主要实现的功能是有个活动的结果弹窗在进入页面会自动弹出来一次，当天只弹出一次，直到活动结束为止。 实现逻辑 使用 addCookie SetCookie getCookie 三个公用的方法来实现操作。 首次载入页面时先判断当前时间是否在活动时间内，之后使用 getCookie 判断 cookie 是否存在，如果不存在使用 addCokie 添加 cookie（这里的 cookie 的值设置为当">
+<meta name="keywords" content="javascript,项目实践,Cookie">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次工作中的 js 控制 cookie 的实践">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/e2c95240/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="概述主要实现的功能是有个活动的结果弹窗在进入页面会自动弹出来一次，当天只弹出一次，直到活动结束为止。 实现逻辑 使用 addCookie SetCookie getCookie 三个公用的方法来实现操作。 首次载入页面时先判断当前时间是否在活动时间内，之后使用 getCookie 判断 cookie 是否存在，如果不存在使用 addCokie 添加 cookie（这里的 cookie 的值设置为当">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-09-27T13:15:05.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="记一次工作中的 js 控制 cookie 的实践">
+<meta name="twitter:description" content="概述主要实现的功能是有个活动的结果弹窗在进入页面会自动弹出来一次，当天只弹出一次，直到活动结束为止。 实现逻辑 使用 addCookie SetCookie getCookie 三个公用的方法来实现操作。 首次载入页面时先判断当前时间是否在活动时间内，之后使用 getCookie 判断 cookie 是否存在，如果不存在使用 addCokie 添加 cookie（这里的 cookie 的值设置为当">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">记一次工作中的 js 控制 cookie 的实践</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">记一次工作中的 js 控制 cookie 的实践</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-09-27T13:15:05.000Z" itemprop="datePublished" class="page-time">
+  2017-09-27
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#概述"><span class="post-toc-number">1.</span> <span class="post-toc-text">概述</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#实现逻辑"><span class="post-toc-number">2.</span> <span class="post-toc-text">实现逻辑</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/技术杂谈/记一次工作中的-js-控制-cookie-的实践" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">记一次工作中的 js 控制 cookie 的实践</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-09-27 21:15:05" datetime="2017-09-27T13:15:05.000Z" itemprop="datePublished">2017-09-27</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>主要实现的功能是有个活动的结果弹窗在进入页面会自动弹出来一次，当天只弹出一次，直到活动结束为止。</p>
+<h2 id="实现逻辑"><a href="#实现逻辑" class="headerlink" title="实现逻辑"></a>实现逻辑</h2><ul>
+<li>使用 <code>addCookie SetCookie getCookie</code> 三个公用的方法来实现操作。</li>
+<li>首次载入页面时先判断当前时间是否在活动时间内，之后使用 <code>getCookie</code> 判断 <code>cookie</code> 是否存在，如果不存在使用 <code>addCokie</code> 添加 <code>cookie</code>（这里的 cookie 的值设置为当天的日期值）并弹出弹窗；如果存在的话判断 <code>cookie</code> 的值，如果等于当天的日期值弹出弹窗</li>
+<li>在关闭弹窗的时候也得先判断是否有这个 <code>cookie</code> ，因为可能活动已经结束了，再使用 <code>SetCookie</code> 对 <code>cookie</code> 的值进行修改，这里将当天的日期值加 1 后的值赋给 <code>SetCookie</code> 的第二个参数，再用活动结束后的时间减去当天的时间最后算出离活动还有几天的天数，将这个天数的值当作是 <code>SetCookie</code> 的第三个参数，这里需要注意的是如果天数小于 1 那么这个方法执行完之后会默认将 <code>cookie</code> 删掉。</li>
+<li>整个的执行测试过程：在今天进入这个页面之后因为没有 <code>cookie</code> 会生成这个 <code>cookie</code> ，<code>cookie</code> 的有效时间至活动结束之前（<code>addCookie</code> 的第三个参数，这个是按照小时数换算的），<code>cookie</code> 的值（第二个参数）设置为当天的日期，这时点击关闭弹窗的按钮修改 <code>cookie</code> 的日期值，之后在今天的其他时间之内再次进入页面的时候会进行日期判断，此时的日期值会是明天的所以不会弹出弹窗，到了第二天再次进入时因为日期值又相等了，所以还会有弹窗，然后点击关闭日期加 1 ，这样直至活动结束，弹出弹窗之后再点击关闭按钮，时间相减的值取整数为 0 ，这样 <code>SetCookie</code> 执行后会自动将这个 cookie 删掉了。</li>
+</ul>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">//三个公用方法</span>
+<span class="token comment" spellcheck="true">//添加cookie</span>
+<span class="token keyword">function</span> <span class="token function">addCookie</span><span class="token punctuation">(</span>objName<span class="token punctuation">,</span> objValue<span class="token punctuation">,</span> objHours<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> str <span class="token operator">=</span> objName <span class="token operator">+</span> <span class="token string">'='</span> <span class="token operator">+</span> <span class="token function">escape</span><span class="token punctuation">(</span>objValue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>objHours <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">//为0时不设定过期时间，浏览器关闭时cookie自动消失</span>
+    <span class="token keyword">var</span> date <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">var</span> ms <span class="token operator">=</span> objHours <span class="token operator">*</span> <span class="token number">3600</span> <span class="token operator">*</span> <span class="token number">1000</span><span class="token punctuation">;</span>
+    date<span class="token punctuation">.</span><span class="token function">setTime</span><span class="token punctuation">(</span>date<span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> ms<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    str <span class="token operator">+</span><span class="token operator">=</span> <span class="token string">'; expires='</span> <span class="token operator">+</span> date<span class="token punctuation">.</span><span class="token function">toGMTString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  document<span class="token punctuation">.</span>cookie <span class="token operator">=</span> str <span class="token operator">+</span> <span class="token string">'; path=/'</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">//修改cookie</span>
+<span class="token keyword">function</span> <span class="token function">SetCookie</span><span class="token punctuation">(</span>c_name<span class="token punctuation">,</span> value<span class="token punctuation">,</span> expiredays<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> exdate <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  exdate<span class="token punctuation">.</span><span class="token function">setDate</span><span class="token punctuation">(</span>exdate<span class="token punctuation">.</span><span class="token function">getDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> expiredays<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  document<span class="token punctuation">.</span>cookie <span class="token operator">=</span>
+    c_name <span class="token operator">+</span>
+    <span class="token string">'='</span> <span class="token operator">+</span>
+    <span class="token function">escape</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token operator">+</span>
+    <span class="token punctuation">(</span>expiredays <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">?</span> <span class="token string">''</span> <span class="token punctuation">:</span> <span class="token string">';expires='</span> <span class="token operator">+</span> exdate<span class="token punctuation">.</span><span class="token function">toGMTString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+    <span class="token string">'; path=/'</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">//取cookies函数</span>
+<span class="token keyword">function</span> <span class="token function">getCookie</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> arr <span class="token operator">=</span> document<span class="token punctuation">.</span>cookie<span class="token punctuation">.</span><span class="token function">match</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">RegExp</span><span class="token punctuation">(</span><span class="token string">'(^| )'</span> <span class="token operator">+</span> name <span class="token operator">+</span> <span class="token string">'=([^;]*)(;|$)'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>arr <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token function">unescape</span><span class="token punctuation">(</span>arr<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">//页面脚本中用到的地方，下面的 #now_date1 的 value 是服务器获取的当前的百度时间 供 JS 调用</span>
+<span class="token keyword">var</span> nowDate <span class="token operator">=</span> <span class="token function">$</span><span class="token punctuation">(</span><span class="token string">'#now_date1'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">val</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//服务器当前时间</span>
+<span class="token comment" spellcheck="true">//增加弹窗 cookie</span>
+<span class="token keyword">this</span><span class="token punctuation">.</span>addpopupcookie <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> _me <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> start <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>nowDate<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> end <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token string">'2018/1/2'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>start <span class="token operator">&lt;</span> end<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> cookiestr <span class="token operator">=</span> <span class="token function">getCookie</span><span class="token punctuation">(</span><span class="token string">'popuptoogle'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>cookiestr<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">var</span> date <span class="token operator">=</span> start<span class="token punctuation">.</span><span class="token function">getDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">''</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> hours <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span><span class="token punctuation">(</span>end <span class="token operator">-</span> start<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">1000</span> <span class="token operator">/</span> <span class="token number">3600</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">addCookie</span><span class="token punctuation">(</span><span class="token string">'popuptoogle'</span><span class="token punctuation">,</span> date<span class="token punctuation">,</span> hours<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">$</span><span class="token punctuation">(</span><span class="token string">'.lay-popup5'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">show</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">parseInt</span><span class="token punctuation">(</span>cookiestr<span class="token punctuation">)</span> <span class="token operator">&lt;=</span> start<span class="token punctuation">.</span><span class="token function">getDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">$</span><span class="token punctuation">(</span><span class="token string">'.lay-popup5'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">show</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> _me<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//公用的关闭弹窗</span>
+<span class="token keyword">this</span><span class="token punctuation">.</span>closelaypopup <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> _me <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">//console.log(e.target.parentNode.parentNode.parentNode);</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>e <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> <span class="token function">getCookie</span><span class="token punctuation">(</span><span class="token string">'popuptoogle'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">$</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>target<span class="token punctuation">.</span>parentNode<span class="token punctuation">.</span>parentNode<span class="token punctuation">.</span>parentNode<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">hasClass</span><span class="token punctuation">(</span><span class="token string">'lay-popup5'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">var</span> now <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>nowDate<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> date <span class="token operator">=</span> now<span class="token punctuation">.</span><span class="token function">getDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span> <span class="token operator">+</span> <span class="token string">''</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> days <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token string">'2018/1/2'</span><span class="token punctuation">)</span> <span class="token operator">-</span> now<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">1000</span> <span class="token operator">/</span> <span class="token number">3600</span> <span class="token operator">/</span> <span class="token number">24</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">SetCookie</span><span class="token punctuation">(</span><span class="token string">'popuptoogle'</span><span class="token punctuation">,</span> date<span class="token punctuation">,</span> days<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">$</span><span class="token punctuation">(</span><span class="token string">'#lay-popup-bg,.lay-popup'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">hide</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  _me<span class="token punctuation">.</span><span class="token function">ioslayclosepopup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> _me<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-09-27T13:15:05.000Z" itemprop="dateUpdated">2017-09-27 21:15:05</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Cookie/">Cookie</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/项目实践/">项目实践</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/e2c95240/&title=《记一次工作中的 js 控制 cookie 的实践》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/e2c95240/&title=《记一次工作中的 js 控制 cookie 的实践》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/e2c95240/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《记一次工作中的 js 控制 cookie 的实践》 — Sixin的小站&url=http://coder.liusixin.cn/posts/e2c95240/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/e2c95240/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/154ba74b/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">VUE 学习笔记——vue-router</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/5f666ea6/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">造轮子系列：JS封装选项卡组件</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/e2c95240/&title=《记一次工作中的 js 控制 cookie 的实践》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/e2c95240/&title=《记一次工作中的 js 控制 cookie 的实践》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/e2c95240/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《记一次工作中的 js 控制 cookie 的实践》 — Sixin的小站&url=http://coder.liusixin.cn/posts/e2c95240/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/e2c95240/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABvUlEQVR42u3aQW7DMAwEQP//0+41QFBhSVqqC4xORuLYkwtBrnRd8bo/1ucn62+/P/9+5rVj4eLijrn3cuX3JIj583FxcU9y14Umv/7tD6z/WKHY4eLivp7be/G6YcLFxf2P3By9fjIuLu77ucnwk4Qg1TRj46yGi4s74OYp5b7rLfkuLi5ui3sX17q5qRa48ttxcXGPcPOCkjcc1Xan/DRcXNwj3KQY9WLTvImpHt3AxcXdx60WlGqYkoek5Y4MFxf3IDffMpmv8hYsLi7ucW51XJm0RL3ABRcX9wx33r4kL5gPQo91W7i4uC1uLwSZl79CvIKLi3uEmxegZGipbrvmpRAXF/dvuUmJmf82P+qBi4v7Hm6vGOVRS3UQwsXFPcmdxKBPHe3Kt2ZxcXHPc3sHtuabsoXhBxcX9yA3jyqq2yp5sYvuxMXF3cx96ihVHpKOxiRcXNwj3Go80StwzWMWraMbuLi4T3HzkHR+f74BEw0/uLi4m7nVQlMtanmZi2Y1XFzcV3J7Y9UkSMXFxX0zdx6XTMYkXFzck9y8QZkMRfkWzgOzGi4u7oDbCzerx7OqmysP5Lu4uLgd7g8y8nGwRRRuhQAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

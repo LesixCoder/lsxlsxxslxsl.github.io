@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/609ebfab/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/609ebfab/">
+    
+    
+    <title>前端单元测试与自动化测试实践 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="javascript,测试,工程化">
+    <meta name="description" content="前言常用的测试框架有 Karma、mocha, 其中 Karma 是一个以浏览器为引擎的测试，而 mocha 用的是 Node.js, 淘宝推出了一个类 Karma 的开源框架叫 Totoro。 由于 Karma 是使用真实的浏览器环境，并且可以测试兼容性，我们采用 Karma 作为框架。 常用的断言库：  Node.js 的 assert Jasmine expect Chai  和 Karma">
+<meta name="keywords" content="javascript,测试,工程化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端单元测试与自动化测试实践">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/609ebfab/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="前言常用的测试框架有 Karma、mocha, 其中 Karma 是一个以浏览器为引擎的测试，而 mocha 用的是 Node.js, 淘宝推出了一个类 Karma 的开源框架叫 Totoro。 由于 Karma 是使用真实的浏览器环境，并且可以测试兼容性，我们采用 Karma 作为框架。 常用的断言库：  Node.js 的 assert Jasmine expect Chai  和 Karma">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180731-221830@2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180731-223210@2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180731-223325@2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180731-223542@2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180731-231232@2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180731-231651@2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180731-232038@2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180731-232144@2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180731-232616@2x.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/WX20180731-233924@2x.png">
+<meta property="og:updated_time" content="2017-12-17T16:21:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前端单元测试与自动化测试实践">
+<meta name="twitter:description" content="前言常用的测试框架有 Karma、mocha, 其中 Karma 是一个以浏览器为引擎的测试，而 mocha 用的是 Node.js, 淘宝推出了一个类 Karma 的开源框架叫 Totoro。 由于 Karma 是使用真实的浏览器环境，并且可以测试兼容性，我们采用 Karma 作为框架。 常用的断言库：  Node.js 的 assert Jasmine expect Chai  和 Karma">
+<meta name="twitter:image" content="http://cdn-blog.liusixin.cn/WX20180731-221830@2x.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">前端单元测试与自动化测试实践</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">前端单元测试与自动化测试实践</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-12-17T14:42:04.000Z" itemprop="datePublished" class="page-time">
+  2017-12-17
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#安装-Karma-Jasmine"><span class="post-toc-number">2.</span> <span class="post-toc-text">安装 Karma + Jasmine</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#测试覆盖率报告"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">测试覆盖率报告</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#覆盖率实现原理"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">覆盖率实现原理</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#自动化测试"><span class="post-toc-number">3.</span> <span class="post-toc-text">自动化测试</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">4.</span> <span class="post-toc-text">总结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端单元测试与自动化测试实践" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">前端单元测试与自动化测试实践</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-12-17 22:42:04" datetime="2017-12-17T14:42:04.000Z" itemprop="datePublished">2017-12-17</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>常用的测试框架有 Karma、mocha, 其中 Karma 是一个以浏览器为引擎的测试，而 mocha 用的是 Node.js, 淘宝推出了一个类 Karma 的开源框架叫 Totoro。</p>
+<p>由于 Karma 是使用真实的浏览器环境，并且可以测试兼容性，我们采用 Karma 作为框架。</p>
+<p>常用的断言库：</p>
+<ul>
+<li>Node.js 的 assert</li>
+<li>Jasmine</li>
+<li>expect</li>
+<li>Chai</li>
+</ul>
+<p>和 Karma 比较配套的是 Jasmine。</p>
+<h2 id="安装-Karma-Jasmine"><a href="#安装-Karma-Jasmine" class="headerlink" title="安装 Karma + Jasmine"></a>安装 Karma + Jasmine</h2><pre class=" language-shell"><code class="language-shell">npm i karma jasmine-core karma-jasmine karma-chrome-launcher -D
+
+npm i karma -g
+</code></pre>
+<p>安装一个全局的 karma 命令，然后执行 karma init 生成 karrna.config.js</p>
+<pre class=" language-shell"><code class="language-shell">karma init
+</code></pre>
+<p>一路回车就好</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180731-221830@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>然后新建一个 src 目录写源文件（src/util.js)</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> util <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token function">reverse</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> str
+      <span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">reverse</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>然后写测试文件(test/util-test.js)</p>
+<pre class=" language-js"><code class="language-js"><span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">'reverse'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'reverse word'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>util<span class="token punctuation">.</span><span class="token function">reverse</span><span class="token punctuation">(</span><span class="token string">'abc'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toEqual</span><span class="token punctuation">(</span><span class="token string">'cba'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>接下来把文件添加到 karma.config.js 里面</p>
+<pre class=" language-js"><code class="language-js">module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>config<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  config<span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token operator">...</span>
+    <span class="token comment" spellcheck="true">// list of files / patterns to load in the browser</span>
+    files<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+      <span class="token string">'test/*.js'</span><span class="token punctuation">,</span>
+      <span class="token string">'src/*.js'</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token operator">...</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>告诉它要在浏览器加载哪些文件，然后运行 <code>karma start</code> 执行测试，如果遇到报 karma 的模块找不到的情况，则可以把找不到的模块安装成全局的。</p>
+<p>成功运行后，终端将会输出测试结果</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180731-223210@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>浏览器也会打出结果</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180731-223325@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>我们修改下代码再看下不通过的情况</p>
+<pre class=" language-js"><code class="language-js"><span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">'reverse'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'reverse word'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>util<span class="token punctuation">.</span><span class="token function">reverse</span><span class="token punctuation">(</span><span class="token string">'abc'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toEqual</span><span class="token punctuation">(</span><span class="token string">'abc'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180731-223542@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>这样就实现了一个最基本的单元测试，现在来看一下测试的覆盖率。</p>
+<h3 id="测试覆盖率报告"><a href="#测试覆盖率报告" class="headerlink" title="测试覆盖率报告"></a>测试覆盖率报告</h3><p>一般测试的覆盖率要越高越好，Karma 支持查看测试代码的覆盖率， 安装一个包：</p>
+<pre class=" language-shell"><code class="language-shell">npm install karma-coverage -D
+</code></pre>
+<p>然后在 karma.config.js 里面添加配置</p>
+<pre class=" language-js"><code class="language-js">preprocessors<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+  <span class="token string">'src/*.js'</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'coverage'</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span>
+
+<span class="token comment" spellcheck="true">// add</span>
+coverageReporter<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+  type<span class="token punctuation">:</span> <span class="token string">'html'</span><span class="token punctuation">,</span>
+  dir<span class="token punctuation">:</span> <span class="token string">'coverage/'</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span>
+
+reporters<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'progress'</span><span class="token punctuation">,</span> <span class="token string">'coverage'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+</code></pre>
+<p>添加一个预处理，告诉它 src 下的源文件需要用 coverage 预处理一下，然后生成的 report 放在 coverage 目录下面，用 HTML 的形式。</p>
+<p>重新运行 <code>karma start</code>, 将会生成 HTML 文件，打开这个 HTML 文件就可以看到覆盖率报告。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180731-231232@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>覆蓝率为 100%, 我们给源 util 添加一个逻辑分支</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> util <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token function">reverse</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>str<span class="token punctuation">.</span>length <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">return</span> str<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> str
+      <span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">reverse</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>然后再看覆盖率报告</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180731-231651@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>可以看到，分支变成了 50%</p>
+<p>再添加一个分支:</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> util <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token function">reverse</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> str <span class="token operator">!==</span> <span class="token string">'string'</span><span class="token punctuation">)</span>
+      <span class="token keyword">throw</span> <span class="token string">'util.reverse should pass a string argument'</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>str<span class="token punctuation">.</span>length <span class="token operator">&lt;=</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">return</span> str<span class="token punctuation">;</span>
+    <span class="token keyword">else</span>
+      <span class="token keyword">return</span> str
+        <span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span>
+        <span class="token punctuation">.</span><span class="token function">reverse</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180731-232038@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>点进 util 也可以看到哪些代码没有覆盖到:</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180731-232144@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>在 util-test.js 里面添加测试代码</p>
+<pre class=" language-js"><code class="language-js"><span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">'reverse'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'reverse word'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>util<span class="token punctuation">.</span><span class="token function">reverse</span><span class="token punctuation">(</span><span class="token string">'abc'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toEqual</span><span class="token punctuation">(</span><span class="token string">'cba'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'reverse字符串长度为1时返回自已'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>util<span class="token punctuation">.</span><span class="token function">reverse</span><span class="token punctuation">(</span><span class="token string">'a'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token string">'a'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'reverse传值不是字符串时会抛异常'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      util<span class="token punctuation">.</span><span class="token function">reverse</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toThrow</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180731-232616@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>这时候看到覆盖率就成 100%了。</p>
+<h3 id="覆盖率实现原理"><a href="#覆盖率实现原理" class="headerlink" title="覆盖率实现原理"></a>覆盖率实现原理</h3><p>从浏览器加载的 util.js 中可以看到一段代码</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/WX20180731-233924@2x.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>可以看到总共被改成了 4 个分支，每个分支如果有执行就会顺带着执行 ＋＋ 操作。这样它就可以统计到有多少代码被执行到了。</p>
+<p><strong>Jasmine</strong> 提供的断言 API 除了上面 <code>toEqual/toBe/toThrow</code> 之外， 具体还有</p>
+<pre class=" language-js"><code class="language-js"><span class="token function">expect</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBeDefined</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">expect</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBeGreaterThan</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">expect</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBeLessThan</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">expect</span><span class="token punctuation">(</span>thing<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBeNaN</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">expect</span><span class="token punctuation">(</span>string<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toContain</span><span class="token punctuation">(</span>substring<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">expect</span><span class="token punctuation">(</span><span class="token string">'my string'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toMatch</span><span class="token punctuation">(</span><span class="token regex">/^my/</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<h2 id="自动化测试"><a href="#自动化测试" class="headerlink" title="自动化测试"></a>自动化测试</h2><p>自动化测试一般用 E2E 测试，即端到端测试。它的工具也有几种</p>
+<ul>
+<li>PhontomJS<ul>
+<li>无界面浏览器</li>
+</ul>
+</li>
+<li>Senlenium<ul>
+<li>打开电脑的浏览器运行，支持多语言操控</li>
+</ul>
+</li>
+<li>Protractor<ul>
+<li>是 <code>Senlenium</code> 的一个 JS 容器</li>
+</ul>
+</li>
+</ul>
+<p>我们使用 Protractor, 因为它提供了－些方便的操控浏览器的 API 以及断言库。</p>
+<p>首先安装 protractor:</p>
+<pre class=" language-shell"><code class="language-shell">npm i protractor -g
+
+webdriver-manager update
+webdriver-manager start
+</code></pre>
+<p>然后写一个 conf.js</p>
+<pre class=" language-js"><code class="language-js">exports<span class="token punctuation">.</span>config <span class="token operator">=</span> <span class="token punctuation">{</span>
+  seleniumAddress<span class="token punctuation">:</span> <span class="token string">'http://localhost:4444/wd/hub'</span><span class="token punctuation">,</span>
+  specs<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'test-spec.js'</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>test-spec.js</p>
+<pre class=" language-js"><code class="language-js"><span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">'site'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'登录框正常使用'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    browser<span class="token punctuation">.</span><span class="token function">waitForAngularEnabled</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    browser<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'https://test.com'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>browser<span class="token punctuation">.</span><span class="token function">getTitle</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toEqual</span><span class="token punctuation">(</span><span class="token string">'Search Listings in Las Vegas - tes'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">$$</span><span class="token punctuation">(</span><span class="token string">'nav .sign-icon + li.sign-in'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token function">$$</span><span class="token punctuation">(</span><span class="token string">'.sign-log'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toEqual</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">$$</span><span class="token punctuation">(</span><span class="token string">'.sign-log input[name=account]'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">sendKeys</span><span class="token punctuation">(</span><span class="token string">'yin@abc.com'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">$$</span><span class="token punctuation">(</span><span class="token string">'.sign-log input[name=password]'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">sendKeys</span><span class="token punctuation">(</span><span class="token string">'3345983893'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">$$</span><span class="token punctuation">(</span><span class="token string">'.sign-log input[type=submit]'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    browser<span class="token punctuation">.</span>driver<span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span><span class="token function">$$</span><span class="token punctuation">(</span><span class="token string">'.sign-log'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toEqual</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>我们测试登录框能否正常使用，先调 <code>browser.get</code> 打开一个网页，在 load 完成之后会继续执行下面的逻辑：先单击导航的 sign-in 弹出登录框，然后往两个输入框填入账号密码，再点提交按钮，让浏览器等待 1s, 最后检测弹框是否消失了。因为注册完会刷新页面。</p>
+<p>然后运行 <code>protractor start</code>, 它就会打开浏览器，自动打开网页，按照我们的设定执行。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>首先看一下工程目录</p>
+<pre class=" language-shell"><code class="language-shell">- website
+  - karma.config.js
+  - unit-test
+    - index.js
+    - mock
+      - middleware.js
+      - home.js
+    - test
+      - sign-log-test.js
+      - util-test.js
+    - coverage
+      - html/index.html
+  - e2e-test
+    - conf.js
+    - spec
+      - test-login.js
+</code></pre>
+<p>要尽可能地提高覆盖率，并且测试要尽可能稳定，理想状态是多个版本迭代还能待续使用，每次上线前或者改完代码后都可以跑一下单元测试。对一些复杂、关键的操作使用自动化测试。</p>
+<p>自动化测试写起来比较简单，就是比较烦琐。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-12-17T16:21:04.000Z" itemprop="dateUpdated">2017-12-18 00:21:04</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/工程化/">工程化</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/测试/">测试</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/609ebfab/&title=《前端单元测试与自动化测试实践》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/609ebfab/&title=《前端单元测试与自动化测试实践》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/609ebfab/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《前端单元测试与自动化测试实践》 — Sixin的小站&url=http://coder.liusixin.cn/posts/609ebfab/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/609ebfab/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/b709886a/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">关于闭包及变量回收问题</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/1bc12c23/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">用评论消息框讲解状态模式</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/609ebfab/&title=《前端单元测试与自动化测试实践》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/609ebfab/&title=《前端单元测试与自动化测试实践》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/609ebfab/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《前端单元测试与自动化测试实践》 — Sixin的小站&url=http://coder.liusixin.cn/posts/609ebfab/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/609ebfab/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABwElEQVR42u3aS47CMBAFQO5/6cwWaSbhPTs2MCqvEAS7smn1x49HvI6n9fubs/X85NmejxULFxd3mpsfOQ9q9/9jZ1xc3I3c68NyXH7wYLDDxcX9SO51SMpfGBcX9z9xrwPT9Qvg4uJ+Fzcvb9rXyMunm2s1XFzcCW7epVz3eUl/FxcXd4h7lCt/pfz74nRcXNwt3DygtEOUHNoOd3Fxcfdw2/IjKX7a9KXeBxcXdzF3Pjy1I9iE+CLFwcXFfRO3LYFm9ilGsLi4uBu5YyOTa2KbxFwPbnFxcfdz83Zne2GrLYdeJEy4uLiLufnlqpmD231OwyIuLu4Wbt42zUNYzm3/hYuLu4fbUpKD21SpKKVwcXG3cNuRxm0T3aHhKy4u7n5uEoaihuZQGVOci4uLu5E7dlWrTYbygWvRNsXFxV3GbbfIr2QlvxZP4uLiLuYe5RprcNw2nsHFxd3CbdsT+VWtG26FJENWXFzcZdyx4JVc18hbKkXyhIuLu5HbBpp2AJOHuahWw8XF/TDuWJAaK5lwcXG/i9sOUNsrHadCXFzcjdyZBCVJd8ZaLbi4uO/ijjU32/CUNFhnSiZcXNybuD/3i0jn7F93GwAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/9b8e26f4/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/9b8e26f4/">
+    
+    
+    <title>HTTP性能优化指南 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="HTTP,性能优化">
+    <meta name="description" content="概述 浏览器渲染过程 DNS TCP 三次握手 HTTP 缓存机制 CDN 与集群  还记得 HTTP 协议吗？  浏览器先输入一个网址 然后浏览器先会去互联网上找 DNS 服务器进行解析 从 DNS 服务器拿到服务器 IP 以后，在回到浏览器中 然后浏览器拿着 IP 去发送 HTTP 请求 服务器处理请求 服务器响应请求 浏览器处理响应 继续请求其它资源">
+<meta name="keywords" content="HTTP,性能优化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTP性能优化指南">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/9b8e26f4/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="概述 浏览器渲染过程 DNS TCP 三次握手 HTTP 缓存机制 CDN 与集群  还记得 HTTP 协议吗？  浏览器先输入一个网址 然后浏览器先会去互联网上找 DNS 服务器进行解析 从 DNS 服务器拿到服务器 IP 以后，在回到浏览器中 然后浏览器拿着 IP 去发送 HTTP 请求 服务器处理请求 服务器响应请求 浏览器处理响应 继续请求其它资源">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064121-105c0945a446d646.png">
+<meta property="og:updated_time" content="2017-08-06T14:48:57.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HTTP性能优化指南">
+<meta name="twitter:description" content="概述 浏览器渲染过程 DNS TCP 三次握手 HTTP 缓存机制 CDN 与集群  还记得 HTTP 协议吗？  浏览器先输入一个网址 然后浏览器先会去互联网上找 DNS 服务器进行解析 从 DNS 服务器拿到服务器 IP 以后，在回到浏览器中 然后浏览器拿着 IP 去发送 HTTP 请求 服务器处理请求 服务器响应请求 浏览器处理响应 继续请求其它资源">
+<meta name="twitter:image" content="http://cdn-blog.liusixin.cn/9064121-105c0945a446d646.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">HTTP性能优化指南</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">HTTP性能优化指南</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-08-06T14:48:57.000Z" itemprop="datePublished" class="page-time">
+  2017-08-06
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/后端/">后端</a></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#概述"><span class="post-toc-number">1.</span> <span class="post-toc-text">概述</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#如何优化"><span class="post-toc-number">2.</span> <span class="post-toc-text">如何优化</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#DNS"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">DNS</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#TCP-三次握手与四次挥手（如果少一次就不能保证，多一次就浪费。"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">TCP 三次握手与四次挥手（如果少一次就不能保证，多一次就浪费。</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#osiiso-模型和-TCP-IP-模型"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">osiiso 模型和 TCP/IP 模型</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#tcpdump"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">tcpdump</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#curl"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">curl</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#CDN"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">CDN</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/性能优化/HTTP性能优化指南" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">HTTP性能优化指南</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-08-06 22:48:57" datetime="2017-08-06T14:48:57.000Z" itemprop="datePublished">2017-08-06</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/后端/">后端</a></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><ul>
+<li>浏览器渲染过程</li>
+<li>DNS</li>
+<li>TCP 三次握手</li>
+<li>HTTP 缓存机制</li>
+<li>CDN 与集群</li>
+</ul>
+<p><strong>还记得 HTTP 协议吗？</strong></p>
+<ol>
+<li>浏览器先输入一个网址</li>
+<li>然后浏览器先会去互联网上找 DNS 服务器进行解析</li>
+<li>从 DNS 服务器拿到服务器 IP 以后，在回到浏览器中</li>
+<li>然后浏览器拿着 IP 去发送 HTTP 请求</li>
+<li>服务器处理请求</li>
+<li>服务器响应请求</li>
+<li>浏览器处理响应</li>
+<li>继续请求其它资源</li>
+</ol>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064121-105c0945a446d646.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>从 prompt 到 response 是和网络相关的，从 processing 到 onload 是和浏览器相关的。</p>
+<ol>
+<li>prompt for unload</li>
+</ol>
+<ul>
+<li>这一步是先把之前的页面干掉</li>
+</ul>
+<ol start="2">
+<li>redirect、upload</li>
+</ol>
+<ul>
+<li>这一步是衔接前面的，也是和缓存相关的，浏览器发一个请求，是从缓存取，还是从服务器拿</li>
+</ul>
+<ol start="3">
+<li>app cache</li>
+</ol>
+<ul>
+<li>如果要从缓存拿的话，我就处理本地应用 cache，如果没有就无所谓了</li>
+</ul>
+<ol start="4">
+<li>DNS</li>
+</ol>
+<ul>
+<li>开始解析</li>
+<li>解析结束</li>
+<li>有这些事件我们就可以去在这些节点上进行优化</li>
+</ul>
+<ol start="5">
+<li>TCP 层面</li>
+</ol>
+<ul>
+<li>三次握手</li>
+<li>开始连接 connectStart</li>
+<li>https 连接 secureConnectionStart</li>
+<li>连接结束 connectEnd</li>
+<li>然后服务器会拿到你的请求路径</li>
+</ul>
+<ol start="6">
+<li>Request 发送响应，但是连接还没完</li>
+<li>Processing 处理文档</li>
+</ol>
+<ul>
+<li>domLoading 开始载入 dom</li>
+<li>dominteractive 把文档设置为交互状态</li>
+<li>domContentLoaded 触发这个事件</li>
+<li>domComplete 浏览器把文档设置为 complete（表示文档与网络相关的修改已经结束了）</li>
+</ul>
+<ol start="8">
+<li>onLoad (这个 onload 和，绑定那个 onload 事件是可以对应的)</li>
+</ol>
+<ul>
+<li>loadEventStart</li>
+<li>loadEventEnd</li>
+</ul>
+<blockquote>
+<p>上面这是一次连接，然后下次再发请求的时候，回直接从 Request 开始。</p>
+</blockquote>
+<blockquote>
+<p>是因为浏览器做了个优化，可以复用这个连接。</p>
+</blockquote>
+<blockquote>
+<p>资源少就一个 tcp 连接，多任务就会打开多个 tcp 连接。keep-Alive 模式</p>
+</blockquote>
+<h2 id="如何优化"><a href="#如何优化" class="headerlink" title="如何优化"></a>如何优化</h2><ul>
+<li>网络：DNS、TCP 连接</li>
+<li>传输</li>
+<li>浏览器</li>
+<li>缓存，包括浏览器本身的缓存和服务器中的缓存</li>
+</ul>
+<h3 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h3><ul>
+<li>DNS 是域名系统，用于将域名转化为 IP</li>
+<li>顶级域名</li>
+<li>域名资源记录</li>
+<li>域名服务器</li>
+<li>域名解析</li>
+</ul>
+<h3 id="TCP-三次握手与四次挥手（如果少一次就不能保证，多一次就浪费。"><a href="#TCP-三次握手与四次挥手（如果少一次就不能保证，多一次就浪费。" class="headerlink" title="TCP 三次握手与四次挥手（如果少一次就不能保证，多一次就浪费。"></a>TCP 三次握手与四次挥手（如果少一次就不能保证，多一次就浪费。</h3><ul>
+<li>三次握手<ul>
+<li>你发起连接请求</li>
+<li>服务源接受你发送的连接，然后服务源会给你发送一个数据</li>
+<li>然后你再发一条数据，告诉服务端我收到了</li>
+</ul>
+</li>
+<li>四次挥手<ul>
+<li>浏览器给服务源发送数据说我要挂了。</li>
+<li>服务源响应说我收到你的请求了可以挂，我也要挂了。</li>
+<li>然后浏览器发送数据可以断开。</li>
+<li>服务源断开连接。</li>
+</ul>
+</li>
+</ul>
+<h3 id="osiiso-模型和-TCP-IP-模型"><a href="#osiiso-模型和-TCP-IP-模型" class="headerlink" title="osiiso 模型和 TCP/IP 模型"></a>osiiso 模型和 TCP/IP 模型</h3><ul>
+<li>应用层（data 数据。HTTP、FTP、DNS、DHCP）</li>
+<li>表示层</li>
+<li>会话层（TCPIC 把上面三个合并为应用层。HTTP 就在这层。这一层会加一个）</li>
+<li>传输层（TCP 协议、UDP 协议）</li>
+<li>网络层（它封装的是二进制，它是帮助你找到对方主机，IP、ICMP 这个是 ping 发的包）</li>
+<li>数据链路层（这一块是做了封装，数据链路层传递的是电脉冲信号，也是有一种规则的。网卡的 MAC 地址。ARP 是在局域网广播 MAC 地址，也有这种攻击，如我叫小明。）</li>
+<li>物理层（硬件、网卡、网线、承载你数据的基础设施。纯硬件）</li>
+</ul>
+<h3 id="tcpdump"><a href="#tcpdump" class="headerlink" title="tcpdump"></a>tcpdump</h3><ul>
+<li>-n 以 ip 地址显示</li>
+<li>host 192.168.0.200 and 111.13.100.92</li>
+<li>-i enp1s0 显卡地址</li>
+</ul>
+<h3 id="curl"><a href="#curl" class="headerlink" title="curl"></a>curl</h3><ul>
+<li>用命令行进行远程 http 通讯</li>
+</ul>
+<h3 id="CDN"><a href="#CDN" class="headerlink" title="CDN"></a>CDN</h3><ul>
+<li>主机模式</li>
+<li>CDN 离你最近的那台服务器</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-08-06T14:48:57.000Z" itemprop="dateUpdated">2017-08-06 22:48:57</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HTTP/">HTTP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能优化/">性能优化</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/9b8e26f4/&title=《HTTP性能优化指南》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/9b8e26f4/&title=《HTTP性能优化指南》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/9b8e26f4/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《HTTP性能优化指南》 — Sixin的小站&url=http://coder.liusixin.cn/posts/9b8e26f4/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/9b8e26f4/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/1d3e321c/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">造轮子系列：封装一个简化版的jQuery</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/8eb3b102/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">前端性能优化--雅虎军规</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/9b8e26f4/&title=《HTTP性能优化指南》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/9b8e26f4/&title=《HTTP性能优化指南》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/9b8e26f4/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《HTTP性能优化指南》 — Sixin的小站&url=http://coder.liusixin.cn/posts/9b8e26f4/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/9b8e26f4/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABu0lEQVR42u3aO27DMBAFQN//0g6QKo2k90iREoJhZVgGOXKx2A8/n3h9f1f7+e863/PmhYuLO839nq6jrc8R7Z7J73Fxcfdzk+DVhrOxIHhhw8XFfRn33iQJFxf3f3CTpOQ83Wn/Dlxc3Ge5SaGSlC5H3xyduLBWw8XFneCua5iOFTyP9XdxcXHj5mY+DmmbI/XpuLi4W7hjY5I8TUmiUNsowcXFXc0dC2ErGqzRa+Pi4m7hztRMeajK2yVRYMXFxV3MbcchbWFz84vh4uI+xD0PN2OvlycxF7vh4uJu4SZXJZLBanF5YuIyBy4u7k5uG3pWPC3KMFxc3O3cJK0ZG6OOlUaHXRxcXNxl3HZY0iZGeYjExcV9Mze/tdHGy/ysaJSCi4u7jDt2MWss8N3VQMHFxV3NnRlmJMcnL1aMWnFxcTdy28PyscdMWYWLi/ssN1/tiDTfZ3CIgouLu4DbBpQ8nLXNjvYpLi7uau7Y8TMXsGbGMLi4uDu5efBq05qkjVIUSLi4uC/jto2PsZ0vdsDFxX0ldz5Naa9o4OLiPsUda5LOD1ryPwUXF3cnt22YzrRC8t/j4uI+xP0BjOlswyAVpdMAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/7189c795/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/7189c795/">
+    
+    
+    <title>JTalk 第八期 前端安全大起底 总结 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="前端安全">
+    <meta name="description" content="JTalk《前端安全》活动结束啦，我收录了这次讲师所讲述的内容和部分同学提出的问题与讲师的答复，遗憾的是没有全部收录下来，只收录了部分内容，文章的内容并不完全代表讲师所讲述的全部内容，有部分是我回忆补充的，会有出入，希望这部分内容能帮到大家。  XSS 跨站脚本的攻击原理与防御 - 龙佳文 什么是 XSS? (XSS 会有哪些危害, 窃取凭据,窃取会话令牌)">
+<meta name="keywords" content="前端安全">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JTalk 第八期 前端安全大起底 总结">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/7189c795/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="JTalk《前端安全》活动结束啦，我收录了这次讲师所讲述的内容和部分同学提出的问题与讲师的答复，遗憾的是没有全部收录下来，只收录了部分内容，文章的内容并不完全代表讲师所讲述的全部内容，有部分是我回忆补充的，会有出入，希望这部分内容能帮到大家。  XSS 跨站脚本的攻击原理与防御 - 龙佳文 什么是 XSS? (XSS 会有哪些危害, 窃取凭据,窃取会话令牌)">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb0650796548f.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cafd44b03bf61.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb021fc37f816.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb089bf90e7c5.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb09717394bc3.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb0a06277b97f.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb0de342be316.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb0e916ba1543.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb106596222f7.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb117791f7267.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb11f67c8579f.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb126047b7c1a.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb15a476aa645.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb16b70a62002.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb1a304068b9e.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb34dfc313cf3.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb4d458280fc6.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb4dec0a1bcdc.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb4e74dff952f.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb51f0968d4f1.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb546e03c6e89.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb560c5166bb1.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb58a84fa9cd0.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb5b73cf65d09.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb5ea5e87a0d7.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb5ff4f0fe0c9.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb62561f0ad0e.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb6189a6f7081.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb60379a73824.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb5f4c8e24131.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163cb60cd2ec6b92.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/163caf73017a4cd5.jpeg">
+<meta property="og:updated_time" content="2018-06-05T05:43:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JTalk 第八期 前端安全大起底 总结">
+<meta name="twitter:description" content="JTalk《前端安全》活动结束啦，我收录了这次讲师所讲述的内容和部分同学提出的问题与讲师的答复，遗憾的是没有全部收录下来，只收录了部分内容，文章的内容并不完全代表讲师所讲述的全部内容，有部分是我回忆补充的，会有出入，希望这部分内容能帮到大家。  XSS 跨站脚本的攻击原理与防御 - 龙佳文 什么是 XSS? (XSS 会有哪些危害, 窃取凭据,窃取会话令牌)">
+<meta name="twitter:image" content="http://cdn-blog.liusixin.cn/163cb0650796548f.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">JTalk 第八期 前端安全大起底 总结</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">JTalk 第八期 前端安全大起底 总结</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-06-05T05:43:00.000Z" itemprop="datePublished" class="page-time">
+  2018-06-05
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#XSS-跨站脚本的攻击原理与防御-龙佳文"><span class="post-toc-number">1.</span> <span class="post-toc-text">XSS 跨站脚本的攻击原理与防御 - 龙佳文</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#问题收录"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">问题收录</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#浅谈流量劫持与防治-刘洋河"><span class="post-toc-number">2.</span> <span class="post-toc-text">浅谈流量劫持与防治 - 刘洋河</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#问答"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">问答</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#深入浅出-CSRF-吴空"><span class="post-toc-number">3.</span> <span class="post-toc-text">深入浅出 CSRF - 吴空</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#用户安全验证探索-潘俊"><span class="post-toc-number">4.</span> <span class="post-toc-text">用户安全验证探索 - 潘俊</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#总结"><span class="post-toc-number">5.</span> <span class="post-toc-text">总结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/前端安全/JTalk 第八期 前端安全大起底 总结" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">JTalk 第八期 前端安全大起底 总结</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-06-05 13:43:00" datetime="2018-06-05T05:43:00.000Z" itemprop="datePublished">2018-06-05</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>JTalk《前端安全》活动结束啦，我收录了这次讲师所讲述的内容和部分同学提出的问题与讲师的答复，遗憾的是没有全部收录下来，只收录了部分内容，文章的内容并不完全代表讲师所讲述的全部内容，有部分是我回忆补充的，会有出入，希望这部分内容能帮到大家。</p>
+</blockquote>
+<h1 id="XSS-跨站脚本的攻击原理与防御-龙佳文"><a href="#XSS-跨站脚本的攻击原理与防御-龙佳文" class="headerlink" title="XSS 跨站脚本的攻击原理与防御 - 龙佳文"></a>XSS 跨站脚本的攻击原理与防御 - 龙佳文</h1><ul>
+<li><p>什么是 XSS? (XSS 会有哪些危害, 窃取凭据,窃取会话令牌)<br><img src="http://cdn-blog.liusixin.cn/163cb0650796548f.png" alt=""></p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cafd44b03bf61.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb021fc37f816.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+</li>
+<li><p>在输入框输入标签字符可以反射得到 cookie 值，并将这个 cookie 发送到指定的地址</p>
+</li>
+<li><p>v-html 可以将重要的数据以任何的形式弹出这个功能类似 innerHEML</p>
+</li>
+<li><p>XSS 产生的原因？（常见导致 XSS 的途径: 反射型，存储型，DOM based）</p>
+</li>
+<li><p>不使用 innerHEML 作为瀑布流展示</p>
+</li>
+<li><p>在地址中可以使用 标签的形式 得到或改变页面显示的形式</p>
+</li>
+<li><p>Chrome 会自带 XSS 防御，在注入标签的时候回被自动拦截,只能拦截主流的注入形式。</p>
+</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb089bf90e7c5.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb09717394bc3.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<ul>
+<li><p>如何防御 XSS？（慎用数据,避免使用 innerHTML 等等）</p>
+</li>
+<li><p>XSS 能实现的攻击有回话劫持，通过 cookie 将用户的信息发送到指定的地址</p>
+</li>
+<li><p>用过得到的 cookie 拿到 token 可以模仿用户的信息和行为进行常规的操作。</p>
+</li>
+<li><p>通过 JS 不断创建文件进行请求通过模仿某一服务器对指定服务器进行攻击。</p>
+</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb0a06277b97f.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<ul>
+<li>对内容进行做转义，防止恶意的标签注入。</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb0de342be316.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb0e916ba1543.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<ul>
+<li>内容白名单，对外部动态内容的安全过滤使用白名单，而不是黑名单通过白名单对指定的标签进行过滤选择。</li>
+</ul>
+<h2 id="问题收录"><a href="#问题收录" class="headerlink" title="问题收录"></a>问题收录</h2><ul>
+<li>攻击次数的上报</li>
+<li>通过 CSP 的规范通过内部的声明，通过其可以将内容进行上报。</li>
+<li>CSP 会去要求进入到所有的内容以外的进行执行。 在页面执行非法的 JS CSP 都会对其执行拦截。</li>
+<li>知道概念 并不深入 怎么检测项目的隐患</li>
+<li>OWSP 有安全的规范和安全的审计软件可以使用</li>
+<li>转义 只针对 HTML 进行转义 对于其他的转义 需要后台做配合处理</li>
+<li>XSS 对于攻击的防御，有没有好用的工具或实时监测漏洞的工具</li>
+<li>对业务流程使用安全审计软件进行审计，如果公司对这个比较重视可以花钱去审计， 安全是需要团队和老板一起进行开发和协作。第三方的数据不一定可靠， 需要团队进行互相协作。</li>
+</ul>
+<h1 id="浅谈流量劫持与防治-刘洋河"><a href="#浅谈流量劫持与防治-刘洋河" class="headerlink" title="浅谈流量劫持与防治 - 刘洋河"></a>浅谈流量劫持与防治 - 刘洋河</h1><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb106596222f7.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<ul>
+<li><p>典型的上网会经历哪些阶段</p>
+</li>
+<li><p>在急于将产品投入使用,导致软件开发的过程中出现很多的问题漏铜，而不知道攻击者的攻击方式，对于基础的内容只是一定要掌握。</p>
+</li>
+<li><p>流量劫持 并不是新生的话题,流量劫持一直纯在并没有彻底的消除。</p>
+</li>
+<li><p>理想的上网环境,打开浏览器就可以使用,当用户打开浏览器上网的时候是需要通过路由器的 IP 访问服务器网站 然后通过 CDN 进行对文件进行下载。</p>
+</li>
+<li><p>流量劫持是怎么发生的呢？</p>
+</li>
+<li><p>链路本身不安全</p>
+</li>
+<li><p>从设计上未考虑安全性。</p>
+</li>
+<li><p>随着计算力发展，安全链路变得不安全。</p>
+</li>
+<li><p>干扰安全链路，迫使链路使用若安全方案。</p>
+</li>
+<li><p>DNS 投毒与防治 流量劫持与防治</p>
+</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb117791f7267.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb11f67c8579f.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb126047b7c1a.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<ul>
+<li><p>DNS</p>
+</li>
+<li><p>基于一个 UDP 的协议，工作的时候效率较慢,缓存的时候是比较快的。</p>
+</li>
+<li><p>没有缓存的情况下需要查询很久。</p>
+</li>
+<li><p>公共域名访问顶级域 存在一个缓存时间 TTL 可以在指定的时限内 如果没有请求到数据会再次请求。</p>
+</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb15a476aa645.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb16b70a62002.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<ul>
+<li><p>污染 DNS</p>
+</li>
+<li><p>可以使用缓存对 DNS 进行攻击或污染</p>
+</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb1a304068b9e.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<ul>
+<li><p>HTTP</p>
+</li>
+<li><p>在网服务其对 DNS 加密，用户得到加密的我呢间下载后进行解密再使用，增加 DNS 的安全性。</p>
+</li>
+<li><p>抵抗 DNS 流量劫持</p>
+</li>
+<li><p>链路问题的排查</p>
+</li>
+<li><p>方案 A:在某些省份、地区⾃自建监测站，定期抓取固定资源</p>
+</li>
+<li><p>问题:资源太固定，监测站数量量也远远不不够</p>
+</li>
+<li><p>方案 B:业务⽅方在⾃自⼰己的 html 中监听资源的 error 事件</p>
+</li>
+<li><p>问题:⽆无法确认问题在于链路路，也可能只是普通的 js 出错</p>
+</li>
+<li><p>方案 C:使⽤用第三⽅方企业服务进⾏行行监控</p>
+</li>
+<li><p>问题:服务越多成本越⾼高</p>
+</li>
+<li><p>方案 D:CSP、SRI</p>
+</li>
+<li><p>问题:兼容性和灵活性差，⽆无法进⾏行行⾃自定义逻辑</p>
+</li>
+</ul>
+<h2 id="问答"><a href="#问答" class="headerlink" title="问答"></a>问答</h2><p>这部分的问答，我只记录了讲师的回复，因为近期加班时长耳鸣，没能听清楚问题，向大家致歉。</p>
+<ul>
+<li><p>浏览器在跑业务代码的时候， 没有空余的时间去做业务计算。 没有太多的资源去做,或者在 SDK 中嵌入，拿到文件的长度和首尾前 100 个字节进行判断，是否被篡改。</p>
+</li>
+<li><p>异步加载脚本，首先可以使用浏览器的加载机制去做， 另一个方案是不使用原有的方案进行加载。 使用自己定义的方案进行修改。</p>
+</li>
+</ul>
+<h1 id="深入浅出-CSRF-吴空"><a href="#深入浅出-CSRF-吴空" class="headerlink" title="深入浅出 CSRF - 吴空"></a>深入浅出 CSRF - 吴空</h1><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb34dfc313cf3.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<ul>
+<li><p>CSRF 是什么? CSRF 可以做什么? CSRF 攻击现状</p>
+</li>
+<li><p>CSRF 攻击 可以伪造邮件 仿制用户的信息 盗取账号 购买商品 银行转账。</p>
+</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb4d458280fc6.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb4dec0a1bcdc.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb4e74dff952f.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<ul>
+<li><p>CSRF 攻击原理与防御 CSRF 漏铜检测</p>
+</li>
+<li><p>防御内容详见 PPT CSRF 常见防御。</p>
+</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb51f0968d4f1.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb546e03c6e89.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb560c5166bb1.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<ul>
+<li><p>CSRF Tester 漏洞检测</p>
+</li>
+<li><p>使⽤用代理理抓取我们在浏览器器中访问过的所有的连接以及所有的表单等信息，通过在 CSRFTester 中修改相应的表单等 信息，重新提交，相当于一次伪造客户端请求，如果修测试的请求成功被⽹网站服务器器接受，则说明存在 CSRF 漏漏洞洞，当然此款⼯工具也可以被⽤用来进⾏行行 CSRF 攻击。</p>
+</li>
+<li><p>CSRF Request Build 漏洞检测</p>
+</li>
+<li><p>在⿊黑客圈指：观点验证程序，运⾏行行这个程序得到预期结果，就验证了了这个观点。</p>
+</li>
+<li><p>前端与服务器端如何在代码层面防范 CSRF 攻击</p>
+</li>
+<li><p>在自动化构建过程接入漏洞检测工具在提交的时候就进行漏铜的检测。</p>
+</li>
+<li><p>线上接口扫描，线上提供一个入口， 通过漏洞扫描工具 进行线上的扫描和更新。</p>
+</li>
+</ul>
+<h1 id="用户安全验证探索-潘俊"><a href="#用户安全验证探索-潘俊" class="headerlink" title="用户安全验证探索 - 潘俊"></a>用户安全验证探索 - 潘俊</h1><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb58a84fa9cd0.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<ul>
+<li>安全验证在 Web 服务中的位置</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb5b73cf65d09.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<ul>
+<li><p>信息的分类与网站的性质有关系，最常见的一般分为隐私和非隐私两大类。结合产品自身的特性来选择信息如何呈现给用户</p>
+</li>
+<li><p>常规操作和敏感操作对于验证的需求并不相同。</p>
+</li>
+<li><p>Case:[新买的手机有了别人的数据]</p>
+</li>
+<li><p>Case:[新注册了一个账号，发现了不属于自己的东西]</p>
+</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb5ea5e87a0d7.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<ul>
+<li>验证的类型和优劣 强验证 弱验证(对于用户识别) 扩展的动态类型的验证</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb5ff4f0fe0c9.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<ul>
+<li>密码正在演变，登录的方式多样性与多样化。</li>
+<li>密码的安全性和重要性逐渐在降低。</li>
+<li>短信快捷登录</li>
+<li>短信登录的兴起</li>
+<li>智能手机的普及和移动互联网的发展</li>
+<li>手机资费结构变化和短信功能的转变</li>
+<li>SIM 卡实名化让手机可以从当个人账号的角色</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb62561f0ad0e.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb6189a6f7081.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<ul>
+<li>短信开发的一些常见的问题</li>
+<li>防范短信轰炸</li>
+<li>短信的有效期</li>
+<li>服务商和费用</li>
+<li>短信登录的利弊</li>
+<li>简单快捷安全</li>
+<li>手机号是可以回收的</li>
+<li>如何从产品整体层面来规划和制定策略</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb60379a73824.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<ul>
+<li>如何减少验证次数</li>
+<li>设备化，将浏览器器也设备化(通过⼀一个⻓长效 COOKIE 标识) 增加设备关联，历史数据来决定设备与账号关系 地域，IP，甚⾄至活跃时间段都可以当成辅助来判定当前用户是否可信。</li>
+<li>该如何选择验证方式</li>
+<li>密码登录</li>
+<li>短信登录</li>
+<li>动态令牌</li>
+<li>扫码登录</li>
+<li>其他</li>
+<li>强依赖第三方登录</li>
+<li>人脸识别，指纹识别等等</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb5f4c8e24131.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163cb60cd2ec6b92.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<ul>
+<li>该如何选择验证方式</li>
+<li>纯微信开发</li>
+<li>微信登录 手机短信 密码登录</li>
+<li>手机 App 为主</li>
+<li>手机短信 密码登录 人工申诉 微信登录 扫码登录</li>
+<li>PC 浏览器位置</li>
+<li>密码登录 手机短信 动态令牌</li>
+<li>多端并重</li>
+<li>手机短信 扫码登录 密码登录 微信登录 动态令牌</li>
+<li>低交互信息类</li>
+<li>密码登录 手机短信</li>
+<li>工具类（重资产）</li>
+<li>手机短信 动态令牌 人工申诉 微信登录 扫码登录 密码登录</li>
+<li>工具类（重信息）</li>
+<li>动态令牌 人工申诉 手机短信 密码登录</li>
+</ul>
+<p>先后顺序代表推荐顺序和开发的优先级</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>安全问题，不只是局限于 Web 前端凡是涉及网络的地方都会有攻击的存在，大厂有自己的安全团队，中小型公司就成了黑客的练手的存在，据朋友说有很多地方在培训黑客，会拿一些中小型公司练手，听到这个感觉充满了挑战，是对自己能力和快速查错及解决问题综合的考验。产品的完成不只是功能的完善，代码的可靠性，健壮性，安全性也是很重要的，任何微小的瑕疵都会成为攻击方的入口，我认为这也是一种对自己的提升与考验，只有经历风雨存活下来的才是有能力继续前行的。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/163caf73017a4cd5.jpeg" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p><strong>本文转自<a href="https://juejin.im/post/5b1521b1f265da6e4a6bd24f" rel="external nofollow noopener noreferrer" target="_blank">掘金</a></strong></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-06-05T05:43:24.000Z" itemprop="dateUpdated">2018-06-05 13:43:24</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/前端安全/">前端安全</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/7189c795/&title=《JTalk 第八期 前端安全大起底 总结》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/7189c795/&title=《JTalk 第八期 前端安全大起底 总结》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/7189c795/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JTalk 第八期 前端安全大起底 总结》 — Sixin的小站&url=http://coder.liusixin.cn/posts/7189c795/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/7189c795/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/b43df12e/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">纯前端实现裁剪压缩图片</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/92e76411/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">网站性能优化实战——从12.67s到1.06s的故事</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/7189c795/&title=《JTalk 第八期 前端安全大起底 总结》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/7189c795/&title=《JTalk 第八期 前端安全大起底 总结》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/7189c795/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JTalk 第八期 前端安全大起底 总结》 — Sixin的小站&url=http://coder.liusixin.cn/posts/7189c795/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/7189c795/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAAByUlEQVR42u3ay46DMAwF0P7/T3ekWc0sCNc2pKg6WaE+4ISFlVzn9YrH+3ccXf8d68+P7nnxwMXFHXPfy7Em5t/m/zqZKi4u7kZuUryObrEuSWtibsDFxX0m96j89XC4uLjfwe2VpOrEcHFxn8NNNj/rmKMaiNy+V8PFxR1w54Hp/HprvouLizvoSlSLWi9yLTwdFxd3C3e9XZkHJdXJRGUOFxd3Czdf3ORbnerWpbfRwsXFvYObPyApNNXlUf6C/q3IcHFxt3AvOCw1WAwVJoaLi7uFW926VFPN6iImb9Di4uLex60eoqqGF/Mma7Ofg4uLexE3qnaDaOOCtisuLu4WbrXJsS40eXNl0pLBxcW9m5v3W5JH5uUJFxf3+dxeE6UaceaTjFopuLi4t3HLqergyFTvnieHMHBxcW/g5oUsX6BUj3kVWq24uLgbuVVWvihJopNC+cPFxd3IzUfeMqkevRo1UXBxcS/lzhuoeWDai02b2y1cXNwxt1e88oNZeRGMChwuLu5GbrV49SacVNCT3+Di4j6MW22K9H5zcgdcXNxHcnvxSu9F4OLifpZbDTfnYWhzi4WLi7uF2wtMe5FKjsbFxf0Q9wecayULjheCKgAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

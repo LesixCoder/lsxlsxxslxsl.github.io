@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/d41e0dd/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/d41e0dd/">
+    
+    
+    <title>CSS workflow | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="CSS">
+    <meta name="description" content="CSS 预处理器（处理浏览器） sass、less、stylus 预处理器常用规范 变量 混合（Mixin）Extend 嵌套规则 运算 函数 Namespaces &amp;amp; Accessors Scope 注释    CSS 后处理器（该删的删，该加的加，增加前缀，包括可以兼容 IE6） CSS 压缩 CLEAN-CSS 自动添加浏览器前缀 Autoprefixer CSS 更加美观排序 CS">
+<meta name="keywords" content="CSS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSS workflow">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/d41e0dd/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="CSS 预处理器（处理浏览器） sass、less、stylus 预处理器常用规范 变量 混合（Mixin）Extend 嵌套规则 运算 函数 Namespaces &amp;amp; Accessors Scope 注释    CSS 后处理器（该删的删，该加的加，增加前缀，包括可以兼容 IE6） CSS 压缩 CLEAN-CSS 自动添加浏览器前缀 Autoprefixer CSS 更加美观排序 CS">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064121-461daabd23972956-1.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064121-b1a634eaabba8526.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064121-b54c1dac07ca3373.png">
+<meta property="og:updated_time" content="2017-09-10T05:22:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CSS workflow">
+<meta name="twitter:description" content="CSS 预处理器（处理浏览器） sass、less、stylus 预处理器常用规范 变量 混合（Mixin）Extend 嵌套规则 运算 函数 Namespaces &amp;amp; Accessors Scope 注释    CSS 后处理器（该删的删，该加的加，增加前缀，包括可以兼容 IE6） CSS 压缩 CLEAN-CSS 自动添加浏览器前缀 Autoprefixer CSS 更加美观排序 CS">
+<meta name="twitter:image" content="http://cdn-blog.liusixin.cn/9064121-461daabd23972956-1.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">CSS workflow</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">CSS workflow</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-09-10T05:22:04.000Z" itemprop="datePublished" class="page-time">
+  2017-09-10
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#CSS-预处理器（处理浏览器）"><span class="post-toc-number">1.</span> <span class="post-toc-text">CSS 预处理器（处理浏览器）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#CSS-后处理器（该删的删，该加的加，增加前缀，包括可以兼容-IE6）"><span class="post-toc-number">2.</span> <span class="post-toc-text">CSS 后处理器（该删的删，该加的加，增加前缀，包括可以兼容 IE6）</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#面向对象的-CSS"><span class="post-toc-number">3.</span> <span class="post-toc-text">面向对象的 CSS</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#CSS-分层与面向对象"><span class="post-toc-number">4.</span> <span class="post-toc-text">CSS 分层与面向对象</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#BEM"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">BEM</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ACSS"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">ACSS</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/css/CSS-workflow" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">CSS workflow</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-09-10 13:22:04" datetime="2017-09-10T05:22:04.000Z" itemprop="datePublished">2017-09-10</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="CSS-预处理器（处理浏览器）"><a href="#CSS-预处理器（处理浏览器）" class="headerlink" title="CSS 预处理器（处理浏览器）"></a>CSS 预处理器（处理浏览器）</h2><ul>
+<li>sass、less、stylus</li>
+<li>预处理器常用规范<ul>
+<li>变量</li>
+<li>混合（Mixin）Extend</li>
+<li>嵌套规则</li>
+<li>运算</li>
+<li>函数</li>
+<li>Namespaces &amp; Accessors</li>
+<li>Scope</li>
+<li>注释</li>
+</ul>
+</li>
+</ul>
+<h2 id="CSS-后处理器（该删的删，该加的加，增加前缀，包括可以兼容-IE6）"><a href="#CSS-后处理器（该删的删，该加的加，增加前缀，包括可以兼容-IE6）" class="headerlink" title="CSS 后处理器（该删的删，该加的加，增加前缀，包括可以兼容 IE6）"></a>CSS 后处理器（该删的删，该加的加，增加前缀，包括可以兼容 IE6）</h2><ul>
+<li>CSS 压缩 CLEAN-CSS</li>
+<li>自动添加浏览器前缀 Autoprefixer</li>
+<li>CSS 更加美观排序 CSScomb</li>
+<li>Rework（编译压缩等）取代 Stylus（只能负责编译） 后处理器发热</li>
+<li>前后通吃 PostCSS</li>
+</ul>
+<blockquote>
+<p>css 处理被分成了两步，一步是 sass、less，一步是到上线前的后处理器（通过 AST‘抽象语法树’去分析）</p>
+</blockquote>
+<p><strong>PostCSS 值得收藏的插件</strong></p>
+<ul>
+<li>POSTCSS-CUSTOM-PROPERTIES 运行时变量</li>
+<li>POSTCSS-SIMPLE-VARS 与 SASS 一致的变量实现</li>
+<li>POSTCSS-MIXINS 实现类似 SASS 的@MIXIN 的功能</li>
+<li>POSTCSS-EXTEND 实现类似 SASS 的继承功能</li>
+<li>POSTCSS-IMPORT 实现类似 SASS 的 IMPORT</li>
+<li>CSSNEXT 面向未来 CSS Grace 修复过去</li>
+</ul>
+<blockquote>
+<p>编译 node 不需要 webpack，我们用 gulp+rollup（tree shaking）。</p>
+</blockquote>
+<h2 id="面向对象的-CSS"><a href="#面向对象的-CSS" class="headerlink" title="面向对象的 CSS"></a>面向对象的 CSS</h2><ul>
+<li>OO CSS 的概念解读</li>
+<li>OO CSS 的作用和注意事项</li>
+<li>OO CSS 代码实战</li>
+</ul>
+<p>众多开发者忽视了 CSS 的表现（认为他太过简单，是一种机械的工作），而且更多关注在 JavaScript 的性能上或者其他方面。</p>
+<p>OO CSS 将页面可重用元素抽象成一个类，用 Class 加以描述，而与其对应的 HTML 即可看成是此类的一个实例。</p>
+<h2 id="CSS-分层与面向对象"><a href="#CSS-分层与面向对象" class="headerlink" title="CSS 分层与面向对象"></a>CSS 分层与面向对象</h2><p>为什么要分层？</p>
+<ul>
+<li>SMACSS</li>
+<li>BEM</li>
+<li>SUIT</li>
+<li>ACSS</li>
+<li>ITCSS</li>
+</ul>
+<p>原因：</p>
+<ul>
+<li>CSS 有语义化的命名约定和 CSS 层的分离，将有助于它的可扩展性，性能的提高和代码的组织管理。</li>
+<li>大量的样式、覆盖、权重和很多！important，分好层可以让团队命名统一规范，方便维护。</li>
+<li>有责任感地去命名你的选择器。</li>
+</ul>
+<h3 id="BEM"><a href="#BEM" class="headerlink" title="BEM"></a>BEM</h3><ul>
+<li>BEM 和 SMACSS 非常类似，主要用来如何给项目命名。一个简单命名更容易让别人一起工作。比如选项卡导航是一个块（Block），这个块里的元素是其中标签之一（Element），而当前选项卡是一个修饰状态（Modifier）</li>
+<li>block 代表了更高级别的抽象或组件</li>
+<li>block__element 代表 block 后代，用于形成一个完整的 block 的整体</li>
+<li>block_modifier 代表 block 的不用状态或不同版本</li>
+<li>修饰符使用的是‘’，子模块使用‘_’，单词连接用‘-’<br><img src="http://cdn-blog.liusixin.cn/9064121-461daabd23972956-1.png" alt=""><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064121-b1a634eaabba8526.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+</li>
+</ul>
+<h3 id="ACSS"><a href="#ACSS" class="headerlink" title="ACSS"></a>ACSS</h3><ul>
+<li>考虑如何设计一个系统的接口。原子（Atoms）是创建一个区块的最基本的特质，比如说表单按钮。分子（Molecules）是很多个原子（Atoms）的组合，比如说一个表单中包括了一个标签，输入框和按钮。生物（Organisms）是众多分子（Molecules）的组合物，比如一个网站的顶部区域，他包括了网站的标题、导航等。而模板（Templates）又是众多生物（Organisms）的结合体。比如一个网站页面的布局。而最后的页面就是特殊的模板。</li>
+</ul>
+<p><img src="http://cdn-blog.liusixin.cn/9064121-b54c1dac07ca3373.png" alt=""></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-09-10T05:22:04.000Z" itemprop="dateUpdated">2017-09-10 13:22:04</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSS/">CSS</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/d41e0dd/&title=《CSS workflow》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/d41e0dd/&title=《CSS workflow》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/d41e0dd/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《CSS workflow》 — Sixin的小站&url=http://coder.liusixin.cn/posts/d41e0dd/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/d41e0dd/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/916f577d/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">OO CSS -- 面向对象的CSS</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/f4712658/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">JS中解决跨域问题</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/d41e0dd/&title=《CSS workflow》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/d41e0dd/&title=《CSS workflow》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/d41e0dd/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《CSS workflow》 — Sixin的小站&url=http://coder.liusixin.cn/posts/d41e0dd/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/d41e0dd/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABx0lEQVR42u3aQZKDMAwEwPz/0+w1h40zkrCXrWqfUiSBhoPKGvF6xet6W+9HPv1m/cv18RsWLi7umHst1yfumti7pbUBFxf3PHddaKqU6s0Uih0uLu4jub2tybos4uLi/nduvj1K/oWLi/tkbtL8lBuV4CobezVcXNwBt7dBuffzlnwXFxe3xb2KKw898y1U4eq4uLhHuHlB6eHy5ie/Li4u7m5utVRNbqMXp/7yXHFxcf+Im5w0OZ6HpM0dGS4u7gZuuZQEDUw1im2OYHFxcbdx8yhzQskfx5eXvXBxcY9w58Vofhvl1z5wcXE3cydlKAlBeoHLx/Pj4uIe5N61Ecm/rW5rcHFxT3Lz4cckTp20T1+aH1xc3G3cPAbd1/BMHhMuLu4ObrkJKR7J26SkfcLFxT3JTcafvXHsJHKNYlNcXNzj3N7YNZrh9HZhuLi4m7lXcfWalqSVavZkuLi4G7jVy9970qTMNa+Li4s75uYjjV78kces0QPCxcU9yM0LzSQ8rQ5rR/kuLi7uQW7S3lSD0UK7hYuL+0hutRGaRy03111cXNyYm7862StSSeQRjWFwcXGPcCeDz/yk1eHKDfkuLi5uh/sDj56aec+gTxkAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

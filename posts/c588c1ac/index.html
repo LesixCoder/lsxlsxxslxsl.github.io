@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/c588c1ac/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/c588c1ac/">
+    
+    
+    <title>前端调试技巧--Audits 和 Chrome 性能插件 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="性能优化,调试">
+    <meta name="description" content="Audits 和 Chrome 性能插件Audits Audits 其实就是分析当前网页的性能的，比如说雅虎军规，这个东西能够大致给我们分析出来一些我们做的不好的地方而且能给我们一些解决意见   雅虎军规参考网址：https://github.com/creeperyang/blog/issues/1   Audits 面板 performanceTracer – Chrome 插件 Page S">
+<meta name="keywords" content="性能优化,调试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端调试技巧--Audits 和 Chrome 性能插件">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/c588c1ac/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="Audits 和 Chrome 性能插件Audits Audits 其实就是分析当前网页的性能的，比如说雅虎军规，这个东西能够大致给我们分析出来一些我们做的不好的地方而且能给我们一些解决意见   雅虎军规参考网址：https://github.com/creeperyang/blog/issues/1   Audits 面板 performanceTracer – Chrome 插件 Page S">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-a3c830aa628cac4f.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-bca430cd39283577.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-fb716eff921cdf7c.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-4115843e7bef9f41.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-13bcdb6ff7e68050.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-397483947afb64e5.png">
+<meta property="og:updated_time" content="2017-05-27T15:45:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前端调试技巧--Audits 和 Chrome 性能插件">
+<meta name="twitter:description" content="Audits 和 Chrome 性能插件Audits Audits 其实就是分析当前网页的性能的，比如说雅虎军规，这个东西能够大致给我们分析出来一些我们做的不好的地方而且能给我们一些解决意见   雅虎军规参考网址：https://github.com/creeperyang/blog/issues/1   Audits 面板 performanceTracer – Chrome 插件 Page S">
+<meta name="twitter:image" content="http://cdn-blog.liusixin.cn/9064013-a3c830aa628cac4f.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">前端调试技巧--Audits 和 Chrome 性能插件</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">前端调试技巧--Audits 和 Chrome 性能插件</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-05-27T15:45:46.000Z" itemprop="datePublished" class="page-time">
+  2017-05-27
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Audits-和-Chrome-性能插件"><span class="post-toc-number">1.</span> <span class="post-toc-text">Audits 和 Chrome 性能插件</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Audits"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">Audits</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/调试/前端调试技巧-Audits-和-Chrome-性能插件" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">前端调试技巧--Audits 和 Chrome 性能插件</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-05-27 23:45:46" datetime="2017-05-27T15:45:46.000Z" itemprop="datePublished">2017-05-27</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="Audits-和-Chrome-性能插件"><a href="#Audits-和-Chrome-性能插件" class="headerlink" title="Audits 和 Chrome 性能插件"></a>Audits 和 Chrome 性能插件</h2><h3 id="Audits"><a href="#Audits" class="headerlink" title="Audits"></a>Audits</h3><blockquote>
+<p>Audits 其实就是分析当前网页的性能的，比如说雅虎军规，这个东西能够大致给我们分析出来一些我们做的不好的地方而且能给我们一些解决意见</p>
+</blockquote>
+<blockquote>
+<p>雅虎军规参考网址：<a href="https://github.com/creeperyang/blog/issues/1" rel="external nofollow noopener noreferrer" target="_blank">https://github.com/creeperyang/blog/issues/1</a></p>
+</blockquote>
+<ul>
+<li><strong>Audits 面板</strong></li>
+<li><strong>performanceTracer – Chrome 插件</strong></li>
+<li><strong>Page Speed – Chrome 插件</strong></li>
+<li><p><strong>performance.timming</strong></p>
+<ul>
+<li>这是代码形式的一个 API ，是谷歌提供给我们的在浏览器里面我们可以通过网页去检测的。</li>
+<li>上面这个插件光学是没什么用的，得需要先了解浏览器的整个的执行机制，下图就是 整个的一个网页从我们用户输入到输出的时候这之间经过的很多的过程，上面的 performance.timing 很好的捕捉到了这样的一个节点，这个节点里面我们主要观察的是 DNS 这一阶段，就是查找 DNS 之间，然后是 握手的时间，请求的时间，输出的时间，还有就是 onload 的时间，那么中间隔着的 DNS TCP Request Response 这几个时间是需要我们非常非常关注的，如果我们是专注于性能开发的，这几个点做的非常漂亮，那么这样整个一个网页的性能是非常高的，所以做网页性能的时候这几个点一定要卡住。</li>
+</ul>
+</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064013-a3c830aa628cac4f.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>接着上一篇中的案例进行讲解，在右侧的开发者工具中找到 Audits 面板，之后就可以让他来帮我们分析一下，接下来点击下面的 【RUN】 按钮</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064013-bca430cd39283577.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064013-fb716eff921cdf7c.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>如果说想要漂亮一点的就可以下载一个 performanceTracer 这样的一个东西，它可以将 我们上面说到的 timing 的 API 也就是上面的 【浏览器的整个的执行机制图】 里面的东西。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064013-4115843e7bef9f41.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>但是如果作为一个专业的性能开发人员来讲的话 performanceTracer 是远远不够我们进行网页加载时的性能监测用的，所以一般会装一个东西叫做 Page Speed，它可以是浏览器加载的更快（Make the web faster）</p>
+<p>下载完后点击面板下面显示的 【START ANALYZING】（开始分析） 按钮，它就会自动的去分析你当前的网页，下图是分析之后自动的将结果给呈现了出来</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064013-13bcdb6ff7e68050.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>它连怎么优化都帮你做到或者是提示了。</p>
+<p>如果是上面的插件还不够用的话，这个时候就需要借助一个东西 performance.timing 这个是浏览器自带的 API 可以在控制台中直接输出，可以看到所有的值都在下面列出来了</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064013-397483947afb64e5.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-05-27T15:45:46.000Z" itemprop="dateUpdated">2017-05-27 23:45:46</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能优化/">性能优化</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/调试/">调试</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/c588c1ac/&title=《前端调试技巧--Audits 和 Chrome 性能插件》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/c588c1ac/&title=《前端调试技巧--Audits 和 Chrome 性能插件》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/c588c1ac/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《前端调试技巧--Audits 和 Chrome 性能插件》 — Sixin的小站&url=http://coder.liusixin.cn/posts/c588c1ac/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/c588c1ac/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/b0b31bc4/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">浅谈前端数据推送</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/eff2d234/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">前端调试技巧--断点以及捕捉事件绑定</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/c588c1ac/&title=《前端调试技巧--Audits 和 Chrome 性能插件》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/c588c1ac/&title=《前端调试技巧--Audits 和 Chrome 性能插件》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/c588c1ac/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《前端调试技巧--Audits 和 Chrome 性能插件》 — Sixin的小站&url=http://coder.liusixin.cn/posts/c588c1ac/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/c588c1ac/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABzElEQVR42u3aS47jMAwFQN//0u7tANORH6lQMBqlVZDYVikLgh9fV7zuf1by6/3f+nTXNbFwcXG3ufdyra/Jj7Q+RmLAxcU9z10Hmuo1+fHy5+Pi4r6fmyQoyWFwcXH/BjdPU/JSChcX953cpPhZFzn5XYdqNVxc3A1u3qWc+zzS38XFxW1x7+JK7u0NYKLdcXFxj3CrDY48JFWLn8KVuLi4B7m9xkd1fJKnUFGthouLO8ztfZMHuF7TJIq7uLi4x7n5wCMvkJIdP+6Li4t7hNtLUHqDljwIPpRJuLi4Y9x1AZOf+Lvj0oeIi4uLO8ztzTfzxmi55RGHRVxc3Gnu/gB1Z/tqoMTFxZ3mVsubfIiyflqeDP1S/ODi4g5z8zZo8tCcXk2triSrwsXFHeZ+YdRRfBmrMKTBxcU9yK2Gs17iUi2roi4vLi7uGLea7iT39oYiD1fi4uIOc3fCTTXY9ZopuLi457m9Ieu3Nq4GUFxc3JPcaks0KVGSNz6SEuihVsPFxR3m9gLN1rh0v1bDxcV9GTcft1Rf7Xo4GC4u7iu51VDVa7V8FOLi4h7kVhOUpDmSj2+TPwgXF/ckt9fc7OGqoXCrv4uLi9vh/gDEzUjn9PznAAAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

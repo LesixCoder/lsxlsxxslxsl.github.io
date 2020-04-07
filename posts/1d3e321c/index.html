@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/1d3e321c/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/1d3e321c/">
+    
+    
+    <title>造轮子系列：封装一个简化版的jQuery | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="javascript,jQuery">
+    <meta name="description" content="jQuery 封装详解我们来实现一个简化版的 jQuery 库 一个库就是一个单独的模块，因此应使用自执行函数的方式模拟一个模块。 (function() {   // do something });  既然能够在全局直接调用 jQuery，则说明 jQuery 被挂载在了全局对象上。 块中对外提供接口时，可以采取 window.jQuery 的方式。 var jQuery = function">
+<meta name="keywords" content="javascript,jQuery">
+<meta property="og:type" content="article">
+<meta property="og:title" content="造轮子系列：封装一个简化版的jQuery">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/1d3e321c/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="jQuery 封装详解我们来实现一个简化版的 jQuery 库 一个库就是一个单独的模块，因此应使用自执行函数的方式模拟一个模块。 (function() {   // do something });  既然能够在全局直接调用 jQuery，则说明 jQuery 被挂载在了全局对象上。 块中对外提供接口时，可以采取 window.jQuery 的方式。 var jQuery = function">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-08-11T14:28:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="造轮子系列：封装一个简化版的jQuery">
+<meta name="twitter:description" content="jQuery 封装详解我们来实现一个简化版的 jQuery 库 一个库就是一个单独的模块，因此应使用自执行函数的方式模拟一个模块。 (function() {   // do something });  既然能够在全局直接调用 jQuery，则说明 jQuery 被挂载在了全局对象上。 块中对外提供接口时，可以采取 window.jQuery 的方式。 var jQuery = function">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">造轮子系列：封装一个简化版的jQuery</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">造轮子系列：封装一个简化版的jQuery</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-08-11T14:28:44.000Z" itemprop="datePublished" class="page-time">
+  2017-08-11
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/造轮子系列/">造轮子系列</a></li></ul></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#jQuery-封装详解"><span class="post-toc-number">1.</span> <span class="post-toc-text">jQuery 封装详解</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#扩展方法"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">扩展方法</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/JS核心技术开发解密/造轮子系列：封装一个简化版的jQuery" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">造轮子系列：封装一个简化版的jQuery</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-08-11 22:28:44" datetime="2017-08-11T14:28:44.000Z" itemprop="datePublished">2017-08-11</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a><ul class="article-category-list-child"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/造轮子系列/">造轮子系列</a></li></ul></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="jQuery-封装详解"><a href="#jQuery-封装详解" class="headerlink" title="jQuery 封装详解"></a>jQuery 封装详解</h2><p><strong>我们来实现一个简化版的 jQuery 库</strong></p>
+<p>一个库就是一个单独的模块，因此应使用自执行函数的方式模拟一个模块。</p>
+<pre class=" language-js"><code class="language-js"><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// do something</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>既然能够在全局直接调用 jQuery，则说明 jQuery 被挂载在了全局对象上。 块中对外提供接口时，可以采取 <code>window.jQuery</code> 的方式。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> jQuery <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// ...</span>
+window<span class="token punctuation">.</span>jQuery <span class="token operator">=</span> jQuery<span class="token punctuation">;</span>
+</code></pre>
+<p>我们在使用过程中，使用了 $，其实只是多加了一个赋值操作。</p>
+<pre class=" language-js"><code class="language-js">window<span class="token punctuation">.</span>$ <span class="token operator">=</span> window<span class="token punctuation">.</span>jQuery <span class="token operator">=</span> jQuery<span class="token punctuation">;</span>
+</code></pre>
+<p>在使用过程中直接使用 $，其实相当于直接调用构造函数 jQuery 创建了一个实例，而没有用 new。 我们知道创建实例 new 关键字是必不可少的，由此说明 new 的操作被放在了 jQuery 方法中来实现，而 jQuery 并不是真正的构造函数。</p>
+<pre class=" language-js"><code class="language-js"><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>ROOT<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// 构造函数</span>
+  <span class="token keyword">var</span> jQuery <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>selector<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 在该方法中直接返回new创建的实例，</span>
+    <span class="token comment" spellcheck="true">// 因此这里的 init 才是真正的构造函数</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">jQuery<span class="token punctuation">.</span>fn<span class="token punctuation">.</span>init</span><span class="token punctuation">(</span>selector<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+  jQuery<span class="token punctuation">.</span>fn <span class="token operator">=</span> jQuery<span class="token punctuation">.</span>prototype <span class="token operator">=</span> <span class="token punctuation">{</span>
+    constructor<span class="token punctuation">:</span> jQuery<span class="token punctuation">,</span>
+    version<span class="token punctuation">:</span> <span class="token string">'1.0.0'</span><span class="token punctuation">,</span>
+    init<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>selector<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">var</span> elem<span class="token punctuation">,</span> selector<span class="token punctuation">;</span>
+      elem <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span>selector<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">this</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> elem<span class="token punctuation">;</span>
+
+      <span class="token comment" spellcheck="true">// 在jQuery中返回的是一个由所有原型属性方法组成的数组，</span>
+      <span class="token comment" spellcheck="true">// 这里做了简化，直接返回this即可</span>
+      <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+
+    <span class="token comment" spellcheck="true">// 在原型上添加一堆方法</span>
+    toArray<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token keyword">get</span><span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    each<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    ready<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    first<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    slice<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// ...more</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// 让 init 方法的原型指向jQuery的原型</span>
+  jQuery<span class="token punctuation">.</span>fn<span class="token punctuation">.</span>init<span class="token punctuation">.</span>prototype <span class="token operator">=</span> jQuery<span class="token punctuation">.</span>fn<span class="token punctuation">;</span>
+
+  ROOT<span class="token punctuation">.</span>jQuery <span class="token operator">=</span> ROOT<span class="token punctuation">.</span>$ <span class="token operator">=</span> jQuery<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span>window<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>在上面的实现中，首先在 jQuery 构造函数中声明了一个 <code>fn</code> 属性，并将其指向了原型 <code>jQuery.prototype</code>。 随后在原型对象中添加了 <code>init</code> 方法。</p>
+<pre class=" language-js"><code class="language-js">jQuery<span class="token punctuation">.</span>fn <span class="token operator">=</span> jQuery<span class="token punctuation">.</span>prototype <span class="token operator">=</span> <span class="token punctuation">{</span>
+  init<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>之后又将 <code>init</code> 的原型指向了 <code>jQuery.prototype</code>。</p>
+<pre class=" language-js"><code class="language-js">jQuery<span class="token punctuation">.</span>fn<span class="token punctuation">.</span>init<span class="token punctuation">.</span>prototype <span class="token operator">=</span> jQuery<span class="token punctuation">.</span>fn<span class="token punctuation">;</span>
+</code></pre>
+<p>而在构造函数 <code>jQuery</code> 中 ，则返回了 <code>init</code> 的实例对象。</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">var</span> jQuery <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>selector<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">jQuery<span class="token punctuation">.</span>fn<span class="token punctuation">.</span>init</span><span class="token punctuation">(</span>selector<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>最后对外暴露接口时，将字符 <code>$</code> 与方法 <code>jQuery</code> 对等起来。</p>
+<pre class=" language-js"><code class="language-js">ROOT<span class="token punctuation">.</span>jQuery <span class="token operator">=</span> ROOT<span class="token punctuation">.</span>$ <span class="token operator">=</span> jQuery<span class="token punctuation">;</span>
+</code></pre>
+<p>因此当使用 <code>$(&#39;#test&#39;)</code> 创建一个 jQuery 实例时，实际上调用的是 <code>jQuery(&#39;#test&#39;)</code> 创建的一个 <code>init</code> 实例。这里正在构造函数的是原型中的 <code>init</code> 方法。</p>
+<h3 id="扩展方法"><a href="#扩展方法" class="headerlink" title="扩展方法"></a>扩展方法</h3><p>jQuery 提供了两个扩展接口来帮助自定义 jQuery 的方法，通常称自定义的 jQuery 方法为 jQuery 桶件。</p>
+<pre class=" language-js"><code class="language-js"><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>ROOT<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// 构造函数</span>
+  <span class="token keyword">var</span> jQuery <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>selector<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 在该方法中直接返回new创建的实例，</span>
+    <span class="token comment" spellcheck="true">// 因此这里的 init 才是真正的构造函数</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">jQuery<span class="token punctuation">.</span>fn<span class="token punctuation">.</span>init</span><span class="token punctuation">(</span>selector<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+  jQuery<span class="token punctuation">.</span>fn <span class="token operator">=</span> jQuery<span class="token punctuation">.</span>prototype <span class="token operator">=</span> <span class="token punctuation">{</span>
+    constructor<span class="token punctuation">:</span> jQuery<span class="token punctuation">,</span>
+    version<span class="token punctuation">:</span> <span class="token string">'1.0.0'</span><span class="token punctuation">,</span>
+    init<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>selector<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">var</span> elem<span class="token punctuation">,</span> selector<span class="token punctuation">;</span>
+      elem <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span>selector<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">this</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> elem<span class="token punctuation">;</span>
+
+      <span class="token comment" spellcheck="true">// 在jQuery中返回的是一个由所有原型属性方法组成的数组，</span>
+      <span class="token comment" spellcheck="true">// 这里做了简化，直接返回this即可</span>
+      <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+
+    <span class="token comment" spellcheck="true">// 在原型上添加一堆方法</span>
+    toArray<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token keyword">get</span><span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    each<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    ready<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    first<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    slice<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// ...more</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// 让 init 方法的原型指向jQuery的原型</span>
+  jQuery<span class="token punctuation">.</span>fn<span class="token punctuation">.</span>init<span class="token punctuation">.</span>prototype <span class="token operator">=</span> jQuery<span class="token punctuation">.</span>fn<span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// 实现 jQuery 的两种扩展方法</span>
+  jQuery<span class="token punctuation">.</span>extend <span class="token operator">=</span> jQuery<span class="token punctuation">.</span>fn<span class="token punctuation">.</span>extend <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>options<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 在jQuery源码中根据参数不同进行不同的判断，这里假设只有一种方式</span>
+    <span class="token keyword">var</span> target <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
+    <span class="token keyword">var</span> copy<span class="token punctuation">;</span>
+
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>name <span class="token keyword">in</span> options<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      copy <span class="token operator">=</span> options<span class="token punctuation">[</span>name<span class="token punctuation">]</span><span class="token punctuation">;</span>
+      target<span class="token punctuation">[</span>name<span class="token punctuation">]</span> <span class="token operator">=</span> copy<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> target<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// jQuery利用上面实现的扩展机制，添加了许多方法</span>
+
+  <span class="token comment" spellcheck="true">// 添加静态扩展方法，即工具方法</span>
+  jQuery<span class="token punctuation">.</span><span class="token function">extend</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    isFunction<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    type<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    parseHTML<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    parseJSON<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    ajax<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// ...more</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// 添加原型方法</span>
+  jQuery<span class="token punctuation">.</span>fn<span class="token punctuation">.</span><span class="token function">extend</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    queue<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    promise<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    attr<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    prop<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    addClass<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    removeClass<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    val<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    css<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// ...more</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  ROOT<span class="token punctuation">.</span>jQuery <span class="token operator">=</span> ROOT<span class="token punctuation">.</span>$ <span class="token operator">=</span> jQuery<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span>window<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>在上面的代码中，我们通过下面的方式简单实现了两个扩展方法。</p>
+<pre class=" language-js"><code class="language-js">jQuery<span class="token punctuation">.</span>extend <span class="token operator">=</span> jQuery<span class="token punctuation">.</span>fn<span class="token punctuation">.</span>extend <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>options<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// 在jQuery源码中根据参数不同进行不同的判断</span>
+  <span class="token comment" spellcheck="true">// 而这里直接用了一种方式 ，所以就不用判断了</span>
+  <span class="token keyword">var</span> target <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> copy<span class="token punctuation">;</span>
+
+  <span class="token keyword">for</span> <span class="token punctuation">(</span>name <span class="token keyword">in</span> options<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    copy <span class="token operator">=</span> options<span class="token punctuation">[</span>name<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    target<span class="token punctuation">[</span>name<span class="token punctuation">]</span> <span class="token operator">=</span> copy<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> target<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>要理解它的实现，首先要明确知道内部 <code>this</code> 的指向。传人的参数 <code>options</code> 对象是一个 <code>key-value</code> 模式的对象。我们可以通过 <code>for in</code> 遍历 <code>options</code>，将 <code>key</code> 作为新的属性，<code>value</code>作为该属性对应的新方法，分别添加到 <code>jQuery</code> 与 <code>jQuery.fn</code> 中。</p>
+<p>也就是说，当通过 <code>$.extend</code> 扩展 jQuery 时，方法被添加到了静态方法中;而通过 <code>$.fn.extend</code> 扩展 jQuery 时，方法被添加到了原型对象中。静态方法可以直接调用，因此也被称为工具方法。</p>
+<pre class=" language-js"><code class="language-js">$<span class="token punctuation">.</span><span class="token function">ajax</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+$<span class="token punctuation">.</span><span class="token function">isFunction</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+$<span class="token punctuation">.</span><span class="token function">each</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>原型方法必须通过声明的实例才能调用</p>
+<pre class=" language-js"><code class="language-js"><span class="token function">$</span><span class="token punctuation">(</span><span class="token string">'#test'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">css</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">$</span><span class="token punctuation">(</span><span class="token string">'#test'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">attr</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-08-11T14:28:44.000Z" itemprop="dateUpdated">2017-08-11 22:28:44</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jQuery/">jQuery</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/1d3e321c/&title=《造轮子系列：封装一个简化版的jQuery》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/1d3e321c/&title=《造轮子系列：封装一个简化版的jQuery》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/1d3e321c/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《造轮子系列：封装一个简化版的jQuery》 — Sixin的小站&url=http://coder.liusixin.cn/posts/1d3e321c/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/1d3e321c/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/e5c359b0/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">如何开发一个响应式页面</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/9b8e26f4/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">HTTP性能优化指南</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/1d3e321c/&title=《造轮子系列：封装一个简化版的jQuery》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/1d3e321c/&title=《造轮子系列：封装一个简化版的jQuery》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/1d3e321c/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《造轮子系列：封装一个简化版的jQuery》 — Sixin的小站&url=http://coder.liusixin.cn/posts/1d3e321c/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/1d3e321c/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABw0lEQVR42u3aS3ICMQwFwLn/pckBkjFPEjaQaq+oYsZuWKj08XXF6xGvu+fv9rx2LFxc3DF3fvzvJ/OzcgMuLu557jrQVBHJwcn+uLi438hdI9a74eLi/iduHpjWO+Pi4n4+Nyl+8uSm+uSWWg0XF3fAzbuU+z5v6e/i4uK2uI/i6h1fDW23p+Pi4h7h5gGll4LkxU9yLi4u7nnuXZtjHapeVbQUrm7g4uIe4faCS2+UkjRhy70cXFzcDdwkkPWuU8zf/eMvwMXF3cztFSGTgme925M0CxcX9wh3fUwSenaUQ9G4BRcXdzO3WvDkoS25ZpGHPFxc3DPcZnpR7F4W6rCk+MHFxT3CTVoV1aZn3lpNrnrg4uKe5FYvW1RHpNd4Rfvg4uJu4FZDT/nXF9OgJ2/h4uIe5OaJy2Rkkg9cCzNhXFzcbdwc0UtreqOU5mAIFxd3wH0U1+Td3lgFFxf3PLfansjTl1fdCmn+GFxc3DE3Dzr5kXn5lBRXuLi47+JWA02e9PQuc5S/xsXF/RhuXtj0yidcXNxv4c5TmUmZhIuLe5LbS1CSdkbe8oguguDi4h7hTpqbeWBK3pqUTLi4uC/i/gDaeAsJ9lEdogAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

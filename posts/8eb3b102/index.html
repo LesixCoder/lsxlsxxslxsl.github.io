@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-122482867-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+<!-- Baidu Tongji -->
+<script>var _hmt = _hmt || []</script>
+<script async src="//hm.baidu.com/hm.js?88b44a330a5d21f560b4f94e1d71f0fe"></script>
+<!-- End Baidu Tongji -->
+
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/8eb3b102/">
+    
+    <link rel="canonical" href="http://coder.liusixin.cn/posts/8eb3b102/">
+    
+    
+    <title>前端性能优化--雅虎军规 | Sixin的小站 | 刘思鑫的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="javascript,性能优化,CSS">
+    <meta name="description" content="前言1. 雅虎军规显而易见的就是雅虎公司出的，雅虎公司一直都是相应的各种规范上的践行者，有一种系列的书都是雅虎出的，它们每一本书的封面都有一只动物，下图是其中一本的示例，如果说你是想要一直从事前端这个行业的话，建议你把这一系列的书都看一下，这些书有些之前的是 雅虎 出的，后来就是 图灵 出的了 2. 参考网址:  雅虎军规官网地址：英文版   雅虎军规：中文翻译版  3. 什么是雅虎军规？  随着">
+<meta name="keywords" content="javascript,性能优化,CSS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端性能优化--雅虎军规">
+<meta property="og:url" content="http://coder.liusixin.cn/posts/8eb3b102/index.html">
+<meta property="og:site_name" content="Sixin的小站">
+<meta property="og:description" content="前言1. 雅虎军规显而易见的就是雅虎公司出的，雅虎公司一直都是相应的各种规范上的践行者，有一种系列的书都是雅虎出的，它们每一本书的封面都有一只动物，下图是其中一本的示例，如果说你是想要一直从事前端这个行业的话，建议你把这一系列的书都看一下，这些书有些之前的是 雅虎 出的，后来就是 图灵 出的了 2. 参考网址:  雅虎军规官网地址：英文版   雅虎军规：中文翻译版  3. 什么是雅虎军规？  随着">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-b3f833117ecafae0.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-949b3f78437d95fd.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-ec7e6810fa7415b9.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-0d0211082997c922.png">
+<meta property="og:image" content="http://cdn-blog.liusixin.cn/9064013-6794ef983ff85206.png">
+<meta property="og:updated_time" content="2017-08-02T13:38:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前端性能优化--雅虎军规">
+<meta name="twitter:description" content="前言1. 雅虎军规显而易见的就是雅虎公司出的，雅虎公司一直都是相应的各种规范上的践行者，有一种系列的书都是雅虎出的，它们每一本书的封面都有一只动物，下图是其中一本的示例，如果说你是想要一直从事前端这个行业的话，建议你把这一系列的书都看一下，这些书有些之前的是 雅虎 出的，后来就是 图灵 出的了 2. 参考网址:  雅虎军规官网地址：英文版   雅虎军规：中文翻译版  3. 什么是雅虎军规？  随着">
+<meta name="twitter:image" content="http://cdn-blog.liusixin.cn/9064013-b3f833117ecafae0.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="Sixin的小站" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide">
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(http://cdn-blog.liusixin.cn/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://cdn-blog.liusixin.cn/coder-1.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">刘思鑫</h5>
+          <a href="mailto:fordreamxkhl@gmail.com" title="fordreamxkhl@gmail.com" class="mail" rel="external nofollow noopener noreferrer" target="_blank">fordreamxkhl@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/">
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives">
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags">
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories">
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/chain">
+                <i class="icon icon-lg icon-users"></i>
+                友情链接
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about">
+                <i class="icon icon-lg icon-user-o"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/lsxlsxxslxsl" target="_blank" rel="external nofollow noopener noreferrer">
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/599d4bfc51882511264e7865" rel="external nofollow noopener noreferrer" target="_blank">
+                <i class="icon icon-lg icon-angle-double-down"></i>
+                掘金
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">前端性能优化--雅虎军规</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">前端性能优化--雅虎军规</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-08-02T06:02:23.000Z" itemprop="datePublished" class="page-time">
+  2017-08-02
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#正文"><span class="post-toc-number">2.</span> <span class="post-toc-text">正文</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-减少-HTTP-请求次数"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">1. 减少 HTTP 请求次数</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-减少-DNS-的查找次数"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">2. 减少 DNS 的查找次数</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-避免跳转"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">3. 避免跳转</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-可缓存的-AJAX"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">4. 可缓存的 AJAX</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5-推迟加载内容"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">5. 推迟加载内容</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6-预加载"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">6. 预加载</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7-减少-DOM-元素数量"><span class="post-toc-number">2.7.</span> <span class="post-toc-text">7. 减少 DOM 元素数量</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#8-根据域名划分页面内容"><span class="post-toc-number">2.8.</span> <span class="post-toc-text">8. 根据域名划分页面内容</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#9-使-iframe-的数量最小"><span class="post-toc-number">2.9.</span> <span class="post-toc-text">9. 使 iframe 的数量最小</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#10-不要出现-404-错误"><span class="post-toc-number">2.10.</span> <span class="post-toc-text">10. 不要出现 404 错误</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#11-使用内容分发网络"><span class="post-toc-number">2.11.</span> <span class="post-toc-text">11. 使用内容分发网络</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#12-为文件头指定-Expires-或-Cache-Control"><span class="post-toc-number">2.12.</span> <span class="post-toc-text">12. 为文件头指定 Expires 或 Cache-Control</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#13-Gzip-压缩文件内容"><span class="post-toc-number">2.13.</span> <span class="post-toc-text">13. Gzip 压缩文件内容</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#14-配置-ETag"><span class="post-toc-number">2.14.</span> <span class="post-toc-text">14. 配置 ETag</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#15-尽早刷新输出缓存"><span class="post-toc-number">2.15.</span> <span class="post-toc-text">15. 尽早刷新输出缓存</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#16-使用-GET-来完成-AJAX-请求"><span class="post-toc-number">2.16.</span> <span class="post-toc-text">16. 使用 GET 来完成 AJAX 请求</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#17-把样式表置于顶部"><span class="post-toc-number">2.17.</span> <span class="post-toc-text">17. 把样式表置于顶部</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#18-避免使用-CSS-表达式"><span class="post-toc-number">2.18.</span> <span class="post-toc-text">18. 避免使用 CSS 表达式</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#19-使用外部-JavaScript-和-CSS"><span class="post-toc-number">2.19.</span> <span class="post-toc-text">19. 使用外部 JavaScript 和 CSS</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#20-削减-JavaScript-和-CSS"><span class="post-toc-number">2.20.</span> <span class="post-toc-text">20. 削减 JavaScript 和 CSS</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#21-用-代替-import"><span class="post-toc-number">2.21.</span> <span class="post-toc-text">21. 用  代替 @import</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#22-避免使用滤镜"><span class="post-toc-number">2.22.</span> <span class="post-toc-text">22. 避免使用滤镜</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#23-把脚本置于页面底部"><span class="post-toc-number">2.23.</span> <span class="post-toc-text">23. 把脚本置于页面底部</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#24-剔除重复脚本"><span class="post-toc-number">2.24.</span> <span class="post-toc-text">24. 剔除重复脚本</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#25-减少-DOM-访问"><span class="post-toc-number">2.25.</span> <span class="post-toc-text">25. 减少 DOM 访问</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#26-开发智能事件处理程序"><span class="post-toc-number">2.26.</span> <span class="post-toc-text">26. 开发智能事件处理程序</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#27-减少-Cookie-体积"><span class="post-toc-number">2.27.</span> <span class="post-toc-text">27. 减少 Cookie 体积</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#28-对于页面内容使用无-cookie-域名"><span class="post-toc-number">2.28.</span> <span class="post-toc-text">28. 对于页面内容使用无 cookie 域名</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#29-优化图像"><span class="post-toc-number">2.29.</span> <span class="post-toc-text">29. 优化图像</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#30-优化-CSS-Spirite"><span class="post-toc-number">2.30.</span> <span class="post-toc-text">30. 优化 CSS Spirite</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#31-不要在-HTML-中缩放图像"><span class="post-toc-number">2.31.</span> <span class="post-toc-text">31. 不要在 HTML 中缩放图像</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#32-favicon-ico-要小而且可缓存"><span class="post-toc-number">2.32.</span> <span class="post-toc-text">32. favicon.ico 要小而且可缓存</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#33-保持单个内容小于-25K"><span class="post-toc-number">2.33.</span> <span class="post-toc-text">33. 保持单个内容小于 25K</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#34-打包组件成复合文本"><span class="post-toc-number">2.34.</span> <span class="post-toc-text">34. 打包组件成复合文本</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-前端/性能优化/前端性能优化-雅虎军规" class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">前端性能优化--雅虎军规</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-08-02 14:02:23" datetime="2017-08-02T06:02:23.000Z" itemprop="datePublished">2017-08-02</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/前端/">前端</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style="display:none">
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><strong>1. 雅虎军规显而易见的就是雅虎公司出的，雅虎公司一直都是相应的各种规范上的践行者，有一种系列的书都是雅虎出的，它们每一本书的封面都有一只动物，下图是其中一本的示例，如果说你是想要一直从事前端这个行业的话，建议你把这一系列的书都看一下，这些书有些之前的是 雅虎 出的，后来就是 图灵 出的了</strong></p>
+<p><strong>2. 参考网址:</strong></p>
+<blockquote>
+<p><a href="https://link.jianshu.com/?t=https://developer.yahoo.com/performance/rules.html" rel="external nofollow noopener noreferrer" target="_blank">雅虎军规官网地址：英文版</a></p>
+</blockquote>
+<blockquote>
+<p><a href="https://link.jianshu.com/?t=https://github.com/creeperyang/blog/issues/1" rel="external nofollow noopener noreferrer" target="_blank">雅虎军规：中文翻译版</a></p>
+</blockquote>
+<p><strong>3. 什么是雅虎军规？</strong></p>
+<blockquote>
+<p>随着移动端现在的崛起，已经不止是上面的 35 条军规了，还有非常非常多的军规，这些军规是你必须要践行的，因为像上面的 35 条军规一样，这些都是在进行网站性能优化中必须掌握的，不是说一定要全都用上，只是说这些能用的你要尽量的用上，这些军规可以结合一些使前端工程自动化的工具来进行开发，自动化就是说：能用框架或者是自动化工具解决的问题，从来不用人工去介入。</p>
+</blockquote>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><h3 id="1-减少-HTTP-请求次数"><a href="#1-减少-HTTP-请求次数" class="headerlink" title="1. 减少 HTTP 请求次数"></a>1. 减少 HTTP 请求次数</h3><p><strong>对 js 和 css 请求数量进行优化</strong></p>
+<p>将多个 js 文件合并成可以是两三个 js 文件，这样请求就会减少了，相应的 css link 也是这个道理</p>
+<p><strong>雪碧图</strong></p>
+<p>在和美工配合的时候页面上的图标之类的可以进行合并，将多个图片合并到一个画布上，这样就可以减少很多的请求。</p>
+<h3 id="2-减少-DNS-的查找次数"><a href="#2-减少-DNS-的查找次数" class="headerlink" title="2. 减少 DNS 的查找次数"></a>2. 减少 DNS 的查找次数</h3><p><strong>什么是 DNS 的查找次数？</strong></p>
+<blockquote>
+<p>假如说我们访问 map.baidu.com 的时候，这个网址是需要进行查找的，他需要通过你输入的这个网址去查找相应的域名（IP），之后才会到真正的服务器上</p>
+</blockquote>
+<p><strong>一般 DNS 的设置都是运维工程师来负责的，但是对于我们前端也是有几点需要注意的</strong></p>
+<ul>
+<li>尽量不要让页面上的 DNS 过多，因为查找起来很慢</li>
+<li>我们前端可以使用 <a href="https://link.jianshu.com/?t=http://skyhome.cn/div_css/301.html" rel="external nofollow noopener noreferrer" target="_blank">DNS 预解析的方法提升页面速度</a></li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064013-b3f833117ecafae0.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>上面的 meta 将 控制 dns 预解析 的值设置为了 on 这样就可以开启 dns 预解析<br>下面的 link 可以强制主机名查询 ，假设在页面其他位置如果引用了 该 link 的 dns 中的资源的话， 实际上在其引用之前就已经提前将其所需要的 DNS 给解析好了，这样的话就可以直接找到资源，不需要再解析 DNS 耗时了，速度也就会非常的快了，这也是我们前端可以做到的一点，下图的是其在 京东 官网上的使用</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064013-949b3f78437d95fd.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<h3 id="3-避免跳转"><a href="#3-避免跳转" class="headerlink" title="3. 避免跳转"></a>3. 避免跳转</h3><p><strong>什么是避免跳转？</strong></p>
+<blockquote>
+<p>这个就是说人家好不容易到你这台机器上来了，发现你这个页面不是之前的页面了，然后你这边再次做了一个跳转 打开了别的页面，尽量不要做成这种不必要的多次跳转</p>
+</blockquote>
+<p><strong>跳转时会建立一个 301 或者是 302 的请求报头</strong></p>
+<p>下图的示例是我在浏览器上以开发者模式下的手机模式输入了 PC 端的网址，打开之后会发现请求报头是 302，这个 302 被永久的建立在了这个 Header 上 ，如果没有这个 Header 的话，浏览器也分不清到底是 301 还是 302 ，他就是靠这个来标识的</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064013-ec7e6810fa7415b9.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<p>301 或者 302 这样的状态码可以参考 <a href="https://link.jianshu.com/?t=https://baike.baidu.com/item/HTTP状态码/5053660?fr=aladdin" rel="external nofollow noopener noreferrer" target="_blank">HTTP 状态码_百度百科</a> 中的说明进行了解，在做性能优化这方面，一些常见的状态码是必须要了解的<br>为了去向全栈工程师发展，这个东西是必会的，全栈的话会让你在公司或者是开发项目时所占的权重会更高一些</p>
+<h3 id="4-可缓存的-AJAX"><a href="#4-可缓存的-AJAX" class="headerlink" title="4. 可缓存的 AJAX"></a>4. 可缓存的 AJAX</h3><p><strong>什么是可缓存的 AJAX？</strong></p>
+<blockquote>
+<p>这个就是说我们在进行这样的请求的时候，可以把这样的 AJAX 进行一次缓存</p>
+</blockquote>
+<p><strong>实现的方法</strong><br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064013-0d0211082997c922.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure></p>
+<p><strong>gzip 组件</strong><br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://cdn-blog.liusixin.cn/9064013-6794ef983ff85206.png" alt="" title="">
+                </div>
+                <div class="image-caption"></div>
+            </figure><br>一般前台请求的资源都会在后台通过 gzip 组件将资源压缩之后再发送回来，然后再在客户端这边来解压，这样再传输过程中相应的资源文件就会变小很多</p>
+<p><strong>设置 ETags</strong></p>
+<blockquote>
+<p>这个全称为：Entity Tag，意思是实体标签，从名字上看，是对于某种实体的一个标识。它属于 HTTP 协议的一部分，也就是所有的 Web 服务器都应该（也确实能）支持这个特性。它的作用是用一个特殊的字符串来标识某个资源的“版本”，客户端（浏览器）来请求的时候，可以比较，如果 ETag 一致，则表示该资源并没有修改过，客户端（浏览器）可以使用自己缓存的版本。</p>
+</blockquote>
+<p><strong>如何实现 AJAX 的缓存，具体可参考 <a href="https://link.jianshu.com/?t=https://www.cnblogs.com/tedzhao/archive/2012/08/23/Ajax_Browser_Cache.html" rel="external nofollow noopener noreferrer" target="_blank">Ajax 请求与浏览器缓存 - ted - 博客园</a> ，这个实现是需要服务端来进行配合的，但是这个整个的过程你得知道，还有如果想要实现 AJAX 缓存的话请求方式尽量设置成 get ，</strong></p>
+<h3 id="5-推迟加载内容"><a href="#5-推迟加载内容" class="headerlink" title="5. 推迟加载内容"></a>5. 推迟加载内容</h3><p>具体可参考 <a href="https://link.jianshu.com/?t=http://image.baidu.com/search/index?tn=baiduimage&amp;ipn=r&amp;ct=201326592&amp;cl=2&amp;lm=-1&amp;st=-1&amp;sf=2&amp;fmq=1480332039000_R_D&amp;pv=&amp;ic=0&amp;nc=1&amp;z=&amp;se=&amp;showtab=0&amp;fb=0&amp;width=&amp;height=&amp;face=0&amp;istype=2&amp;ie=utf-8&amp;word=微距摄影" rel="external nofollow noopener noreferrer" target="_blank">微距摄影_百度图片搜索</a> ，这个网站使用的就是滚动加载的方式，你在往下滚动时下面的图片的边滚动边请求的</p>
+<h3 id="6-预加载"><a href="#6-预加载" class="headerlink" title="6. 预加载"></a>6. 预加载</h3><blockquote>
+<p>参考：<a href="https://link.jianshu.com/?t=http://www.cnblogs.com/suyuwen1/p/5506397.html" rel="external nofollow noopener noreferrer" target="_blank">详解 HTML5 中 rel 属性的 prefetch 预加载功能使用</a></p>
+</blockquote>
+<h3 id="7-减少-DOM-元素数量"><a href="#7-减少-DOM-元素数量" class="headerlink" title="7. 减少 DOM 元素数量"></a>7. 减少 DOM 元素数量</h3><blockquote>
+<p>要尽量的去控制页面的 HTML 的数量，最好的方式是遵循 一个标签三个元素的方式：div before after</p>
+</blockquote>
+<h3 id="8-根据域名划分页面内容"><a href="#8-根据域名划分页面内容" class="headerlink" title="8. 根据域名划分页面内容"></a>8. 根据域名划分页面内容</h3><blockquote>
+<p>尽量不要把所有的资源都放在同一台服务器上，至少将 js css images 这些静态的东西放在一个 CDN 的服务器上，这样就需要多个机器来支撑这样的分离</p>
+</blockquote>
+<h3 id="9-使-iframe-的数量最小"><a href="#9-使-iframe-的数量最小" class="headerlink" title="9. 使 iframe 的数量最小"></a>9. 使 iframe 的数量最小</h3><blockquote>
+<p>iframe 在页面中能尽量不用的话就不用，这个标签可以在页面页面中插入一个新的 HTML 文档，iframe 也有相应的优缺点</p>
+</blockquote>
+<h3 id="10-不要出现-404-错误"><a href="#10-不要出现-404-错误" class="headerlink" title="10. 不要出现 404 错误"></a>10. 不要出现 404 错误</h3><blockquote>
+<p>这个意思就是页面尽量不要丢东西，HTTP 请求是会耗时的即使这个资源已经不存在了</p>
+</blockquote>
+<h3 id="11-使用内容分发网络"><a href="#11-使用内容分发网络" class="headerlink" title="11. 使用内容分发网络"></a>11. 使用内容分发网络</h3><blockquote>
+<p>这个就是上面所说的 CDN ，也就是说如果服务器有多余的话就一定要将 html js css 这些静态的资源单独放到一个静态资源服务器中，这样可以让用户最快的去访问到</p>
+</blockquote>
+<h3 id="12-为文件头指定-Expires-或-Cache-Control"><a href="#12-为文件头指定-Expires-或-Cache-Control" class="headerlink" title="12. 为文件头指定 Expires 或 Cache-Control"></a>12. 为文件头指定 Expires 或 Cache-Control</h3><blockquote>
+<p>这个就是将该缓存的东西在浏览器中缓存起来，这样的话下次访问时如果请求的资源没发生改变就会直接用缓存里的，不会再去重新的请求耗时了</p>
+</blockquote>
+<h3 id="13-Gzip-压缩文件内容"><a href="#13-Gzip-压缩文件内容" class="headerlink" title="13. Gzip 压缩文件内容"></a>13. Gzip 压缩文件内容</h3><blockquote>
+<p>将 Gzip 组件压缩网站的 js css 文件的状态设置为 on，如果没有开启的话需要告诉后台让其开启</p>
+</blockquote>
+<h3 id="14-配置-ETag"><a href="#14-配置-ETag" class="headerlink" title="14. 配置 ETag"></a>14. 配置 ETag</h3><blockquote>
+<p>这个和上面提到的是一样的</p>
+</blockquote>
+<h3 id="15-尽早刷新输出缓存"><a href="#15-尽早刷新输出缓存" class="headerlink" title="15. 尽早刷新输出缓存"></a>15. 尽早刷新输出缓存</h3><blockquote>
+<p>早一点刷新 buffer（尽早给浏览器数据）。</p>
+</blockquote>
+<blockquote>
+<p>当用户请求一个页面，服务器一般要花 200-500ms 来拼凑整个页面。这段时间，浏览器是空闲的（等数据返回）。在 php，有个方法 flush()允许你传输部分准备好的 html 响应给浏览器。这样的话浏览器就可以开始下载组件，而同时后台可以继续生成页面剩下的部分。这种好处更多是在忙碌的后台或轻前端网站可以看到。</p>
+</blockquote>
+<blockquote>
+<p>一个比较好的 flush 的位置是在 head 之后，因为浏览器可以加载其中的样式和脚本文件，而后台继续生成页面剩余部分。</p>
+</blockquote>
+<pre class=" language-php"><code class="language-php"><span class="token comment" spellcheck="true">//这个示例是用的 PHP 做的中间层</span>
+<span class="token markup"><span class="token comment" spellcheck="true">&lt;!-- css, js --></span></span>
+<span class="token markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">></span></span></span>
+<span class="token delimiter">&lt;?php</span> <span class="token function">flush</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token delimiter">?></span>
+<span class="token markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span></span>
+<span class="token markup"><span class="token comment" spellcheck="true">&lt;!-- content --></span></span>
+</code></pre>
+<h3 id="16-使用-GET-来完成-AJAX-请求"><a href="#16-使用-GET-来完成-AJAX-请求" class="headerlink" title="16. 使用 GET 来完成 AJAX 请求"></a>16. 使用 GET 来完成 AJAX 请求</h3><blockquote>
+<p>ajax 请求用 get。</p>
+</blockquote>
+<blockquote>
+<p><a href="https://link.jianshu.com/?t=http://mail.yahoo.com/" rel="external nofollow noopener noreferrer" target="_blank">Yahoo! Mail</a> 团队发现当使用<code>XMLHttpRequest</code>，POST 被浏览器实现为两步：首先发送头部，然后发送数据。所以使用 GET 最好，仅用一个 TCP 包发送（除非 cookie 太多）。IE 的 url 长度限制是 2K。</p>
+</blockquote>
+<blockquote>
+<p>POST 不提交任何数据跟 GET 行为类似，但从语义上讲，获取数据应该用 GET，提交数据到服务器用 POST。</p>
+</blockquote>
+<h3 id="17-把样式表置于顶部"><a href="#17-把样式表置于顶部" class="headerlink" title="17. 把样式表置于顶部"></a>17. 把样式表置于顶部</h3><blockquote>
+<p>研究雅虎网页性能时发现把样式表移到<code>&lt;head&gt;</code>里会让页面更快。这是因为把样式表移到<code>&lt;head&gt;</code>里允许页面逐步渲染。</p>
+</blockquote>
+<blockquote>
+<p>关注性能的前端工程师希望页面被逐步渲染，这时因为，我们希望浏览器尽早渲染获取到的任何内容。这对大页面和网速慢的用户很重要。给用户视觉反馈，比如进度条的重要性已经被大量研究和记录。在我们的情况中，<code>HTML</code>页面就是进度条。当浏览器逐步加载页面头部，导航条，logo 等等，这些都是给等待页面的用户的视觉反馈。这优化了整体用户体验。</p>
+</blockquote>
+<blockquote>
+<p>把样式表放在文档底部的问题是它阻止了许多浏览器的逐步渲染，包括 IE。这些浏览器阻止渲染来避免在样式更改时需要重绘页面元素。所以用户会卡在白屏。</p>
+</blockquote>
+<blockquote>
+<p><a href="https://link.jianshu.com/?t=http://www.w3.org/TR/html4/struct/links.html#h-12.3" rel="external nofollow noopener noreferrer" target="_blank">HTML 规范</a>清楚表明样式应该在<code>&lt;head&gt;</code>里。</p>
+</blockquote>
+<h3 id="18-避免使用-CSS-表达式"><a href="#18-避免使用-CSS-表达式" class="headerlink" title="18. 避免使用 CSS 表达式"></a>18. 避免使用 CSS 表达式</h3><blockquote>
+<p>CSS 表达式是强大的（可能也是危险的）设置动态 CSS 属性的方法。IE5 开始支持，IE8 开始不赞成使用。例如，背景颜色可以设置成每小时轮换：</p>
+</blockquote>
+<pre class=" language-less"><code class="language-less"><span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token function">expression</span><span class="token punctuation">(</span>
+  <span class="token punctuation">(</span>new <span class="token function">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token number">.</span><span class="token function">getHours</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token number">%2</span> ? <span class="token string">'#B8D4FF'</span><span class="token punctuation">:</span> <span class="token string">'#F08A00'</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<blockquote>
+<p>CSS 表达式的问题是它们可能比大多数人预期的计算的更频繁。它们不仅在页面载入和调整大小时重新计算，也在滚动页面甚至是用户在页面上移动鼠标时计算。比如在页面上移动鼠标可能轻易计算超过 10000 次。</p>
+</blockquote>
+<blockquote>
+<p>要避免 CSS 表达式计算太多次，可以在它第一次计算后替换成确切值，或者用事件处理函数而不是 CSS 表达式。</p>
+</blockquote>
+<h3 id="19-使用外部-JavaScript-和-CSS"><a href="#19-使用外部-JavaScript-和-CSS" class="headerlink" title="19. 使用外部 JavaScript 和 CSS"></a>19. 使用外部 JavaScript 和 CSS</h3><blockquote>
+<p>尽量不要在 html 行内写 js 或者 css</p>
+</blockquote>
+<h3 id="20-削减-JavaScript-和-CSS"><a href="#20-削减-JavaScript-和-CSS" class="headerlink" title="20. 削减 JavaScript 和 CSS"></a>20. 削减 JavaScript 和 CSS</h3><blockquote>
+<p>使用一些工具将 js 和 css 分别进行压缩和大打包</p>
+</blockquote>
+<h3 id="21-用-代替-import"><a href="#21-用-代替-import" class="headerlink" title="21. 用  代替 @import"></a>21. 用 <link> 代替 @import</h3><blockquote>
+<p>之前的一个最佳原则是说 CSS 应该在顶部来允许逐步渲染。<br>但是在 IE 用@import 和把 CSS 放到页面底部行为一致，所以最好别用。</p>
+</blockquote>
+<h3 id="22-避免使用滤镜"><a href="#22-避免使用滤镜" class="headerlink" title="22. 避免使用滤镜"></a>22. 避免使用滤镜</h3><blockquote>
+<p>这个是 IE 独有的东西，但是不到万不得已尽量不要使用，因为这个对渲染性能要求很高</p>
+</blockquote>
+<h3 id="23-把脚本置于页面底部"><a href="#23-把脚本置于页面底部" class="headerlink" title="23. 把脚本置于页面底部"></a>23. 把脚本置于页面底部</h3><h3 id="24-剔除重复脚本"><a href="#24-剔除重复脚本" class="headerlink" title="24. 剔除重复脚本"></a>24. 剔除重复脚本</h3><h3 id="25-减少-DOM-访问"><a href="#25-减少-DOM-访问" class="headerlink" title="25. 减少 DOM 访问"></a>25. 减少 DOM 访问</h3><blockquote>
+<p>这个示例就是说你在 js 中使用了某个 DOM 元素，你可以先将其储存起来，这样的话下次再用的时候就会相应的快一点</p>
+</blockquote>
+<h3 id="26-开发智能事件处理程序"><a href="#26-开发智能事件处理程序" class="headerlink" title="26. 开发智能事件处理程序"></a>26. 开发智能事件处理程序</h3><blockquote>
+<p>有时候页面看起来不那么响应（响应速度慢），是因为绑定到不同元素的大量事件处理函数执行太多次。这是为什么使用事件委托是一种好方法，事件委托就是将事件绑定给相应的父级，多个子集可以根据相应的区别去执行不同的事件</p>
+</blockquote>
+<blockquote>
+<p>另外，你不必等到 onload 事件来开始处理 DOM 树，DOMContentLoaded 更快。大多时候你需要的只是想访问的元素已在 DOM 树中，所以你不必等到所有图片被下载。</p>
+</blockquote>
+<h3 id="27-减少-Cookie-体积"><a href="#27-减少-Cookie-体积" class="headerlink" title="27. 减少 Cookie 体积"></a>27. 减少 Cookie 体积</h3><blockquote>
+<p>比如说在你每次在某个网站中的链接相互跳转的时候这些个 cookie 会把所有的 cookie 全部都带到服务器去然后服务器会把这些东西再带回了，相当的麻烦，所以若是不是特别必要的东西建议写在 local storage 里面</p>
+</blockquote>
+<h3 id="28-对于页面内容使用无-cookie-域名"><a href="#28-对于页面内容使用无-cookie-域名" class="headerlink" title="28. 对于页面内容使用无 cookie 域名"></a>28. 对于页面内容使用无 cookie 域名</h3><blockquote>
+<p>当浏览器请求静态图片并把 cookie 一起发送到服务器时，cookie 此时对服务器没什么用处。所以这些 cookie 只是增加了网络流量。所以你应该保证静态组件的请求是没有 cookie 的。可以创建一个子域名来托管所有静态组件。</p>
+</blockquote>
+<blockquote>
+<p>比如说在页面中请求了一个图片，这个图片的域名需要使用不会记录到 cookie 中的（基本上是说和 cookie 中设置的 domain 域名不一样），这样的话就比较的轻，不会带来带去的了，这个图片使用的域名就是专门存放图片的地方</p>
+</blockquote>
+<h3 id="29-优化图像"><a href="#29-优化图像" class="headerlink" title="29. 优化图像"></a>29. 优化图像</h3><blockquote>
+<p>用一些工具把图像压缩</p>
+</blockquote>
+<blockquote>
+<p>图片的背后是很多的二进制数据来构成的，你可以将一张图片拖进一个编辑器里查看会发现都是 01 组合成的二进制码，这里面会有比如说是哪个软件处理的、处理时间等等一些无用的东西，可以通过压缩来把它们都干掉，我目前在项目中使用的是 <a href="https://link.jianshu.com/?t=https://tinypng.com/" rel="external nofollow noopener noreferrer" target="_blank">TinyPNG</a> 在线压缩，你也可以将它扩展到 PhotoShop 软件中使用</p>
+</blockquote>
+<h3 id="30-优化-CSS-Spirite"><a href="#30-优化-CSS-Spirite" class="headerlink" title="30. 优化 CSS Spirite"></a>30. 优化 CSS Spirite</h3><h3 id="31-不要在-HTML-中缩放图像"><a href="#31-不要在-HTML-中缩放图像" class="headerlink" title="31. 不要在 HTML 中缩放图像"></a>31. 不要在 HTML 中缩放图像</h3><blockquote>
+<p>不要因为你可以设置图片的宽高就去用比你需要的大得多的图片。如果你需要</p>
+</blockquote>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>img</span> <span class="token attr-name">width</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>100<span class="token punctuation">"</span></span> <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>100<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>mycat.jpg<span class="token punctuation">"</span></span> <span class="token attr-name">alt</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>My Cat<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+</code></pre>
+<p>那么，就用 100x100px 的图片，而不是 500x500px 的。</p>
+<h3 id="32-favicon-ico-要小而且可缓存"><a href="#32-favicon-ico-要小而且可缓存" class="headerlink" title="32. favicon.ico 要小而且可缓存"></a>32. favicon.ico 要小而且可缓存</h3><blockquote>
+<p>favicon.ico 是在你服务器根路径的图片。邪恶的是即使你不关心它，浏览器仍然会请求它。所以最好不要响应 404。另外由于在同一服务器，每次请求 favicon.ico 时也会带上 cookie。这个图片还会影响下载顺序，比如在 IE，如果你在 onload 时下载额外的组件，fcvicon 会在这些组件之前被下载。</p>
+</blockquote>
+<p><strong>怎么减轻 favicon.ico 的缺点？</strong></p>
+<ul>
+<li>小，最好 1K 以下</li>
+<li>设置 Expires 头部。也许可以安全地设置为几个月。</li>
+</ul>
+<h3 id="33-保持单个内容小于-25K"><a href="#33-保持单个内容小于-25K" class="headerlink" title="33. 保持单个内容小于 25K"></a>33. 保持单个内容小于 25K</h3><blockquote>
+<p>这个限制与 iPhone 不缓存大于 25K 的组件相关。注意，这是非压缩（uncompressed）的文件大小。在这里 minification（压缩，不要与 compress 混淆）很重要，因为 gzip 无法满足（iPhone）。</p>
+</blockquote>
+<h3 id="34-打包组件成复合文本"><a href="#34-打包组件成复合文本" class="headerlink" title="34. 打包组件成复合文本"></a>34. 打包组件成复合文本</h3><blockquote>
+<p>这个的意思就是建议将 js 和 css 打包到一起，然后再通过其他的一些方法将他们区分开，现在已经有很多前端自动化构建工具可以实现了 比如 webpack</p>
+</blockquote>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-08-02T13:38:53.000Z" itemprop="dateUpdated">2017-08-02 21:38:53</time>
+</span><br>
+
+
+        
+    </div>
+    
+    <footer>
+        <a href="http://coder.liusixin.cn">
+            <img src="http://cdn-blog.liusixin.cn/coder-1.jpg" alt="刘思鑫">
+            刘思鑫
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSS/">CSS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/javascript/">javascript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能优化/">性能优化</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/8eb3b102/&title=《前端性能优化--雅虎军规》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/8eb3b102/&title=《前端性能优化--雅虎军规》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/8eb3b102/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《前端性能优化--雅虎军规》 — Sixin的小站&url=http://coder.liusixin.cn/posts/8eb3b102/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/8eb3b102/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/posts/9b8e26f4/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">HTTP性能优化指南</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/posts/b56bb73b/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">JavaScript数据结构与算法总结</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "2WXGXLypM4zFckxtGM4xyoQe-gzGzoHsz",
+            appKey: "muMuDGGs0nePJORgEeCJmgWA",
+            avatar: "mm",
+            placeholder: "说点什么吧...",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <!-- <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p> -->
+    </div>
+    <div class="bottom">
+        <p><span>刘思鑫 &copy; 2017 - 2020</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow noopener noreferrer">京ICP备17054400号-1</a><br>
+                
+                <!-- Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a> -->
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://coder.liusixin.cn/posts/8eb3b102/&title=《前端性能优化--雅虎军规》 — Sixin的小站&pic=http://cdn-blog.liusixin.cn/coder-1.jpg" data-title="微博" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://coder.liusixin.cn/posts/8eb3b102/&title=《前端性能优化--雅虎军规》 — Sixin的小站&source=刘思鑫的个人博客" data-title=" QQ" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://coder.liusixin.cn/posts/8eb3b102/" data-title=" Facebook" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《前端性能优化--雅虎军规》 — Sixin的小站&url=http://coder.liusixin.cn/posts/8eb3b102/&via=http://coder.liusixin.cn" data-title=" Twitter" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://coder.liusixin.cn/posts/8eb3b102/" data-title=" Google+" rel="external nofollow noopener noreferrer">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABxElEQVR42u3aza7CIBAG0L7/S/duTbySbxjAmhxWRiucbibzw3XF635Z42/ef339/n3Pa8fCxcVtc+/hSnBzz4xf7+Or4uLiHuSOA031meTg6v64uLjP51YR1bCIi4v7W9xO4MPFxf0tblL8VFsnySkbazVcXNwGN+9S7vu8pb+Li4s7xb2LKyl78mBUPh0XF/cIt5O+dEanefqCi4v7HG61EMqDXZ5CFYasuLi4S7nVgDLmdsYn5YwMFxd3M7fahaiGv7mrGP+chYuLe5ybBJqk1KkGtULyhIuLe5CbpBrVI9cWQlGNhYuLu4ibb5cXP60OTZDu4OLinuEmo9NC86J4fN5+xcXF/S43uWAx1xKtXteIAhkuLu427txVieSVOqu8Dy4u7iJuHlDG/5osY4KG7MdaDRcXdzN3blxaHZn0EylcXNyT3M5VjH5TtfAkLi7uZm7nKlU/bCX74+Linueuao5suWbRabLg4uK2uf3yJi+B8sZKVPzg4uJu5lYDTZKyzI1Lo1oNFxf3Ydy8KMobo3m5hYuL+3xu9ULGXCukleLg4uI2uHMJSo5LWh7JZ1xc3DPcucHn2qFLUlDh4uIe4f4BhVlxsO53ymkAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+lazyScripts.push('//s95.cnzz.com/z_stat.php?id=1274200658&web_id=1274200658')
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
